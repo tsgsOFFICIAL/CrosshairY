@@ -1,0 +1,11 @@
+<svg class="img-fluid" id="outputsvg" xmlns="http://www.w3.org/2000/svg" style="transform: matrix(40, 0, 0, 40, -2.64136, 232.44); transform-origin: 50% 50%; cursor: move; max-height: 489.52px; transition: transform 200ms ease-in-out;" width="9" height="9" viewBox="0 0 90 90">
+  <g id="l4PzEvK7o9Xug1qrG0LWmd4" fill="#000" style="transform: none;">
+    <g style="transform: none;">
+      <path id="pCB9cCrAR" d="M30 80 l0 -10 15 0 15 0 0 10 0 10 -15 0 -15 0 0 -10z"></path>
+      <path id="paYoAzYG3" d="M0 45 l0 -15 10 0 10 0 0 15 0 15 -10 0 -10 0 0 -15z"></path>
+      <path id="p19mOjFwOG" d="M30 45 l0 -15 15 0 15 0 0 15 0 15 -15 0 -15 0 0 -15z"></path>
+      <path id="pM6YGfREN" d="M70 45 l0 -15 10 0 10 0 0 15 0 15 -10 0 -10 0 0 -15z"></path>
+      <path id="p16BNMEXob" d="M30 10 l0 -10 15 0 15 0 0 10 0 10 -15 0 -15 0 0 -10z"></path>
+    </g>
+  </g>
+</svg>
