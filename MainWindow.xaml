@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CrosshairY"
         mc:Ignorable="d"
-        Title="Crosshair Y" Height="400" Width="500"
+        Title="Crosshair Y" Height="450" Width="500"
         WindowStartupLocation="CenterScreen"
         Background="#FFF7F7F7" FontFamily="Segoe UI"
         Loaded="OnWindowLoaded" Closing="OnWindowClosing">
@@ -45,6 +45,11 @@
                     </Button>
                 </StackPanel>
 
+                <!-- Crosshair Preview -->
+                <Border Margin="0,15,0,0" BorderBrush="#CCC" BorderThickness="1" CornerRadius="4" Background="#FAFAFA" Height="100" Width="100">
+                    <Image x:Name="PreviewImage" Stretch="Uniform"/>
+                </Border>
+
                 <!-- Size Slider -->
                 <TextBlock Text="Size" Margin="0,15,0,5" FontWeight="SemiBold" Foreground="#444"/>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
@@ -64,7 +69,7 @@
                 <!-- Toggle Button -->
                 <Button x:Name="ToggleButton" Width="180" Height="36" Margin="0,20,0,0"
                         Click="OnToggleButtonClick" Cursor="Hand"
-                        ToolTip="Toggle crosshair visibility">
+                        ToolTip="Toggle crosshair visibility (Ctrl+Shift+C)">
                     <Button.Style>
                         <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
                             <Setter Property="Background" Value="#007ACC"/>

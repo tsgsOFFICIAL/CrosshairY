@@ -1,7 +1,8 @@
 ﻿using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using System.Runtime.InteropServices;
-using System.Windows.Interop;
+using System.Windows.Media.Imaging;
 using System.Windows.Controls;
+using System.Windows.Interop;
 using System.Text.Json;
 using System.Windows;
 using System.IO;
@@ -14,53 +15,63 @@ namespace CrosshairY
         private Settings _settings;
         private List<string> _crosshairImages;
         private bool _isCrosshairEnabled;
+        private readonly string _crosshairFolder;
 
         public MainWindow()
         {
             _overlayWindow = new OverlayWindow();
-            _settings = LoadSettings();
+            _crosshairFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "assets", "crosshairs");
             _crosshairImages = LoadCrosshairLibrary();
+            _settings = LoadSettings();
             _isCrosshairEnabled = false;
 
             InitializeComponent();
-
-            // Register hotkey (Ctrl+Shift+C)
-            RegisterHotKey(new WindowInteropHelper(this).Handle, 1, 0x0004 | 0x0002, 0x43); // 0x0004 = MOD_CONTROL, 0x0002 = MOD_SHIFT, 0x43 = 'C'
-
-            Closed += (s, e) =>
-            {
-                _overlayWindow?.Close();
-                Close();
-            };
         }
 
         private void OnWindowLoaded(object sender, RoutedEventArgs e)
         {
-            // Populate crosshair combobox
             CrosshairComboBox.ItemsSource = _crosshairImages;
-            CrosshairComboBox.SelectedItem = _settings.CrosshairPath ?? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "assets", "crosshairs", "aim.png");
-            SizeSlider.Value = _settings.Size;
-            OpacitySlider.Value = _settings.Opacity;
+            CrosshairComboBox.SelectedItem = _settings.CrosshairPath;
+
+            if (CrosshairComboBox.SelectedItem == null && _crosshairImages.Count > 0)
+            {
+                CrosshairComboBox.SelectedItem = _crosshairImages[0];
+                _settings.CrosshairPath = _crosshairImages[0];
+            }
+
+            SizeSlider.Value = Math.Clamp(_settings.Size, 10, 200);
+            OpacitySlider.Value = Math.Clamp(_settings.Opacity, 0.1, 1.0);
             UpdateOverlay();
         }
 
         private void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            _overlayWindow?.Close();
+
             SaveSettings();
-            UnregisterHotKey(new WindowInteropHelper(this).Handle, 1); // Unregister hotkey with ID 1
+            UnregisterHotKey(new WindowInteropHelper(this).Handle, 1);
         }
 
         private void OnUploadImageClick(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
             {
-                Filter = "Image files (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg"
+                Filter = "PNG Image (*.png)|*.png"
             };
 
             if (openFileDialog.ShowDialog() == true)
             {
-                _settings.CrosshairPath = openFileDialog.FileName;
-                CrosshairComboBox.SelectedItem = _settings.CrosshairPath;
+                string fileName = Path.GetFileNameWithoutExtension(openFileDialog.FileName);
+               
+                _settings.CrosshairPath = fileName;
+                CrosshairComboBox.SelectedItem = fileName;
+                
+                if (!_crosshairImages.Contains(fileName))
+                    _crosshairImages.Add(fileName);
+               
+                CrosshairComboBox.ItemsSource = null; // Reset to refresh
+                CrosshairComboBox.ItemsSource = _crosshairImages;
+                CrosshairComboBox.SelectedItem = fileName;
                 UpdateOverlay();
             }
         }
@@ -76,7 +87,7 @@ namespace CrosshairY
 
         private void OnSizeSliderValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            if (SizeValueText == null || OpacityValueText == null)
+            if (SizeValueText == null)
                 return;
 
             _settings.Size = SizeSlider.Value;
@@ -118,40 +129,65 @@ namespace CrosshairY
 
         private void UpdateOverlay()
         {
-            if (File.Exists(_settings.CrosshairPath))
+            try
             {
-                _overlayWindow.UpdateCrosshair(_settings.CrosshairPath, _settings.Size, _settings.Opacity);
-                StatusText.Text = "Crosshair updated";
+                string crosshairPath = Path.Combine(_crosshairFolder, _settings.CrosshairPath + ".png");
+                
+                if (!string.IsNullOrEmpty(_settings.CrosshairPath) && File.Exists(crosshairPath))
+                {
+                    BitmapImage bitmap = new BitmapImage(new Uri(crosshairPath));
+
+                    _overlayWindow.UpdateCrosshair(crosshairPath, _settings.Size, _settings.Opacity);
+                    PreviewImage.Source = bitmap;
+                    StatusText.Text = "Crosshair updated";
+                }
+                else
+                {
+                    PreviewImage.Source = null;
+                    StatusText.Text = _crosshairImages.Count > 0 ? "Invalid crosshair image" : "No crosshairs found";
+                }
             }
-            else
+            catch (Exception ex)
             {
-                StatusText.Text = "Invalid crosshair image";
+                PreviewImage.Source = null;
+                StatusText.Text = $"Failed to load crosshair: {ex.Message}";
             }
         }
 
         private List<string> LoadCrosshairLibrary()
         {
             List<string> images = new List<string>();
-            string crosshairFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "assets", "crosshairs");
-
-            if (Directory.Exists(crosshairFolder))
+            
+            if (Directory.Exists(_crosshairFolder))
             {
-                images.AddRange(Directory.GetFiles(crosshairFolder, "*.png"));
+                images.AddRange(Directory.GetFiles(_crosshairFolder, "*.png").Select(Path.GetFileNameWithoutExtension)!);
             }
 
-            return [.. images.Distinct()]; // Remove duplicates, if any
+            return [.. images.Distinct()];
         }
 
         private Settings LoadSettings()
         {
             string settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CrosshairY", "settings.json");
+            
             if (File.Exists(settingsPath))
             {
                 string json = File.ReadAllText(settingsPath);
-                return JsonSerializer.Deserialize<Settings>(json) ?? new Settings();
+                Settings settings = JsonSerializer.Deserialize<Settings>(json) ?? new Settings();
+                settings.Size = Math.Clamp(settings.Size, 10, 200);
+                settings.Opacity = Math.Clamp(settings.Opacity, 0.1, 1.0);
+               
+                if (string.IsNullOrEmpty(settings.CrosshairPath) && _crosshairImages.Count > 0)
+                    settings.CrosshairPath = _crosshairImages[0];
+
+                return settings;
             }
 
-            return new Settings();
+            Settings defaultSettings = new Settings();
+
+            if (_crosshairImages.Count > 0)
+                defaultSettings.CrosshairPath = _crosshairImages[0];
+            return defaultSettings;
         }
 
         private void SaveSettings()
@@ -162,7 +198,6 @@ namespace CrosshairY
             File.WriteAllText(settingsPath, json);
         }
 
-        // Hotkey handling
         [DllImport("user32.dll")]
         private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
 
@@ -174,6 +209,7 @@ namespace CrosshairY
             base.OnSourceInitialized(e);
             HwndSource? source = PresentationSource.FromVisual(this) as HwndSource;
             source?.AddHook(WndProc);
+            RegisterHotKey(new WindowInteropHelper(this).Handle, 1, 0x0004 | 0x0002, 0x43); // 0x0004 = MOD_CONTROL, 0x0002 = MOD_SHIFT, 0x43 = 'C'
         }
 
         private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
