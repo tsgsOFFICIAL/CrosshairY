@@ -125,7 +125,7 @@ namespace CrosshairY
             }
 
             // Set slider values, ensuring they are within valid ranges
-            SizeSlider.Value = Math.Clamp(_settings.Size, 10, 200);
+            SizeSlider.Value = Math.Clamp(_settings.Size, 5, 200);
             OpacitySlider.Value = Math.Clamp(_settings.Opacity, 0.1, 1.0);
             // Update the overlay with the current settings
             UpdateOverlay();
@@ -136,7 +136,7 @@ namespace CrosshairY
         /// </summary>
         /// <param name="sender">The source of the event.</param>
         /// <param name="e">The event arguments.</param>
-        private void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void OnWindowClosing(object sender, CancelEventArgs e)
         {
             // Save current settings to disk
             SaveSettings();
@@ -159,38 +159,28 @@ namespace CrosshairY
 
             if (openFileDialog.ShowDialog() == true)
             {
-                // Extract the file name without extension
-                string fileName = Path.GetFileNameWithoutExtension(openFileDialog.FileName);
-                string extension = Path.GetExtension(openFileDialog.FileName).ToLowerInvariant();
-                // Construct the destination path in the crosshairs folder
-                string destinationPath = Path.Combine(_crosshairFolder, fileName + extension);
+                string fileNameWithExt = Path.GetFileName(openFileDialog.FileName);
+                string destinationPath = Path.Combine(_crosshairFolder, fileNameWithExt);
 
                 try
                 {
-                    // Ensure the crosshairs folder exists in the build output directory
                     Directory.CreateDirectory(_crosshairFolder);
-                    // Copy the selected image to the crosshairs folder, overwriting if it exists
                     File.Copy(openFileDialog.FileName, destinationPath, true);
 
-                    // Update settings with the new crosshair name
-                    _settings.CrosshairPath = fileName;
-                    CrosshairComboBox.SelectedItem = fileName;
+                    _settings.CrosshairPath = fileNameWithExt;
+                    CrosshairComboBox.SelectedItem = fileNameWithExt;
 
-                    // Add the new crosshair name to the library if it’s not already present
-                    if (!_crosshairImages.Contains(fileName))
-                        _crosshairImages.Add(fileName);
+                    if (!_crosshairImages.Contains(fileNameWithExt))
+                        _crosshairImages.Add(fileNameWithExt);
 
-                    // Refresh the ComboBox to reflect the new crosshair
-                    CrosshairComboBox.ItemsSource = null; // Clear binding
-                    CrosshairComboBox.ItemsSource = _crosshairImages; // Rebind
-                    CrosshairComboBox.SelectedItem = fileName;
+                    CrosshairComboBox.ItemsSource = null;
+                    CrosshairComboBox.ItemsSource = _crosshairImages;
+                    CrosshairComboBox.SelectedItem = fileNameWithExt;
 
-                    // Update the overlay and preview with the new crosshair
                     UpdateOverlay();
                 }
                 catch (Exception ex)
                 {
-                    // Display error message if the upload fails (e.g., file access denied)
                     StatusText.Text = $"Failed to upload image: {ex.Message}";
                 }
             }
@@ -293,12 +283,10 @@ namespace CrosshairY
         {
             try
             {
-                // Construct path, preserving extension
-                string crosshairPath = Path.Combine(_crosshairFolder, _settings.CrosshairPath + Path.GetExtension(FindCrosshairFile(_settings.CrosshairPath) ?? ".png"));
+                string crosshairPath = Path.Combine(_crosshairFolder, _settings.CrosshairPath);
 
                 if (!string.IsNullOrEmpty(_settings.CrosshairPath) && File.Exists(crosshairPath))
                 {
-                    // Load image for preview
                     ImageSource previewSource;
                     string extension = Path.GetExtension(crosshairPath).ToLowerInvariant();
 
@@ -387,8 +375,8 @@ namespace CrosshairY
             if (Directory.Exists(_crosshairFolder))
             {
                 // Get all PNG and SVG files and extract their names without extensions
-                images.AddRange(Directory.GetFiles(_crosshairFolder, "*.png").Select(Path.GetFileNameWithoutExtension)!);
-                images.AddRange(Directory.GetFiles(_crosshairFolder, "*.svg").Select(Path.GetFileNameWithoutExtension)!);
+                images.AddRange(Directory.GetFiles(_crosshairFolder, "*.png").Select(Path.GetFileName)!);
+                images.AddRange(Directory.GetFiles(_crosshairFolder, "*.svg").Select(Path.GetFileName)!);
             }
 
             // Return distinct names as a collection expression
@@ -424,7 +412,7 @@ namespace CrosshairY
                 string json = File.ReadAllText(settingsPath);
                 Settings settings = JsonSerializer.Deserialize<Settings>(json) ?? new Settings();
 
-                settings.Size = Math.Clamp(settings.Size, 10, 200);
+                settings.Size = Math.Clamp(settings.Size, 5, 200);
                 settings.Opacity = Math.Clamp(settings.Opacity, 0.1, 1.0);
 
                 if (string.IsNullOrEmpty(settings.CrosshairPath) && _crosshairImages.Count > 0)

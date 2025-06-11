@@ -20,6 +20,7 @@
                 Effect="{DynamicResource DropShadowEffect}">
             <StackPanel>
                 <TextBlock Text="CrosshairY - Free Crosshair Overlay" FontSize="24" FontWeight="Bold" Foreground="#333"/>
+                <TextBlock Text="By tsgsOFFICIAL" FontSize="14" Foreground="#333"/>
 
                 <!-- Crosshair Selection -->
                 <TextBlock Text="Select Crosshair" Margin="0,20,0,5" FontWeight="SemiBold" Foreground="#444"/>
@@ -55,9 +56,9 @@
                 <!-- Size Slider -->
                 <TextBlock Text="Size" Margin="0,15,0,5" FontWeight="SemiBold" Foreground="#444"/>
                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <Slider x:Name="SizeSlider" Width="200" Minimum="10" Maximum="200" Value="50"
+                    <Slider x:Name="SizeSlider" Width="200" Minimum="5" Maximum="200" Value="25"
                             ValueChanged="OnSizeSliderValueChanged" ToolTip="Adjust crosshair size"/>
-                    <TextBlock x:Name="SizeValueText" Text="50px" Margin="10,0,0,0" VerticalAlignment="Center"/>
+                    <TextBlock x:Name="SizeValueText" Text="25px" Margin="10,0,0,0" VerticalAlignment="Center"/>
                 </StackPanel>
 
                 <!-- Opacity Slider -->

@@ -1,4 +1,5 @@
 ﻿using Color = System.Windows.Media.Color;
+using Pen = System.Windows.Media.Pen;
 using System.Runtime.InteropServices;
 using System.Windows.Media.Imaging;
 using SharpVectors.Renderers.Wpf;
@@ -101,20 +102,24 @@ namespace CrosshairY
         }
 
         // Helper to apply fill color recursively
-        private static void ApplyFillColor(Drawing drawing, Color color)
+        private void ApplyFillColor(Drawing drawing, Color color)
         {
-            Debug.WriteLine($"Processing drawing type: {drawing.GetType().Name}"); if (drawing is GeometryDrawing geometryDrawing)
-            {
-                geometryDrawing.Brush = new SolidColorBrush(color); // Set fill
+            Debug.WriteLine($"Processing drawing type: {drawing.GetType().Name}");
+            if (drawing is GeometryDrawing geometryDrawing)
+            { // Only set fill if the original SVG has a fill (preserve fill="none")
+                if (geometryDrawing.Brush != null)
+                {
+                    geometryDrawing.Brush = new SolidColorBrush(color);
+                } // Set stroke color
                 if (geometryDrawing.Pen != null)
                 {
-                    geometryDrawing.Pen.Brush = new SolidColorBrush(color); // Set stroke
+                    geometryDrawing.Pen = new Pen(new SolidColorBrush(color), geometryDrawing.Pen.Thickness);
                 }
                 else
                 {
-                    geometryDrawing.Pen = new System.Windows.Media.Pen(new SolidColorBrush(color), 1.0); // Create pen if null
+                    geometryDrawing.Pen = new Pen(new SolidColorBrush(color), 1.0);
                 }
-                Debug.WriteLine($"Applied color {color} to GeometryDrawing (Fill: {geometryDrawing.Brush}, Stroke: {geometryDrawing.Pen?.Brush})");
+                Debug.WriteLine($"Applied color {color} to GeometryDrawing (Fill: {geometryDrawing.Brush?.ToString() ?? "null "}, Stroke: {geometryDrawing.Pen?.Brush?.ToString() ?? "null "})");
             }
             else if (drawing is DrawingGroup drawingGroup)
             {
