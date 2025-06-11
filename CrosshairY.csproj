@@ -10,7 +10,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="SharpVectors" Version="1.8.4.2" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<None Update="assets\crosshairs\*.png">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="assets\crosshairs\*.svg">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>

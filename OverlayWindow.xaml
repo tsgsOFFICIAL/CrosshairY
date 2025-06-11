@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CrosshairY"
         mc:Ignorable="d"
+        Title="Crosshair"
         AllowsTransparency="True" WindowStyle="None" Background="Transparent"
         Topmost="True" ShowInTaskbar="False" ResizeMode="NoResize"
         Width="200" Height="200">
