@@ -1,4 +1,4 @@
-![CrosshairY](https://socialify.git.ci/tsgsOFFICIAL/CrosshairY/image?description=1&font=Source%20Code%20Pro&forks=1&issues=1&language=1&name=1&owner=1&pattern=Transparent&pulls=1&stargazers=1&theme=Dark)
+![CrosshairY](https://socialify.git.ci/tsgsOFFICIAL/CrosshairY/image?description=1&font=Source+Code+Pro&forks=1&issues=1&language=1&name=1&owner=1&pattern=Transparent&pulls=1&stargazers=1&theme=Dark)
 
 # CrosshairY
 **A free and open-source crosshair overlay for any game, no BS required.**
