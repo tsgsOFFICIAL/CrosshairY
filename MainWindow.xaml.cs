@@ -1,281 +1,197 @@
-﻿using System.ComponentModel;
-using System.Windows;
+﻿using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+using System.Runtime.InteropServices;
+using System.Windows.Interop;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Media;
-using System.IO;
 using System.Text.Json;
-using Color = System.Windows.Media.Color;
-using Brushes = System.Windows.Media.Brushes;
+using System.Windows;
+using System.IO;
 
 namespace CrosshairY
 {
     public partial class MainWindow : Window
     {
-        private CrosshairWindow? _crosshairWindow;
-        private CrosshairSettings _settings;
+        private OverlayWindow _overlayWindow;
+        private Settings _settings;
+        private List<string> _crosshairImages;
+        private bool _isCrosshairEnabled;
 
         public MainWindow()
         {
-            // Load settings from file if it exists
-            _settings = LoadSettings() ?? new CrosshairSettings
-            {
-                Type = "Cross",
-                Color = Colors.Red,
-                Size = 20,
-                Thickness = 2,
-                Opacity = 1.0
-            };
-            _crosshairWindow = new CrosshairWindow(_settings);
+            _overlayWindow = new OverlayWindow();
+            _settings = LoadSettings();
+            _crosshairImages = LoadCrosshairLibrary();
+            _isCrosshairEnabled = false;
 
             InitializeComponent();
-            DataContext = _settings; // Set DataContext to enable bindings
+
+            // Register hotkey (Ctrl+Shift+C)
+            RegisterHotKey(new WindowInteropHelper(this).Handle, 1, 0x0004 | 0x0002, 0x43); // 0x0004 = MOD_CONTROL, 0x0002 = MOD_SHIFT, 0x43 = 'C'
 
             Closed += (s, e) =>
             {
-                _crosshairWindow?.Close();
+                _overlayWindow?.Close();
                 Close();
             };
-
-            // Update toggle button text based on initial crosshair window state
-            if (ToggleButtonText != null)
-                ToggleButtonText.Text = _crosshairWindow?.IsVisible == true ? "Hide Crosshair" : "Show Crosshair";
         }
 
-        private CrosshairSettings? LoadSettings()
+        private void OnWindowLoaded(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                if (File.Exists("crosshair_settings.json"))
-                {
-                    string json = File.ReadAllText("crosshair_settings.json");
-                    CrosshairSettings? settings = JsonSerializer.Deserialize<CrosshairSettings>(json);
-                    if (settings != null)
-                    {
-                        // Validate Type to ensure it's one of the allowed values
-                        if (settings.Type != "Cross" && settings.Type != "Dot" && settings.Type != "Circle")
-                        {
-                            settings.Type = "Cross";
-                        }
-                        // Validate other properties
-                        settings.Size = Math.Clamp(settings.Size, 5, 50);
-                        settings.Thickness = Math.Clamp(settings.Thickness, 1, 10);
-                        settings.Opacity = Math.Clamp(settings.Opacity, 0.1, 1.0);
-                        return settings;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                if (StatusText != null)
-                    StatusText.Text = $"Error loading settings: {ex.Message}";
-            }
-            return null;
+            // Populate crosshair combobox
+            CrosshairComboBox.ItemsSource = _crosshairImages;
+            CrosshairComboBox.SelectedItem = _settings.CrosshairPath ?? Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "assets", "crosshairs", "aim.png");
+            SizeSlider.Value = _settings.Size;
+            OpacitySlider.Value = _settings.Opacity;
+            UpdateOverlay();
         }
 
-        private void OnPickColorClick(object sender, RoutedEventArgs e)
+        private void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            ColorDialog dialog = new ColorDialog();
-            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            SaveSettings();
+            UnregisterHotKey(new WindowInteropHelper(this).Handle, 1); // Unregister hotkey with ID 1
+        }
+
+        private void OnUploadImageClick(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog
             {
-                _settings.Color = Color.FromArgb(dialog.Color.A, dialog.Color.R, dialog.Color.G, dialog.Color.B);
-                if (StatusText != null)
-                    StatusText.Text = "Color updated";
+                Filter = "Image files (*.png;*.jpg;*.jpeg)|*.png;*.jpg;*.jpeg"
+            };
+
+            if (openFileDialog.ShowDialog() == true)
+            {
+                _settings.CrosshairPath = openFileDialog.FileName;
+                CrosshairComboBox.SelectedItem = _settings.CrosshairPath;
+                UpdateOverlay();
             }
         }
 
-        private void OnToggleCrosshairClick(object sender, RoutedEventArgs e)
+        private void OnCrosshairComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (_crosshairWindow != null)
+            if (CrosshairComboBox.SelectedItem != null)
             {
-                if (_crosshairWindow.IsVisible)
-                {
-                    _crosshairWindow.Hide();
-                    if (ToggleButtonText != null)
-                        ToggleButtonText.Text = "Show Crosshair";
-                    if (StatusText != null)
-                        StatusText.Text = "Crosshair hidden";
-                }
-                else
-                {
-                    _crosshairWindow.Show();
-                    if (ToggleButtonText != null)
-                        ToggleButtonText.Text = "Hide Crosshair";
-                    if (StatusText != null)
-                        StatusText.Text = "Crosshair visible";
-                }
+                _settings.CrosshairPath = CrosshairComboBox.SelectedItem.ToString() ?? "";
+                UpdateOverlay();
             }
         }
 
-        private void OnSaveProfileClick(object sender, RoutedEventArgs e)
+        private void OnSizeSliderValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
-            try
+            if (SizeValueText == null || OpacityValueText == null)
+                return;
+
+            _settings.Size = SizeSlider.Value;
+            SizeValueText.Text = $"{(int)SizeSlider.Value}px";
+            UpdateOverlay();
+        }
+
+        private void OnOpacitySliderValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (OpacityValueText == null)
+                return;
+
+            _settings.Opacity = OpacitySlider.Value;
+            OpacityValueText.Text = $"{(int)(OpacitySlider.Value * 100)}%";
+            UpdateOverlay();
+        }
+
+        private void OnToggleButtonClick(object sender, RoutedEventArgs e)
+        {
+            ToggleCrosshair();
+        }
+
+        private void ToggleCrosshair()
+        {
+            _isCrosshairEnabled = !_isCrosshairEnabled;
+            if (_isCrosshairEnabled)
             {
-                string json = JsonSerializer.Serialize(_settings, new JsonSerializerOptions { WriteIndented = true });
-                File.WriteAllText("crosshair_settings.json", json);
-                if (StatusText != null)
-                    StatusText.Text = "Profile saved successfully";
+                _overlayWindow.Show();
+                ToggleButtonText.Text = "Disable Crosshair";
+                StatusText.Text = "Crosshair Enabled";
             }
-            catch (Exception ex)
+            else
             {
-                if (StatusText != null)
-                    StatusText.Text = $"Error saving profile: {ex.Message}";
+                _overlayWindow.Hide();
+                ToggleButtonText.Text = "Enable Crosshair";
+                StatusText.Text = "Crosshair Disabled";
             }
+        }
+
+        private void UpdateOverlay()
+        {
+            if (File.Exists(_settings.CrosshairPath))
+            {
+                _overlayWindow.UpdateCrosshair(_settings.CrosshairPath, _settings.Size, _settings.Opacity);
+                StatusText.Text = "Crosshair updated";
+            }
+            else
+            {
+                StatusText.Text = "Invalid crosshair image";
+            }
+        }
+
+        private List<string> LoadCrosshairLibrary()
+        {
+            List<string> images = new List<string>();
+            string crosshairFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "assets", "crosshairs");
+
+            if (Directory.Exists(crosshairFolder))
+            {
+                images.AddRange(Directory.GetFiles(crosshairFolder, "*.png"));
+            }
+
+            return [.. images.Distinct()]; // Remove duplicates, if any
+        }
+
+        private Settings LoadSettings()
+        {
+            string settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CrosshairY", "settings.json");
+            if (File.Exists(settingsPath))
+            {
+                string json = File.ReadAllText(settingsPath);
+                return JsonSerializer.Deserialize<Settings>(json) ?? new Settings();
+            }
+
+            return new Settings();
+        }
+
+        private void SaveSettings()
+        {
+            string settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CrosshairY", "settings.json");
+            Directory.CreateDirectory(Path.GetDirectoryName(settingsPath)!);
+            string json = JsonSerializer.Serialize(_settings);
+            File.WriteAllText(settingsPath, json);
+        }
+
+        // Hotkey handling
+        [DllImport("user32.dll")]
+        private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
+
+        [DllImport("user32.dll")]
+        private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+            HwndSource? source = PresentationSource.FromVisual(this) as HwndSource;
+            source?.AddHook(WndProc);
+        }
+
+        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            const int WM_HOTKEY = 0x0312;
+            if (msg == WM_HOTKEY && wParam.ToInt32() == 1)
+            {
+                ToggleCrosshair();
+                handled = true;
+            }
+            return IntPtr.Zero;
         }
     }
 
-    public class CrosshairSettings : INotifyPropertyChanged
+    public class Settings
     {
-        private string? _type;
-        private Color _color;
-        private int _size;
-        private int _thickness;
-        private double _opacity;
-        private ComboBoxItem? _selectedCrosshairTypeItem;
-
-        public string? Type
-        {
-            get => _type;
-            set
-            {
-                if (_type != value)
-                {
-                    _type = value;
-                    OnPropertyChanged(nameof(Type));
-                    // Update SelectedCrosshairTypeItem when Type changes
-                    UpdateSelectedCrosshairTypeItem();
-                }
-            }
-        }
-
-        public ComboBoxItem? SelectedCrosshairTypeItem
-        {
-            get => _selectedCrosshairTypeItem;
-            set
-            {
-                if (_selectedCrosshairTypeItem != value)
-                {
-                    _selectedCrosshairTypeItem = value;
-                    // Update Type when SelectedCrosshairTypeItem changes
-                    Type = value?.Content?.ToString() ?? "Cross";
-                    OnPropertyChanged(nameof(SelectedCrosshairTypeItem));
-                }
-            }
-        }
-
-        public Color Color
-        {
-            get => _color;
-            set
-            {
-                if (_color != value)
-                {
-                    _color = value;
-                    OnPropertyChanged(nameof(Color));
-                }
-            }
-        }
-
-        public int Size
-        {
-            get => _size;
-            set
-            {
-                if (_size != value)
-                {
-                    _size = value;
-                    OnPropertyChanged(nameof(Size));
-                }
-            }
-        }
-
-        public int Thickness
-        {
-            get => _thickness;
-            set
-            {
-                if (_thickness != value)
-                {
-                    _thickness = value;
-                    OnPropertyChanged(nameof(Thickness));
-                }
-            }
-        }
-
-        public double Opacity
-        {
-            get => _opacity;
-            set
-            {
-                if (_opacity != value)
-                {
-                    _opacity = value;
-                    OnPropertyChanged(nameof(Opacity));
-                }
-            }
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private void UpdateSelectedCrosshairTypeItem()
-        {
-            // Find the ComboBoxItem in the MainWindow's ComboBox that matches Type
-            if (System.Windows.Application.Current.MainWindow is MainWindow mainWindow && mainWindow.CrosshairTypeComboBox != null)
-            {
-                ComboBoxItem? item = mainWindow.CrosshairTypeComboBox.Items
-                    .OfType<ComboBoxItem>()
-                    .FirstOrDefault(i => i.Content?.ToString() == _type);
-                if (item != null)
-                {
-                    _selectedCrosshairTypeItem = item;
-                    OnPropertyChanged(nameof(SelectedCrosshairTypeItem));
-                }
-            }
-        }
-    }
-
-    public class ColorToBrushConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            if (value is Color color)
-                return new SolidColorBrush(color);
-            return Brushes.Transparent;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            if (value is SolidColorBrush brush)
-                return brush.Color;
-            return Colors.Transparent;
-        }
-    }
-
-    public class ComboBoxItemToStringConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            // Convert string Type to ComboBoxItem for display
-            if (value is string type)
-            {
-                return new ComboBoxItem { Content = type };
-            }
-            return new ComboBoxItem { Content = "Cross" };
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            // Convert ComboBoxItem back to string Type
-            if (value is ComboBoxItem item && item.Content is string content)
-            {
-                return content;
-            }
-            return "Cross";
-        }
+        public string CrosshairPath { get; set; } = "";
+        public double Size { get; set; } = 50;
+        public double Opacity { get; set; } = 1.0;
     }
 }
