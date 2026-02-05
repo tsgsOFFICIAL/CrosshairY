@@ -112,6 +112,7 @@
 	  <None Include="bin\Release\net8.0-windows\publish\win-x64\fr\UIAutomationTypes.resources.dll" />
 	  <None Include="bin\Release\net8.0-windows\publish\win-x64\fr\WindowsBase.resources.dll" />
 	  <None Include="bin\Release\net8.0-windows\publish\win-x64\fr\WindowsFormsIntegration.resources.dll" />
+	  <None Include="bin\Release\net8.0-windows\publish\win-x64\GlobalHotKey.dll" />
 	  <None Include="bin\Release\net8.0-windows\publish\win-x64\hostfxr.dll" />
 	  <None Include="bin\Release\net8.0-windows\publish\win-x64\hostpolicy.dll" />
 	  <None Include="bin\Release\net8.0-windows\publish\win-x64\it\Microsoft.VisualBasic.Forms.resources.dll" />
@@ -176,6 +177,7 @@
 	  <None Include="bin\Release\net8.0-windows\publish\win-x64\Microsoft.Win32.SystemEvents.dll" />
 	  <None Include="bin\Release\net8.0-windows\publish\win-x64\mscordaccore.dll" />
 	  <None Include="bin\Release\net8.0-windows\publish\win-x64\mscordaccore_amd64_amd64_8.0.1725.26602.dll" />
+	  <None Include="bin\Release\net8.0-windows\publish\win-x64\mscordaccore_amd64_amd64_8.0.2325.60607.dll" />
 	  <None Include="bin\Release\net8.0-windows\publish\win-x64\mscordbi.dll" />
 	  <None Include="bin\Release\net8.0-windows\publish\win-x64\mscorlib.dll" />
 	  <None Include="bin\Release\net8.0-windows\publish\win-x64\mscorrc.dll" />
@@ -506,7 +508,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="SharpVectors" Version="1.8.4.2" />
+		<PackageReference Include="GlobalHotKey" Version="1.1.0" />
+		<PackageReference Include="SharpVectors" Version="1.8.5" />
 	</ItemGroup>
 
 	<ItemGroup>

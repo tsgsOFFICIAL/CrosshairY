@@ -1,4 +1,4 @@
-![CrosshairY](https://socialify.git.ci/tsgsOFFICIAL/CrosshairY/image?description=1&font=Source%20Code%20Pro&forks=1&issues=1&language=1&name=1&owner=1&pattern=Transparent&pulls=1&stargazers=1&theme=Dark)
+![CrosshairY](https://socialify.git.ci/tsgsOFFICIAL/CrosshairY/image?description=1&font=Source+Code+Pro&forks=1&issues=1&language=1&name=1&owner=1&pattern=Transparent&pulls=1&stargazers=1&theme=Dark)
 
 # CrosshairY
 **A free and open-source crosshair overlay for any game, no BS required.**
@@ -15,7 +15,8 @@
 ---
 
 ## Live Demo
-![Demo](https://github.com/tsgsOFFICIAL/CrosshairY/blob/main/demo.gif)
+![Demo](https://github.com/tsgsOFFICIAL/CrosshairY/blob/master/full_demo.gif)
+
 *The program displays a customizable crosshair overlay on your screen, staying on top of any game.*
 
 ---
@@ -44,7 +45,7 @@ Open a [GitHub Issue](https://github.com/tsgsOFFICIAL/CrosshairY/issues) or cont
 ---
 
 ## Installation
-1. **Download** the latest release [here](https://github.com/tsgsOFFICIAL/CrosshairY/releases/latest) (*preferred*) or via [direct link](https://download-directory.github.io/?url=https://github.com/tsgsOFFICIAL/CrosshairY/tree/main/CrosshairY/bin/Release\net8.0-windows\publish\win-x64).
+1. **Download** the latest release [here](https://github.com/tsgsOFFICIAL/CrosshairY/releases/latest) (*preferred*) or via [direct link](https://download-directory.github.io/?url=https://github.com/tsgsOFFICIAL/CrosshairY/tree/master/bin/Release/net8.0-windows/publish/win-x64).
 2. **Extract** the ZIP to `%appdata%\CrosshairY`:
    - Press `Win + R`, type `%appdata%`, then press Enter.
    - Create a folder named `CrosshairY` and extract the files here.

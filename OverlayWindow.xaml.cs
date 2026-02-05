@@ -47,7 +47,12 @@ namespace CrosshairY
 
                 if (isSvg)
                 {
-                    WpfDrawingSettings settings = new WpfDrawingSettings { IncludeRuntime = true, TextAsGeometry = false };
+                    WpfDrawingSettings settings = new WpfDrawingSettings
+                    {
+                        IncludeRuntime = true,
+                        TextAsGeometry = false
+                    };
+
                     using (FileSvgReader reader = new FileSvgReader(settings))
                     {
                         DrawingGroup drawing = reader.Read(imagePath);

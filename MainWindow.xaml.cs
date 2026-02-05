@@ -1,15 +1,15 @@
 ﻿using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using Color = System.Windows.Media.Color;
-using System.Runtime.InteropServices;
 using System.Windows.Media.Imaging;
 using SharpVectors.Renderers.Wpf;
-using System.Windows.Controls;
 using SharpVectors.Converters;
-using System.Windows.Interop;
+using System.Windows.Controls;
 using System.ComponentModel;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Text.Json;
 using System.Windows;
+using GlobalHotKey;
 using System.IO;
 
 namespace CrosshairY
@@ -24,36 +24,38 @@ namespace CrosshairY
         /// The overlay window that displays the crosshair on top of other applications.
         /// </summary>
         private OverlayWindow _overlayWindow;
-
         /// <summary>
         /// The application settings, including crosshair path, size, and opacity.
         /// </summary>
         private Settings _settings;
-
         /// <summary>
         /// List of crosshair image names (without .png) available in the assets/crosshairs folder.
         /// </summary>
         private List<string> _crosshairImages;
-
         /// <summary>
         /// Indicates whether the crosshair overlay is currently enabled (visible).
         /// </summary>
         private bool _isCrosshairEnabled;
-
         /// <summary>
         /// Path to the assets/crosshairs folder in the build output directory.
         /// </summary>
         private readonly string _crosshairFolder;
-
         /// <summary>
         /// The color used for the crosshair when selected, defaulting to red.
         /// </summary>
         private Color _selectedColor = Color.FromRgb(255, 0, 0);
-
         /// <summary>
         /// Gets the brush representing the selected color for the crosshair.
         /// </summary>
         public SolidColorBrush SelectedColorBrush => new SolidColorBrush(_selectedColor);
+        /// <summary>
+        /// Manages the registration and handling of global hotkeys.
+        /// </summary>
+        /// <remarks>This field holds an instance of <see cref="HotKeyManager"/>, which is responsible for
+        /// managing global hotkey registrations and triggering associated actions when those hotkeys are
+        /// pressed.</remarks>
+        private HotKeyManager _hotKeyManager;
+        private KeyGesture _toggleHotKeyGesture = new KeyGesture(Key.F1, ModifierKeys.Control);
 
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
@@ -76,7 +78,36 @@ namespace CrosshairY
 
             ApplySettingsToUI(); // manually assign loaded settings to controls
 
-            Closed += (s, e) => _overlayWindow?.Close();
+            _hotKeyManager = new HotKeyManager();
+            _hotKeyManager.KeyPressed += HotKeyManager_KeyPressed;
+
+            _hotKeyManager.Register(_toggleHotKeyGesture.Key, _toggleHotKeyGesture.Modifiers);
+
+            Closed += (s, e) =>
+            {
+                _overlayWindow?.Close();
+                _hotKeyManager.Dispose();
+            };
+        }
+
+        /// <summary>
+        /// Handles the <see cref="HotKeyManager.KeyPressed"/> event and toggles the application's state based on the
+        /// specified hotkey gesture.
+        /// </summary>
+        /// <remarks>This method checks if the pressed hotkey matches the "ToggleOnOff" gesture defined in
+        /// the hotkey map. If a match is found, it toggles the application's state between active and inactive,
+        /// displaying a corresponding notification overlay. The method ensures that the notification is only displayed
+        /// if no other notification is currently open.</remarks>
+        /// <param name="sender">The source of the event. This parameter is typically not used.</param>
+        /// <param name="e">The <see cref="KeyPressedEventArgs"/> containing the details of the pressed hotkey.</param>
+        private void HotKeyManager_KeyPressed(object? sender, KeyPressedEventArgs e)
+        {
+            // Check if the pressed hotkey matches the "ToggleOnOff" gesture
+            if (e.HotKey.Key == _toggleHotKeyGesture.Key && e.HotKey.Modifiers == _toggleHotKeyGesture.Modifiers)
+            {
+                // Toggle the application's state
+                ToggleCrosshair();
+            }
         }
 
         /// <summary>
@@ -127,6 +158,7 @@ namespace CrosshairY
             // Set slider values, ensuring they are within valid ranges
             SizeSlider.Value = Math.Clamp(_settings.Size, 5, 200);
             OpacitySlider.Value = Math.Clamp(_settings.Opacity, 0.1, 1.0);
+
             // Update the overlay with the current settings
             UpdateOverlay();
         }
@@ -140,8 +172,8 @@ namespace CrosshairY
         {
             // Save current settings to disk
             SaveSettings();
-            // Unregister the global hotkey (Ctrl+Shift+C)
-            UnregisterHotKey(new WindowInteropHelper(this).Handle, 1);
+            // Unregister the global hotkey
+            _hotKeyManager.Unregister(_toggleHotKeyGesture.Key, _toggleHotKeyGesture.Modifiers);
         }
 
         /// <summary>
@@ -213,10 +245,13 @@ namespace CrosshairY
             if (SizeValueText == null)
                 return;
 
+            // Correct the value to nearest integer that's divisible by 2 to prevent going off center
+            int correctedValue = (int)(SizeSlider.Value / 2) * 2;
+
             // Update settings with the new size
-            _settings.Size = SizeSlider.Value;
+            _settings.Size = correctedValue;
             // Display the size in pixels
-            SizeValueText.Text = $"{(int)SizeSlider.Value}px";
+            SizeValueText.Text = $"{correctedValue}px";
             // Refresh the overlay with the new size
             UpdateOverlay();
         }
@@ -350,6 +385,7 @@ namespace CrosshairY
             {
                 // Update the overlay with the latest settings before showing to prevent flicker
                 UpdateOverlay();
+
                 // Show the overlay and update UI
                 _overlayWindow.Show();
                 ToggleButtonText.Text = "Disable Crosshair";
@@ -428,7 +464,6 @@ namespace CrosshairY
             return defaultSettings;
         }
 
-
         /// <summary>
         /// Saves the current settings to the settings.json file in the AppData folder.
         /// </summary>
@@ -447,68 +482,6 @@ namespace CrosshairY
                 WriteIndented = true
             });
             File.WriteAllText(settingsPath, json);
-        }
-
-        /*
-            MOD_ALT (Alt key)
-            0x0001	Either ALT key must be held down.
-
-            MOD_CONTROL (Control key)
-            0x0002	Either CTRL key must be held down.
-            
-            MOD_NOREPEAT (No repeat)
-            0x4000	Changes the hotkey behavior so that the keyboard auto-repeat does not yield multiple hotkey notifications.
-            Windows Vista: This flag is not supported.
-            
-            MOD_SHIFT (Shift key)
-            0x0004	Either SHIFT key must be held down.
-            
-            MOD_WIN (Windows key)
-            0x0008	Either WINDOWS key must be held down. These keys are labeled with the Windows logo. Keyboard shortcuts that involve the WINDOWS key are reserved for use by the operating system.
-         */
-        // Hotkey virtual key codes and modifiers: https://learn.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes
-        // Win32 API imports for hotkey registration
-        [DllImport("user32.dll")]
-        private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk); // Registers a global hotkey
-
-        [DllImport("user32.dll")]
-        private static extern bool UnregisterHotKey(IntPtr hWnd, int id); // Unregisters a global hotkey
-
-        /// <summary>
-        /// Handles the SourceInitialized event, registering the global hotkey (Ctrl+Shift+C).
-        /// </summary>
-        /// <param name="e">The event arguments.</param>
-        protected override void OnSourceInitialized(EventArgs e)
-        {
-            base.OnSourceInitialized(e);
-            // Get the window’s message hook for processing hotkey messages
-            HwndSource? source = PresentationSource.FromVisual(this) as HwndSource;
-            source?.AddHook(WndProc);
-            // Register Ctrl+Shift+C (MOD_CONTROL = 0x0004, MOD_SHIFT = 0x0002, 'C' = 0x43)
-            RegisterHotKey(new WindowInteropHelper(this).Handle, 1, 0x0004 | 0x0002, 0x43);
-        }
-
-        /// <summary>
-        /// Processes window messages, handling the WM_HOTKEY message for the registered hotkey.
-        /// </summary>
-        /// <param name="hwnd">The window handle.</param>
-        /// <param name="msg">The message identifier.</param>
-        /// <param name="wParam">The message parameter (hotkey ID).</param>
-        /// <param name="lParam">The message parameter (key and modifier info).</param>
-        /// <param name="handled">Indicates whether the message was handled.</param>
-        /// <returns>The result of the message processing.</returns>
-        private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
-        {
-            const int WM_HOTKEY = 0x0312; // Message ID for hotkey events
-
-            if (msg == WM_HOTKEY && wParam.ToInt32() == 1)
-            {
-                // Handle Crosshair hotkey by toggling the crosshair
-                ToggleCrosshair();
-                handled = true;
-            }
-
-            return IntPtr.Zero;
         }
     }
 

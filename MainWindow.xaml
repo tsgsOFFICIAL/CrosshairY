@@ -105,7 +105,7 @@
                 <!-- Toggle Button -->
                 <Button x:Name="ToggleButton" Width="180" Height="36" Margin="0,20,0,0"
                         Click="OnToggleButtonClick" Cursor="Hand"
-                        ToolTip="Toggle crosshair visibility (Ctrl+Shift+C)">
+                        ToolTip="Toggle crosshair visibility (Ctrl + F1)">
                     <Button.Style>
                         <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
                             <Setter Property="Background" Value="#007ACC"/>
