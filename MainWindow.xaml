@@ -5,125 +5,130 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CrosshairY"
         mc:Ignorable="d"
-        Title="Crosshair Y" Height="650" Width="500"
-        WindowStartupLocation="CenterScreen"
-        Background="#FFF7F7F7" FontFamily="Segoe UI"
-        Loaded="OnWindowLoaded" Closing="OnWindowClosing">
-    
-    <Window.Resources>
-        <DropShadowEffect x:Key="DropShadowEffect" Color="#888" BlurRadius="8" ShadowDepth="2" Opacity="0.2"/>
-    </Window.Resources>
-    
-    <Grid Margin="20">
-        <Border Background="White" CornerRadius="8" Padding="20" 
-                BorderBrush="#DDD" BorderThickness="1" 
-                Effect="{DynamicResource DropShadowEffect}">
-            <StackPanel>
-                <TextBlock Text="CrosshairY - Free Crosshair Overlay" FontSize="24" FontWeight="Bold" Foreground="#333"/>
-                <TextBlock Text="By tsgsOFFICIAL" FontSize="14" Foreground="#333"/>
+        Title="Crosshair Y - CS2 Editor" Height="820" Width="500"
+        WindowStartupLocation="CenterScreen" Background="#1E1E1E" FontFamily="Segoe UI">
 
-                <!-- Crosshair Selection -->
-                <TextBlock Text="Select Crosshair" Margin="0,20,0,5" FontWeight="SemiBold" Foreground="#444"/>
-                <StackPanel Orientation="Horizontal">
-                    <ComboBox x:Name="CrosshairComboBox" Width="200" Height="28" FontSize="14" 
-                              SelectionChanged="OnCrosshairComboBoxSelectionChanged"
-                              ToolTip="Select a crosshair from the library"/>
-                    <Button x:Name="UploadImageButton" Width="100" Height="28" Margin="10,0,0,0"
-                            Click="OnUploadImageClick" Cursor="Hand"
-                            ToolTip="Upload a custom crosshair image">
-                        <Button.Style>
-                            <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                                <Setter Property="Background" Value="#2E8B57"/>
-                                <Setter Property="Foreground" Value="White"/>
-                                <Setter Property="FontWeight" Value="SemiBold"/>
-                                <Setter Property="BorderThickness" Value="0"/>
-                                <Style.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="#3CA76A"/>
-                                    </Trigger>
-                                </Style.Triggers>
-                            </Style>
-                        </Button.Style>
-                        <TextBlock Text="Upload Image"/>
-                    </Button>
-                </StackPanel>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="28">
 
-                <!-- Crosshair Preview -->
-                <Border Margin="0,15,0,0" BorderBrush="#CCC" BorderThickness="1" CornerRadius="4" Background="#FAFAFA" Height="100" Width="100">
-                    <Image x:Name="PreviewImage" Stretch="Uniform"/>
-                </Border>
+            <!-- Header + Preview -->
+            <TextBlock Text="Crosshair Y" FontSize="32" FontWeight="Bold" Foreground="#00FFAA" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+            <TextBlock Text="CS2-style Parametric Editor" FontSize="16" Foreground="#AAAAAA" HorizontalAlignment="Center" Margin="0,0,0,24"/>
 
-                <!-- Size Slider -->
-                <TextBlock Text="Size" Margin="0,15,0,5" FontWeight="SemiBold" Foreground="#444"/>
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <Slider x:Name="SizeSlider" Width="200" Minimum="5" Maximum="200" Value="25"
-                            ValueChanged="OnSizeSliderValueChanged" ToolTip="Adjust crosshair size"/>
-                    <TextBlock x:Name="SizeValueText" Text="25px" Margin="10,0,0,0" VerticalAlignment="Center"/>
-                </StackPanel>
+            <Border Background="#111111" BorderBrush="#444444" BorderThickness="2" CornerRadius="12" Height="260" Width="260" HorizontalAlignment="Center" Margin="0,0,0,32">
+                <Canvas x:Name="PreviewCanvas" Background="Transparent"/>
+            </Border>
 
-                <!-- Opacity Slider -->
-                <TextBlock Text="Opacity" Margin="0,15,0,5" FontWeight="SemiBold" Foreground="#444"/>
-                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                    <Slider x:Name="OpacitySlider" Width="200" Minimum="0.1" Maximum="1.0" Value="1.0"
-                            ValueChanged="OnOpacitySliderValueChanged" ToolTip="Adjust crosshair opacity"/>
-                    <TextBlock x:Name="OpacityValueText" Text="100%" Margin="10,0,0,0" VerticalAlignment="Center"/>
-                </StackPanel>
+            <!-- Core Shape Controls -->
+            <TextBlock Text="Shape" FontSize="20" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,16"/>
 
-                <!-- Crosshair Color (RGB Sliders) -->
-                <TextBlock Text="Crosshair Color (RGB)" Margin="0,15,0,5" FontWeight="SemiBold" Foreground="#444"/>
-                <StackPanel Orientation="Vertical" Margin="0,0,0,5">
-                    <!-- Red -->
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBlock Text="R" Width="20" VerticalAlignment="Center" Foreground="#444"/>
-                        <Slider x:Name="RedSlider" Minimum="0" Maximum="255" Value="255" Width="150"
-                ValueChanged="OnColorSliderChanged"/>
-                        <TextBlock x:Name="RedValueText" Text="255" Width="30" Margin="10,0,0,0" VerticalAlignment="Center"/>
-                    </StackPanel>
+            <Grid Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="60"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Gap" Foreground="#DDDDDD" VerticalAlignment="Center"/>
+                <Slider Grid.Column="1" x:Name="GapSlider" Minimum="-10" Maximum="10" Value="0" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="Slider_Changed" Margin="8,0"/>
+                <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=GapSlider, StringFormat={}{0:0.0}}" Foreground="White" Background="#222222" Padding="6,4" TextAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
 
-                    <!-- Green -->
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,5,0,0">
-                        <TextBlock Text="G" Width="20" VerticalAlignment="Center" Foreground="#444"/>
-                        <Slider x:Name="GreenSlider" Minimum="0" Maximum="255" Value="0" Width="150"
-                ValueChanged="OnColorSliderChanged"/>
-                        <TextBlock x:Name="GreenValueText" Text="0" Width="30" Margin="10,0,0,0" VerticalAlignment="Center"/>
-                    </StackPanel>
+            <Grid Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="60"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Length" Foreground="#DDDDDD" VerticalAlignment="Center"/>
+                <Slider Grid.Column="1" x:Name="LengthSlider" Minimum="0" Maximum="100" Value="10" ValueChanged="Slider_Changed" Margin="8,0"/>
+                <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=LengthSlider, StringFormat={}{0:0.0}}" Foreground="White" Background="#222222" Padding="6,4" TextAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
 
-                    <!-- Blue -->
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="0,5,0,0">
-                        <TextBlock Text="B" Width="20" VerticalAlignment="Center" Foreground="#444"/>
-                        <Slider x:Name="BlueSlider" Minimum="0" Maximum="255" Value="0" Width="150"
-                ValueChanged="OnColorSliderChanged"/>
-                        <TextBlock x:Name="BlueValueText" Text="0" Width="30" Margin="10,0,0,0" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </StackPanel>
+            <Grid Margin="0,0,0,24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="60"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Thickness" Foreground="#DDDDDD" VerticalAlignment="Center"/>
+                <Slider Grid.Column="1" x:Name="ThicknessSlider" Minimum="0" Maximum="10" Value="1" ValueChanged="Slider_Changed" Margin="8,0"/>
+                <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=ThicknessSlider, StringFormat={}{0:0.0}}" Foreground="White" Background="#222222" Padding="6,4" TextAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
 
-                <!-- Color Preview -->
-                <Border Width="50" Height="20" Margin="0,5,0,0" BorderBrush="#CCC" BorderThickness="1">
-                    <Rectangle Fill="{Binding SelectedColorBrush}" />
-                </Border>
+            <!-- Outline & Features -->
+            <TextBlock Text="Outline &amp; Extras" FontSize="20" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,16"/>
 
-                <!-- Toggle Button -->
-                <Button x:Name="ToggleButton" Width="180" Height="36" Margin="0,20,0,0"
-                        Click="OnToggleButtonClick" Cursor="Hand"
-                        ToolTip="Toggle crosshair visibility (Ctrl + F1)">
-                    <Button.Style>
-                        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
-                            <Setter Property="Background" Value="#007ACC"/>
-                            <Setter Property="Foreground" Value="White"/>
-                            <Setter Property="FontWeight" Value="SemiBold"/>
-                            <Setter Property="BorderThickness" Value="0"/>
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#1A8FFF"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </Button.Style>
-                    <TextBlock x:Name="ToggleButtonText" Text="Enable Crosshair"/>
-                </Button>
+            <CheckBox x:Name="OutlineCheck" Content="Draw Outline" IsChecked="True" Foreground="White" Margin="0,0,0,12" Checked="Checkbox_Changed" Unchecked="Checkbox_Changed"/>
 
-                <TextBlock x:Name="StatusText" Text="Ready" Margin="0,20,0,0" FontStyle="Italic" Foreground="#666" FontSize="13"/>
+            <Grid Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="60"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Outline" Foreground="#DDDDDD" VerticalAlignment="Center"/>
+                <Slider Grid.Column="1" x:Name="OutlineSlider" Minimum="0" Maximum="5" Value="1" ValueChanged="Slider_Changed" Margin="8,0"/>
+                <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=OutlineSlider, StringFormat={}{0:0.0}}" Foreground="White" Background="#222222" Padding="6,4" TextAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+
+            <CheckBox x:Name="DotCheck" Content="Center Dot" Foreground="White" Margin="0,0,0,12" Checked="Checkbox_Changed" Unchecked="Checkbox_Changed"/>
+            <CheckBox x:Name="TStyleCheck" Content="T-Style (no top line)" Foreground="White" Margin="0,0,0,24" Checked="Checkbox_Changed" Unchecked="Checkbox_Changed"/>
+
+            <!-- Color -->
+            <TextBlock Text="Color" FontSize="20" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,16"/>
+
+            <Grid Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="60"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Red" Foreground="#FF6666" VerticalAlignment="Center"/>
+                <Slider Grid.Column="1" x:Name="RedSlider" Minimum="0" Maximum="255" Value="255" ValueChanged="Slider_Changed" Margin="8,0"/>
+                <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=RedSlider, StringFormat={}{0:0}}" Foreground="White" Background="#222222" Padding="6,4" TextAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+
+            <Grid Margin="0,0,0,16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="60"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Green" Foreground="#66FF66" VerticalAlignment="Center"/>
+                <Slider Grid.Column="1" x:Name="GreenSlider" Minimum="0" Maximum="255" Value="255" ValueChanged="Slider_Changed" Margin="8,0"/>
+                <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=GreenSlider, StringFormat={}{0:0}}" Foreground="White" Background="#222222" Padding="6,4" TextAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+
+            <Grid Margin="0,0,0,20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="60"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Blue" Foreground="#6666FF" VerticalAlignment="Center"/>
+                <Slider Grid.Column="1" x:Name="BlueSlider" Minimum="0" Maximum="255" Value="255" ValueChanged="Slider_Changed" Margin="8,0"/>
+                <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=BlueSlider, StringFormat={}{0:0}}" Foreground="White" Background="#222222" Padding="6,4" TextAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+
+            <Grid Margin="0,0,0,32">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="60"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Alpha" Foreground="#DDDDDD" VerticalAlignment="Center"/>
+                <Slider Grid.Column="1" x:Name="AlphaSlider" Minimum="0" Maximum="255" Value="255" ValueChanged="Slider_Changed" Margin="8,0"/>
+                <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=AlphaSlider, StringFormat={}{0:0}}" Foreground="White" Background="#222222" Padding="6,4" TextAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+
+            <!-- Buttons -->
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,0,0,20">
+                <Button Content="Copy Share Code" Click="CopyShareCode_Click" Width="190" Height="48" Margin="0,0,16,0" Background="#0099FF" Foreground="White" FontWeight="SemiBold" FontSize="14"/>
+                <Button Content="Import Share Code" Click="ImportShareCode_Click" Width="190" Height="48" Background="#FF9900" Foreground="White" FontWeight="SemiBold" FontSize="14"/>
             </StackPanel>
-        </Border>
-    </Grid>
+
+            <Button x:Name="ToggleBtn" Content="Toggle Overlay (Ctrl + F1)" Click="Toggle_Click" Height="56" Background="#00FFAA" Foreground="Black" FontSize="16" FontWeight="Bold"/>
+
+        </StackPanel>
+    </ScrollViewer>
 </Window>
