@@ -496,13 +496,4 @@
 		<PackageReference Include="GlobalHotKey" Version="1.1.0" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<None Update="assets\crosshairs\*.svg">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="assets\crosshairs\*.png">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-	</ItemGroup>
-
 </Project>
