@@ -1,6 +1,7 @@
-﻿using System.Windows.Input;
+﻿using GlobalHotKey;
+using System.ComponentModel;
 using System.Windows;
-using GlobalHotKey;
+using System.Windows.Input;
 
 namespace CrosshairY
 {
@@ -8,19 +9,20 @@ namespace CrosshairY
     {
         private readonly SettingsManager _settingsManager = new();
         private CrosshairSettings _currentSettings = new();
-        private OverlayWindow _overlay;
+        private readonly OverlayWindow _overlay;
 
-        private bool _isLoading = false;
+        private bool _isLoading = true;
 
         public MainWindow()
         {
-            // Temporarily prevent event spam
-            _isLoading = true;
-
             InitializeComponent();
-
             _overlay = new OverlayWindow();
 
+            Loaded += OnMainWindowLoaded;
+        }
+
+        private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
+        {
             // Load settings first
             _currentSettings = _settingsManager.Load() ?? new CrosshairSettings();
 
@@ -29,13 +31,13 @@ namespace CrosshairY
             _isLoading = false;
 
             // Now do the first real render with loaded values
-            RenderPreview();
-            _overlay.UpdateCrosshair(_currentSettings);
+            UpdateAll();
 
             // Hotkey (Ctrl+F1)
             HotKeyManager hotkey = new HotKeyManager();
             hotkey.KeyPressed += (_, _) => ToggleOverlay();
             hotkey.Register(Key.F1, ModifierKeys.Control);
+
         }
 
         private void ApplySettingsToUI()
@@ -53,7 +55,7 @@ namespace CrosshairY
             AlphaSlider.Value = _currentSettings.Alpha;
         }
 
-        private void Slider_Changed(object sender, RoutedPropertyChangedEventArgs<double> e)
+        private void OnSliderChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
             if (_isLoading)
                 return;
@@ -61,7 +63,7 @@ namespace CrosshairY
             UpdateAll();
         }
 
-        private void Checkbox_Changed(object sender, RoutedEventArgs e)
+        private void OnCheckboxChanged(object sender, RoutedEventArgs e)
         {
             if (_isLoading)
                 return;
@@ -119,5 +121,7 @@ namespace CrosshairY
 
         private void Toggle_Click(object sender, RoutedEventArgs e) => ToggleOverlay();
         private void ToggleOverlay() => _overlay.ToggleVisibility();
+
+        protected override void OnClosing(CancelEventArgs e) => Environment.Exit(0);
     }
 }

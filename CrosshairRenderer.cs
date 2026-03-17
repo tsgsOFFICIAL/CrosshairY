@@ -24,14 +24,20 @@ namespace CrosshairY
                 double ot = s.OutlineThickness + s.Thickness;
                 AddLine(canvas, centerX - halfLen - gap, centerY, centerX - gap, centerY, ot, outlineBrush); // left
                 AddLine(canvas, centerX + gap, centerY, centerX + halfLen + gap, centerY, ot, outlineBrush); // right
-                if (!s.TStyle) AddLine(canvas, centerX, centerY - halfLen - gap, centerX, centerY - gap, ot, outlineBrush); // top
+               
+                if (!s.TStyle)
+                    AddLine(canvas, centerX, centerY - halfLen - gap, centerX, centerY - gap, ot, outlineBrush); // top
+              
                 AddLine(canvas, centerX, centerY + gap, centerX, centerY + halfLen + gap, ot, outlineBrush); // bottom
             }
 
             // Main lines
             AddLine(canvas, centerX - halfLen - gap, centerY, centerX - gap, centerY, s.Thickness, brush); // left
             AddLine(canvas, centerX + gap, centerY, centerX + halfLen + gap, centerY, s.Thickness, brush); // right
-            if (!s.TStyle) AddLine(canvas, centerX, centerY - halfLen - gap, centerX, centerY - gap, s.Thickness, brush); // top
+           
+            if (!s.TStyle)
+                AddLine(canvas, centerX, centerY - halfLen - gap, centerX, centerY - gap, s.Thickness, brush); // top
+           
             AddLine(canvas, centerX, centerY + gap, centerX, centerY + halfLen + gap, s.Thickness, brush); // bottom
 
             // Dot

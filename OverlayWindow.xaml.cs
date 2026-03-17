@@ -18,8 +18,16 @@ namespace CrosshairY
 
         public void UpdateCrosshair(CrosshairSettings s)
         {
+            if (!IsLoaded)
+            {
+                Loaded += (_, _) => UpdateCrosshair(s);
+                return;
+            }
+
             Width = Height = (s.Length + s.Gap + s.Thickness + s.OutlineThickness) * 2 + 50;
+
             CrosshairRenderer.Render(OverlayCanvas, s);
+
             Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
             Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
         }
