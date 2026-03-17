@@ -1,6 +1,6 @@
 ﻿namespace CrosshairY
 {
-    public static class CS2ShareCode
+    public static class ShareCode
     {
         public static string Encode(CrosshairSettings s)
         {

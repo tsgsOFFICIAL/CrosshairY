@@ -23,8 +23,14 @@ namespace CrosshairY
                 Loaded += (_, _) => UpdateCrosshair(s);
                 return;
             }
+            double correctedWidth, correctedHeight;
+            if (s.Outline)
+                correctedWidth = correctedHeight = (s.Length + s.Gap + s.Thickness + s.OutlineThickness) * 2 + 50;
+            else
+                correctedWidth = correctedHeight = (s.Length + s.Gap + s.Thickness) * 2 + 50;
 
-            Width = Height = (s.Length + s.Gap + s.Thickness + s.OutlineThickness) * 2 + 50;
+            Width = (int)(correctedWidth / 2) * 2;
+            Height = (int)(correctedHeight / 2) * 2;
 
             CrosshairRenderer.Render(OverlayCanvas, s);
 

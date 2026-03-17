@@ -29,7 +29,7 @@
                     <ColumnDefinition Width="60"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="Gap" Foreground="#DDDDDD" VerticalAlignment="Center"/>
-                <Slider Grid.Column="1" x:Name="GapSlider" Minimum="-20" Maximum="20" Value="0" TickFrequency="0.1" IsSnapToTickEnabled="True" ValueChanged="OnSliderChanged" Margin="8,0"/>
+                <Slider Grid.Column="1" x:Name="GapSlider" Minimum="-20" Maximum="50" Value="0" TickFrequency="0.1" IsSnapToTickEnabled="True" ValueChanged="OnSliderChanged" Margin="8,0"/>
                 <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=GapSlider, StringFormat={}{0:0.0}}" Foreground="White" Background="#222222" Padding="6,4" TextAlignment="Center" VerticalAlignment="Center"/>
             </Grid>
 

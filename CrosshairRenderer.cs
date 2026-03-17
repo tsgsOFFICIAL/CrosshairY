@@ -16,36 +16,63 @@ namespace CrosshairY
 
             System.Windows.Media.Color color = System.Windows.Media.Color.FromArgb(s.Alpha, s.ColorR, s.ColorG, s.ColorB);
             SolidColorBrush brush = new SolidColorBrush(color);
-            SolidColorBrush outlineBrush = System.Windows.Media.Brushes.Black;
+            SolidColorBrush outlineBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(s.Alpha, 0, 0, 0));
 
-            // Outline first (thicker)
+            // Outline first – now using full outside growth via thicker centered stroke
             if (s.Outline)
             {
-                double ot = s.OutlineThickness + s.Thickness;
-                AddLine(canvas, centerX - halfLen - gap, centerY, centerX - gap, centerY, ot, outlineBrush); // left
-                AddLine(canvas, centerX + gap, centerY, centerX + halfLen + gap, centerY, ot, outlineBrush); // right
-               
+                double outlineTotalThick = s.Thickness + s.OutlineThickness * 2;  // ← key: *2 so full OutlineThickness per side
+
+                // Left arm outline
+                AddLine(canvas, centerX - halfLen - gap, centerY, centerX - gap, centerY, outlineTotalThick, outlineBrush);
+
+                // Right arm outline
+                AddLine(canvas, centerX + gap, centerY, centerX + halfLen + gap, centerY, outlineTotalThick, outlineBrush);
+
                 if (!s.TStyle)
-                    AddLine(canvas, centerX, centerY - halfLen - gap, centerX, centerY - gap, ot, outlineBrush); // top
-              
-                AddLine(canvas, centerX, centerY + gap, centerX, centerY + halfLen + gap, ot, outlineBrush); // bottom
+                {
+                    // Top arm outline
+                    AddLine(canvas, centerX, centerY - halfLen - gap, centerX, centerY - gap, outlineTotalThick, outlineBrush);
+                }
+
+                // Bottom arm outline
+                AddLine(canvas, centerX, centerY + gap, centerX, centerY + halfLen + gap, outlineTotalThick, outlineBrush);
             }
 
             // Main lines
             AddLine(canvas, centerX - halfLen - gap, centerY, centerX - gap, centerY, s.Thickness, brush); // left
             AddLine(canvas, centerX + gap, centerY, centerX + halfLen + gap, centerY, s.Thickness, brush); // right
-           
+
             if (!s.TStyle)
                 AddLine(canvas, centerX, centerY - halfLen - gap, centerX, centerY - gap, s.Thickness, brush); // top
-           
+
             AddLine(canvas, centerX, centerY + gap, centerX, centerY + halfLen + gap, s.Thickness, brush); // bottom
 
-            // Dot
+            // Dot with outline
             if (s.Dot)
             {
-                Ellipse dot = new Ellipse { Width = s.Thickness * 2, Height = s.Thickness * 2, Fill = brush };
-                Canvas.SetLeft(dot, centerX - s.Thickness);
-                Canvas.SetTop(dot, centerY - s.Thickness);
+                double dotSize = s.Thickness * 2;
+                double halfThickness = s.Thickness;
+
+                if (s.Outline)
+                {
+                    Ellipse dotOutline = new Ellipse
+                    {
+                        Width = dotSize + s.OutlineThickness * 2,
+                        Height = dotSize + s.OutlineThickness * 2,
+                        Stroke = outlineBrush,
+                        StrokeThickness = s.OutlineThickness,
+                        Fill = null
+                    };
+
+                    Canvas.SetLeft(dotOutline, centerX - halfThickness - s.OutlineThickness);
+                    Canvas.SetTop(dotOutline, centerY - halfThickness - s.OutlineThickness);
+                    canvas.Children.Add(dotOutline);
+                }
+
+                Ellipse dot = new Ellipse { Width = dotSize, Height = dotSize, Fill = brush };
+                Canvas.SetLeft(dot, centerX - halfThickness);
+                Canvas.SetTop(dot, centerY - halfThickness);
                 canvas.Children.Add(dot);
             }
         }

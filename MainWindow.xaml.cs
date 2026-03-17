@@ -100,7 +100,7 @@ namespace CrosshairY
 
         private void CopyShareCode_Click(object sender, RoutedEventArgs e)
         {
-            System.Windows.Clipboard.SetText(CS2ShareCode.Encode(_currentSettings));
+            System.Windows.Clipboard.SetText(ShareCode.Encode(_currentSettings));
             System.Windows.MessageBox.Show("Share code copied!", "CrosshairY");
         }
 
@@ -109,7 +109,7 @@ namespace CrosshairY
             string code = Microsoft.VisualBasic.Interaction.InputBox("Paste CS2 share code:", "Import");
             if (!string.IsNullOrEmpty(code))
             {
-                CrosshairSettings? imported = CS2ShareCode.Decode(code);
+                CrosshairSettings? imported = ShareCode.Decode(code);
                 if (imported != null)
                 {
                     _currentSettings = imported;
