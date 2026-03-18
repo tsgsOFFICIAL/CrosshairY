@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CrosshairY"
         mc:Ignorable="d"
-        Title="Crosshair Y - CS2 Editor" Height="820" Width="500"
+        Title="Crosshair Y" Height="820" Width="500"
         WindowStartupLocation="CenterScreen" Background="#1E1E1E" FontFamily="Segoe UI">
 
     <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -13,7 +13,7 @@
 
             <!-- Header + Preview -->
             <TextBlock Text="Crosshair Y" FontSize="32" FontWeight="Bold" Foreground="#00FFAA" HorizontalAlignment="Center" Margin="0,0,0,8"/>
-            <TextBlock Text="CS2-style Parametric Editor" FontSize="16" Foreground="#AAAAAA" HorizontalAlignment="Center" Margin="0,0,0,24"/>
+            <TextBlock Text="Parametric Editor" FontSize="16" Foreground="#AAAAAA" HorizontalAlignment="Center" Margin="0,0,0,24"/>
 
             <Border Background="#111111" BorderBrush="#444444" BorderThickness="2" CornerRadius="12" Height="260" Width="260" HorizontalAlignment="Center" Margin="0,0,0,32">
                 <Canvas x:Name="PreviewCanvas" Background="Transparent"/>
@@ -29,7 +29,7 @@
                     <ColumnDefinition Width="60"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="Gap" Foreground="#DDDDDD" VerticalAlignment="Center"/>
-                <Slider Grid.Column="1" x:Name="GapSlider" Minimum="-20" Maximum="50" Value="0" TickFrequency="0.1" IsSnapToTickEnabled="True" ValueChanged="OnSliderChanged" Margin="8,0"/>
+                <Slider Grid.Column="1" x:Name="GapSlider" Minimum="-20" Maximum="50" Value="0" TickFrequency="0.1" IsSnapToTickEnabled="True" SmallChange="0.1" LargeChange="0.1" ValueChanged="OnSliderChanged" Margin="8,0"/>
                 <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=GapSlider, StringFormat={}{0:0.0}}" Foreground="White" Background="#222222" Padding="6,4" TextAlignment="Center" VerticalAlignment="Center"/>
             </Grid>
 
@@ -40,7 +40,7 @@
                     <ColumnDefinition Width="60"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="Length" Foreground="#DDDDDD" VerticalAlignment="Center"/>
-                <Slider Grid.Column="1" x:Name="LengthSlider" Minimum="0" Maximum="200" Value="10" TickFrequency="0.1" IsSnapToTickEnabled="True" ValueChanged="OnSliderChanged" Margin="8,0"/>
+                <Slider Grid.Column="1" x:Name="LengthSlider" Minimum="0" Maximum="200" Value="10" TickFrequency="0.1" IsSnapToTickEnabled="True" SmallChange="0.1" LargeChange="0.1" ValueChanged="OnSliderChanged" Margin="8,0"/>
                 <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=LengthSlider, StringFormat={}{0:0.0}}" Foreground="White" Background="#222222" Padding="6,4" TextAlignment="Center" VerticalAlignment="Center"/>
             </Grid>
 
@@ -51,7 +51,7 @@
                     <ColumnDefinition Width="60"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="Thickness" Foreground="#DDDDDD" VerticalAlignment="Center"/>
-                <Slider Grid.Column="1" x:Name="ThicknessSlider" Minimum="0" Maximum="10" Value="1" TickFrequency="0.1" IsSnapToTickEnabled="True" ValueChanged="OnSliderChanged" Margin="8,0"/>
+                <Slider Grid.Column="1" x:Name="ThicknessSlider" Minimum="0" Maximum="10" Value="1" TickFrequency="0.1" IsSnapToTickEnabled="True" SmallChange="0.1" LargeChange="0.1" ValueChanged="OnSliderChanged" Margin="8,0"/>
                 <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=ThicknessSlider, StringFormat={}{0:0.0}}" Foreground="White" Background="#222222" Padding="6,4" TextAlignment="Center" VerticalAlignment="Center"/>
             </Grid>
 
@@ -67,7 +67,7 @@
                     <ColumnDefinition Width="60"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="Outline" Foreground="#DDDDDD" VerticalAlignment="Center"/>
-                <Slider Grid.Column="1" x:Name="OutlineSlider" Minimum="0" Maximum="5" Value="1" TickFrequency="0.1" IsSnapToTickEnabled="True" ValueChanged="OnSliderChanged" Margin="8,0"/>
+                <Slider Grid.Column="1" x:Name="OutlineSlider" Minimum="0" Maximum="5" Value="1" TickFrequency="0.1" IsSnapToTickEnabled="True" SmallChange="0.1" LargeChange="0.1" ValueChanged="OnSliderChanged" Margin="8,0"/>
                 <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=OutlineSlider, StringFormat={}{0:0.0}}" Foreground="White" Background="#222222" Padding="6,4" TextAlignment="Center" VerticalAlignment="Center"/>
             </Grid>
 
@@ -84,7 +84,7 @@
                     <ColumnDefinition Width="60"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="Red" Foreground="#FF6666" VerticalAlignment="Center"/>
-                <Slider Grid.Column="1" x:Name="RedSlider" Minimum="0" Maximum="255" Value="255" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="OnSliderChanged" Margin="8,0"/>
+                <Slider Grid.Column="1" x:Name="RedSlider" Minimum="0" Maximum="255" Value="255" TickFrequency="1" IsSnapToTickEnabled="True" SmallChange="0.1" LargeChange="0.1" ValueChanged="OnSliderChanged" Margin="8,0"/>
                 <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=RedSlider, StringFormat={}{0:0}}" Foreground="White" Background="#222222" Padding="6,4" TextAlignment="Center" VerticalAlignment="Center"/>
             </Grid>
 
@@ -95,7 +95,7 @@
                     <ColumnDefinition Width="60"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="Green" Foreground="#66FF66" VerticalAlignment="Center"/>
-                <Slider Grid.Column="1" x:Name="GreenSlider" Minimum="0" Maximum="255" Value="255" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="OnSliderChanged" Margin="8,0"/>
+                <Slider Grid.Column="1" x:Name="GreenSlider" Minimum="0" Maximum="255" Value="255" TickFrequency="1" IsSnapToTickEnabled="True" SmallChange="0.1" LargeChange="0.1" ValueChanged="OnSliderChanged" Margin="8,0"/>
                 <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=GreenSlider, StringFormat={}{0:0}}" Foreground="White" Background="#222222" Padding="6,4" TextAlignment="Center" VerticalAlignment="Center"/>
             </Grid>
 
@@ -106,7 +106,7 @@
                     <ColumnDefinition Width="60"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="Blue" Foreground="#6666FF" VerticalAlignment="Center"/>
-                <Slider Grid.Column="1" x:Name="BlueSlider" Minimum="0" Maximum="255" Value="255" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="OnSliderChanged" Margin="8,0"/>
+                <Slider Grid.Column="1" x:Name="BlueSlider" Minimum="0" Maximum="255" Value="255" TickFrequency="1" IsSnapToTickEnabled="True" SmallChange="0.1" LargeChange="0.1" ValueChanged="OnSliderChanged" Margin="8,0"/>
                 <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=BlueSlider, StringFormat={}{0:0}}" Foreground="White" Background="#222222" Padding="6,4" TextAlignment="Center" VerticalAlignment="Center"/>
             </Grid>
 
@@ -117,7 +117,7 @@
                     <ColumnDefinition Width="60"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Grid.Column="0" Text="Alpha" Foreground="#DDDDDD" VerticalAlignment="Center"/>
-                <Slider Grid.Column="1" x:Name="AlphaSlider" Minimum="0" Maximum="255" Value="255" TickFrequency="1" IsSnapToTickEnabled="True" ValueChanged="OnSliderChanged" Margin="8,0"/>
+                <Slider Grid.Column="1" x:Name="AlphaSlider" Minimum="0" Maximum="255" Value="255" TickFrequency="1" IsSnapToTickEnabled="True" SmallChange="0.1" LargeChange="0.1" ValueChanged="OnSliderChanged" Margin="8,0"/>
                 <TextBlock Grid.Column="2" Text="{Binding Value, ElementName=AlphaSlider, StringFormat={}{0:0}}" Foreground="White" Background="#222222" Padding="6,4" TextAlignment="Center" VerticalAlignment="Center"/>
             </Grid>
 

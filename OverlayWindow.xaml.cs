@@ -18,6 +18,8 @@ namespace CrosshairY
 
         public void UpdateCrosshair(CrosshairSettings s)
         {
+            var isActive = IsActive;
+            var isShowing = IsVisible;
             if (!IsLoaded)
             {
                 Loaded += (_, _) => UpdateCrosshair(s);

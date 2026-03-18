@@ -40,19 +40,21 @@ namespace CrosshairY
 
         }
 
-        private void ApplySettingsToUI()
+        private void ApplySettingsToUI(CrosshairSettings? settings = null)
         {
-            GapSlider.Value = _currentSettings.Gap;
-            LengthSlider.Value = _currentSettings.Length;
-            ThicknessSlider.Value = _currentSettings.Thickness;
-            OutlineSlider.Value = _currentSettings.OutlineThickness;
-            DotCheck.IsChecked = _currentSettings.Dot;
-            TStyleCheck.IsChecked = _currentSettings.TStyle;
-            OutlineCheck.IsChecked = _currentSettings.Outline;
-            RedSlider.Value = _currentSettings.ColorR;
-            GreenSlider.Value = _currentSettings.ColorG;
-            BlueSlider.Value = _currentSettings.ColorB;
-            AlphaSlider.Value = _currentSettings.Alpha;
+            settings ??= _currentSettings;
+
+            GapSlider.Value = settings.Gap;
+            LengthSlider.Value = settings.Length;
+            ThicknessSlider.Value = settings.Thickness;
+            OutlineSlider.Value = settings.OutlineThickness;
+            DotCheck.IsChecked = settings.Dot;
+            TStyleCheck.IsChecked = settings.TStyle;
+            OutlineCheck.IsChecked = settings.Outline;
+            RedSlider.Value = settings.ColorR;
+            GreenSlider.Value = settings.ColorG;
+            BlueSlider.Value = settings.ColorB;
+            AlphaSlider.Value = settings.Alpha;
         }
 
         private void OnSliderChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
@@ -100,20 +102,20 @@ namespace CrosshairY
 
         private void CopyShareCode_Click(object sender, RoutedEventArgs e)
         {
-            System.Windows.Clipboard.SetText(ShareCode.Encode(_currentSettings));
-            System.Windows.MessageBox.Show("Share code copied!", "CrosshairY");
+            string shareCode = ShareCode.Encode(_currentSettings);
+            System.Windows.Clipboard.SetText(shareCode);
+            System.Windows.MessageBox.Show($"Share code copied!\n{shareCode}", "Crosshair Y");
         }
 
-        private void ImportShareCode_Click(object sender, RoutedEventArgs e)
+        private async void ImportShareCode_Click(object sender, RoutedEventArgs e)
         {
-            string code = Microsoft.VisualBasic.Interaction.InputBox("Paste CS2 share code:", "Import");
+            string code = Microsoft.VisualBasic.Interaction.InputBox("Paste share code:", "Import");
             if (!string.IsNullOrEmpty(code))
             {
                 CrosshairSettings? imported = ShareCode.Decode(code);
                 if (imported != null)
                 {
-                    _currentSettings = imported;
-                    ApplySettingsToUI();
+                    ApplySettingsToUI(imported);
                     UpdateAll();
                 }
             }

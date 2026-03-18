@@ -1,53 +1,158 @@
-﻿namespace CrosshairY
+﻿using System.Text;
+using System.IO;
+
+namespace CrosshairY
 {
     public static class ShareCode
     {
-        public static string Encode(CrosshairSettings s)
-        {
-            // Full Valve bit-packing (exact match to in-game)
-            ulong packed = 0;
-            packed |= (ulong)(s.Gap + 10) & 0x1F;                     // 5 bits
-            packed |= ((ulong)(s.Length) & 0xFF) << 5;                // 8 bits
-            packed |= ((ulong)(s.Thickness * 10) & 0xFF) << 13;       // 8 bits
-            packed |= ((ulong)(s.Outline ? 1 : 0)) << 21;
-            packed |= ((ulong)(s.OutlineThickness * 10) & 0xF) << 22;
-            packed |= ((ulong)(s.Dot ? 1 : 0)) << 26;
-            packed |= ((ulong)(s.TStyle ? 1 : 0)) << 27;
-            packed |= ((ulong)s.ColorR) << 28;
-            packed |= ((ulong)s.ColorG) << 36;
-            packed |= ((ulong)s.ColorB) << 44;
-            packed |= ((ulong)s.Alpha) << 52;
+        private const string Prefix = "TSGS-";
+        private const byte Version = 1;
 
-            string b64 = Convert.ToBase64String(BitConverter.GetBytes(packed))
-                         .Replace('+', '-').Replace('/', '_').TrimEnd('=');
-            return "CSGO-" + b64.Insert(5, "-").Insert(11, "-").Insert(17, "-").Insert(23, "-");
+        private const string Alphabet = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789"; // Custom Base57
+        private static readonly int BaseN = Alphabet.Length;
+
+        public static string Encode(CrosshairSettings c)
+        {
+            MemoryStream ms = new MemoryStream();
+            BinaryWriter bw = new BinaryWriter(ms);
+
+            bw.Write(Version);
+
+            bw.Write(c.Gap);
+            bw.Write(c.Length);
+            bw.Write(c.Thickness);
+            bw.Write(c.OutlineThickness);
+
+            bw.Write(c.Dot);
+            bw.Write(c.TStyle);
+            bw.Write(c.Outline);
+
+            bw.Write(c.ColorR);
+            bw.Write(c.ColorG);
+            bw.Write(c.ColorB);
+            bw.Write(c.Alpha);
+
+            byte[] data = ms.ToArray();
+
+            string encoded = EncodeBaseN(data);
+
+            List<string> chunks = new List<string>();
+            for (int i = 0; i < encoded.Length; i += 5)
+            {
+                int len = Math.Min(5, encoded.Length - i);
+                chunks.Add(encoded.Substring(i, len));
+            }
+
+            return Prefix + string.Join("-", chunks);
         }
 
         public static CrosshairSettings? Decode(string code)
         {
-            if (!code.StartsWith("CSGO-")) return null;
+            if (string.IsNullOrWhiteSpace(code) || !code.StartsWith(Prefix))
+                return null;
+
             try
             {
-                string clean = code.Substring(5).Replace("-", "");
-                byte[] bytes = Convert.FromBase64String(clean.Replace('-', '+').Replace('_', '/') + "==");
-                ulong packed = BitConverter.ToUInt64(bytes, 0);
+                string raw = code.Substring(Prefix.Length).Replace("-", "");
 
-                return new CrosshairSettings
+                byte[] data = DecodeBaseN(raw);
+
+                MemoryStream ms = new MemoryStream(data);
+                BinaryReader br = new BinaryReader(ms);
+
+                byte version = br.ReadByte();
+
+                return version switch
                 {
-                    Gap = ((packed & 0x1F) - 10),
-                    Length = (packed >> 5) & 0xFF,
-                    Thickness = ((packed >> 13) & 0xFF) / 10f,
-                    Outline = ((packed >> 21) & 1) == 1,
-                    OutlineThickness = ((packed >> 22) & 0xF) / 10f,
-                    Dot = ((packed >> 26) & 1) == 1,
-                    TStyle = ((packed >> 27) & 1) == 1,
-                    ColorR = (byte)((packed >> 28) & 0xFF),
-                    ColorG = (byte)((packed >> 36) & 0xFF),
-                    ColorB = (byte)((packed >> 44) & 0xFF),
-                    Alpha = (byte)((packed >> 52) & 0xFF)
+                    1 => DecodeV1(br),
+                    _ => null,
                 };
             }
-            catch { return null; }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private static CrosshairSettings DecodeV1(BinaryReader br)
+        {
+            CrosshairSettings c = new CrosshairSettings
+            {
+                Gap = br.ReadSingle(),
+                Length = br.ReadSingle(),
+                Thickness = br.ReadSingle(),
+                OutlineThickness = br.ReadSingle(),
+
+                Dot = br.ReadBoolean(),
+                TStyle = br.ReadBoolean(),
+                Outline = br.ReadBoolean(),
+
+                ColorR = br.ReadByte(),
+                ColorG = br.ReadByte(),
+                ColorB = br.ReadByte(),
+                Alpha = br.ReadByte()
+            };
+
+            return c;
+        }
+
+        // ---------- Base-N Encoding ----------
+        private static string EncodeBaseN(byte[] data)
+        {
+            List<int> digits = [0];
+
+            for (int i = 0; i < data.Length; i++)
+            {
+                int carry = data[i];
+
+                for (int j = 0; j < digits.Count; j++)
+                {
+                    int val = digits[j] * 256 + carry;
+                    digits[j] = val % BaseN;
+                    carry = val / BaseN;
+                }
+
+                while (carry > 0)
+                {
+                    digits.Add(carry % BaseN);
+                    carry /= BaseN;
+                }
+            }
+
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = digits.Count - 1; i >= 0; i--)
+                sb.Append(Alphabet[digits[i]]);
+
+            return sb.ToString();
+        }
+
+        private static byte[] DecodeBaseN(string input)
+        {
+            List<int> bytes = [0];
+
+            for (int i = 0; i < input.Length; i++)
+            {
+                int carry = Alphabet.IndexOf(input[i]);
+                if (carry < 0)
+                    throw new Exception("Invalid character");
+
+                for (int j = 0; j < bytes.Count; j++)
+                {
+                    int val = bytes[j] * BaseN + carry;
+                    bytes[j] = val & 0xFF;
+                    carry = val >> 8;
+                }
+
+                while (carry > 0)
+                {
+                    bytes.Add(carry & 0xFF);
+                    carry >>= 8;
+                }
+            }
+
+            bytes.Reverse();
+            return [.. bytes.ConvertAll(b => (byte)b)];
         }
     }
 }
