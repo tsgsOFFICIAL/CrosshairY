@@ -1,28 +1,89 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Runtime.CompilerServices;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.ComponentModel;
+using CrosshairY.Managers;
+using CrosshairY.Windows;
+using System.Windows;
 
 namespace CrosshairY.Pages
 {
     /// <summary>
     /// Interaction logic for HomePage.xaml
     /// </summary>
-    public partial class HomePage : Page
+    public partial class HomePage : Page, INotifyPropertyChanged
     {
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
+        /// <remarks>This event is typically raised by the implementation of the INotifyPropertyChanged
+        /// interface to notify subscribers that a property value has changed. Handlers receive the name of the property
+        /// that changed in the event data. This event is commonly used in data binding scenarios to update UI elements
+        /// when underlying data changes.</remarks>
+        public event PropertyChangedEventHandler? PropertyChanged;
+        /// <summary>
+        /// Raises the PropertyChanged event to notify listeners that a property value has changed.
+        /// </summary>
+        /// <remarks>Use this method to implement the INotifyPropertyChanged interface in classes that
+        /// support data binding. Calling this method with the correct property name ensures that UI elements or other
+        /// listeners are updated when the property value changes.</remarks>
+        /// <param name="name">The name of the property that changed. This value is optional and is automatically provided when called from
+        /// a property setter.</param>
+        private void OnPropertyChanged([CallerMemberName] string? name = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+        private string _toggleCrosshairString = "";
+
+        public string ToggleCrosshairString
+        {
+            get => string.IsNullOrEmpty(_toggleCrosshairString) ? "N/A" : _toggleCrosshairString;
+            set
+            {
+                _toggleCrosshairString = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         public HomePage()
         {
             InitializeComponent();
+            DataContext = this;
+        }
+
+        private void OnChangeHotkeyButtonClicked(object sender, RoutedEventArgs e)
+        {
+            HotkeyDialog hotkeyDialog = new HotkeyDialog
+            {
+                Owner = Window.GetWindow(this)
+            };
+
+            if (hotkeyDialog.ShowDialog() == true)
+            {
+                if (hotkeyDialog.SelectedHotkey != null)
+                {
+                    // Unbind previous hotkey (if any)
+
+                    // Bind new hotkey
+                    App.Settings.Hotkey.ToggleCrosshair = hotkeyDialog.SelectedHotkey;
+
+                    // Save settings file
+
+
+
+
+
+                    ToggleCrosshairString = $"{(hotkeyDialog.SelectedHotkey.Modifiers == System.Windows.Input.ModifierKeys.None ? "" : $"{hotkeyDialog.SelectedHotkey.Modifiers} + ")}{hotkeyDialog.SelectedHotkey.Key}";
+                }
+            }
+        }
+
+        private void OnOpenDesignerButtonClicked(object sender, RoutedEventArgs e)
+        {
+            AppNavigationService.Navigate<DesignerPage>();
+        }
+
+        private void OnBrowseCrosshairsButtonClicked(object sender, RoutedEventArgs e)
+        {
+            AppNavigationService.Navigate<LibraryPage>();
         }
     }
 }

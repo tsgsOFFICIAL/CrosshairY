@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.IO;
 
-namespace CrosshairY
+namespace CrosshairY.Models
 {
     public static class ShareCode
     {
@@ -11,26 +11,26 @@ namespace CrosshairY
         private const string Alphabet = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789"; // Custom Base57
         private static readonly int BaseN = Alphabet.Length;
 
-        public static string Encode(CrosshairSettings c)
+        public static string Encode(CrosshairSettings crosshair)
         {
-            MemoryStream ms = new MemoryStream();
-            BinaryWriter bw = new BinaryWriter(ms);
+            using MemoryStream ms = new();
+            using BinaryWriter bw = new(ms);
 
             bw.Write(Version);
 
-            bw.Write(c.Gap);
-            bw.Write(c.Length);
-            bw.Write(c.Thickness);
-            bw.Write(c.OutlineThickness);
+            bw.Write(crosshair.Gap);
+            bw.Write(crosshair.Length);
+            bw.Write(crosshair.Thickness);
+            bw.Write(crosshair.OutlineThickness);
 
-            bw.Write(c.Dot);
-            bw.Write(c.TStyle);
-            bw.Write(c.Outline);
+            bw.Write(crosshair.Dot);
+            bw.Write(crosshair.TStyle);
+            bw.Write(crosshair.Outline);
 
-            bw.Write(c.ColorR);
-            bw.Write(c.ColorG);
-            bw.Write(c.ColorB);
-            bw.Write(c.Alpha);
+            bw.Write(crosshair.ColorR);
+            bw.Write(crosshair.ColorG);
+            bw.Write(crosshair.ColorB);
+            bw.Write(crosshair.Alpha);
 
             byte[] data = ms.ToArray();
 
@@ -57,8 +57,8 @@ namespace CrosshairY
 
                 byte[] data = DecodeBaseN(raw);
 
-                MemoryStream ms = new MemoryStream(data);
-                BinaryReader br = new BinaryReader(ms);
+                using MemoryStream ms = new(data);
+                using BinaryReader br = new(ms);
 
                 byte version = br.ReadByte();
 

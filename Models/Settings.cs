@@ -1,5 +1,18 @@
-﻿namespace CrosshairY
+﻿using System.Windows.Input;
+
+namespace CrosshairY.Models
 {
+    public class Settings
+    {
+        public CrosshairSettings Crosshair { get; set; } = new CrosshairSettings();
+        public Hotkey Hotkey { get; set; } = new Hotkey();
+    }
+
+    public class Hotkey
+    {
+        public KeyGesture? ToggleCrosshair { get; set; }
+    }
+
     public class CrosshairSettings
     {
         public float Gap { get; set; } = 0;

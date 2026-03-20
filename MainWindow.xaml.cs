@@ -1,5 +1,7 @@
-﻿using System.Runtime.InteropServices;
-using System.Windows.Media.Animation;
+﻿using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Windows.Controls;
+using System.ComponentModel;
 using System.Windows.Input;
 using CrosshairY.Managers;
 using CrosshairY.Utility;
@@ -11,7 +13,7 @@ using System.IO;
 
 namespace CrosshairY
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, INotifyPropertyChanged
     {
         [DllImport("user32.dll")]
         private static extern int GetWindowLong(IntPtr hwnd, int index);
@@ -35,6 +37,17 @@ namespace CrosshairY
             }
         }
 
+        private string _versionString = "";
+        public string VersionString
+        {
+            get => string.IsNullOrEmpty(_versionString) ? "N/A" : _versionString;
+            set
+            {
+                _versionString = value;
+                OnPropertyChanged();
+            }
+        }
+
         private bool _isInTrayMode = false;
         private double _savedLeft;
         private double _savedTop;
@@ -42,7 +55,23 @@ namespace CrosshairY
         private const int WS_EX_TOOLWINDOW = 0x00000080;
         private const int GWL_EXSTYLE = -20;
 
-        private UserControl? _currentPage;
+        /// <summary>
+        /// Occurs when a property value changes.
+        /// </summary>
+        /// <remarks>This event is typically raised by the implementation of the INotifyPropertyChanged
+        /// interface to notify subscribers that a property value has changed. Handlers receive the name of the property
+        /// that changed in the event data. This event is commonly used in data binding scenarios to update UI elements
+        /// when underlying data changes.</remarks>
+        public event PropertyChangedEventHandler? PropertyChanged;
+        /// <summary>
+        /// Raises the PropertyChanged event to notify listeners that a property value has changed.
+        /// </summary>
+        /// <remarks>Use this method to implement the INotifyPropertyChanged interface in classes that
+        /// support data binding. Calling this method with the correct property name ensures that UI elements or other
+        /// listeners are updated when the property value changes.</remarks>
+        /// <param name="name">The name of the property that changed. This value is optional and is automatically provided when called from
+        /// a property setter.</param>
+        private void OnPropertyChanged([CallerMemberName] string? name = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
         public MainWindow()
         {
@@ -50,7 +79,9 @@ namespace CrosshairY
 
             Loaded += OnMainWindowLoaded;
 
+            // Initialize tray icon visibility
             IsTrayIconVisible = true;
+            DataContext = this;
 
             // Initialize commands
             ToggleWindowCommand = new RelayCommand(o => ToggleWindowState());
@@ -63,178 +94,10 @@ namespace CrosshairY
 
             // Default page
             MainFrame.Navigate(new HomePage());
+
+            AppNavigationService.NavigateAction = Navigate;
         }
 
-        private void NavButton_Checked(object sender, RoutedEventArgs e)
-        {
-            if (MainFrame == null)
-                return;
-
-            if (NavHome.IsChecked == true)
-                MainFrame.Navigate(new HomePage());
-            else if (NavDesigner.IsChecked == true)
-                MainFrame.Navigate(new DesignerPage());
-            else if (NavCrosshairs.IsChecked == true)
-                MainFrame.Navigate(new CrosshairsPage());
-            else if (NavSettings.IsChecked == true)
-                MainFrame.Navigate(new SettingsPage());
-        }
-
-        private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
-        {
-            StartActivationServer();
-
-            FileVersionInfo localVersionInfo = FileVersionInfo.GetVersionInfo(Helper.GetExePath());
-            //VersionString = localVersionInfo.FileVersion ?? "N/A";
-
-            string basePath = Path.Combine(Environment.ExpandEnvironmentVariables("%APPDATA%"), "CrosshairY");
-            string updatePath = Path.Combine(basePath, "Update");
-
-            string[] args = Environment.GetCommandLineArgs();
-
-            foreach (string arg in args)
-            {
-                switch (arg)
-                {
-                    case "--updating":
-                        Thread.Sleep(3000); // Allow other instance(s) to close before finalizing the update
-
-                        // Delete all files and folders from the base path (%appdata% + \\CrosshairY)
-                        // except update/runtime state and user data.
-                        string[] foldersToKeep =
-                        [
-                            "Update"
-                        ];
-
-                        string[] filesToKeep =
-                        [
-                            "Settings.json"
-                        ];
-
-                        // Delete all files, except for the ones in filesToKeep
-                        foreach (string file in Directory.GetFiles(basePath))
-                        {
-                            string fileName = Path.GetFileName(file);
-                            if (Array.Exists(filesToKeep, f => f.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
-                                continue;
-
-                            File.Delete(file);
-                        }
-
-                        foreach (string directory in Directory.GetDirectories(basePath))
-                        {
-                            string dirName = Path.GetFileName(directory);
-                            if (Array.Exists(foldersToKeep, f => f.Equals(dirName, StringComparison.OrdinalIgnoreCase)))
-                                continue;
-
-                            Directory.Delete(directory, true);
-                        }
-
-                        // Move update files to base path
-                        foreach (string file in Directory.GetFiles(updatePath, "*", SearchOption.AllDirectories))
-                        {
-                            string relativePath = Path.GetRelativePath(updatePath, file);
-                            string destinationPath = Path.Combine(basePath, relativePath);
-                            string destinationDir = Path.GetDirectoryName(destinationPath)!;
-
-                            if (!Directory.Exists(destinationDir))
-                                Directory.CreateDirectory(destinationDir);
-
-                            File.Copy(file, destinationPath, true);
-                        }
-
-                        // Start the real, updated app
-                        Process.Start(Path.Combine(basePath, "CrosshairY"), "--updated");
-                        Environment.Exit(0);
-                        break;
-                    case "--updated":
-                        // Start normally, but delete the Update folder after a delay
-                        Task.Run(() =>
-                        {
-                            Thread.Sleep(10 * 1000); // Wait 10 seconds to ensure the app has started properly
-                            try
-                            {
-                                if (Directory.Exists(updatePath))
-                                    Directory.Delete(updatePath, true);
-                            }
-                            catch (Exception)
-                            { }
-                        });
-
-                        NotificationManager.ShowNotification("CrosshairY", "Application updated successfully!");
-                        break;
-                    case "--minimize":
-                        EnterTrayMode();
-                        break;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Replaces the current page displayed in the main content area with the specified page, applying a fade
-        /// animation during the transition.
-        /// </summary>
-        /// <remarks>If the specified page is already displayed, no action is taken. The transition uses a
-        /// fade-out animation for the current page followed by a fade-in animation for the new page to provide a smooth
-        /// visual effect.</remarks>
-        /// <param name="newPage">The new <see cref="UserControl"/> to display as the main content. Cannot be null.</param>
-        private void SwitchPage(UserControl newPage)
-        {
-            // Same instance? Do nothing (prevents flicker + no new WebViews)
-            if (ReferenceEquals(_currentPage, newPage))
-                return;
-
-            //// Animate out -> in
-            //if (_currentPage is not null)
-            //{
-            //    DoubleAnimation fadeOut = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(120));
-            //    fadeOut.Completed += (_, __) =>
-            //    {
-            //        MainContent.Content = _currentPage = newPage;
-            //        DoubleAnimation fadeIn = new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(160));
-            //        newPage.BeginAnimation(OpacityProperty, fadeIn);
-            //    };
-
-            //    _currentPage.BeginAnimation(OpacityProperty, fadeOut);
-            //}
-            //else
-            //{
-            //    // First load
-            //    _currentPage = newPage;
-            //    MainContent.Content = newPage;
-
-            //    newPage.Opacity = 0;
-            //    DoubleAnimation fadeIn = new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(200));
-
-            //    newPage.BeginAnimation(OpacityProperty, fadeIn);
-            //}
-        }
-        /// <summary>
-        /// Handles the Click event for sidebar navigation buttons, switching the displayed page based on the button's
-        /// tag.
-        /// </summary>
-        /// <remarks>The method expects the sender to be a Button whose Tag property is set to a
-        /// recognized page identifier (such as "Dashboard", "Inventory", "Settings", or "Help"). If the Tag does not
-        /// match a known page, no action is taken.</remarks>
-        /// <param name="sender">The source of the event, expected to be a Button with its Tag property indicating the target page.</param>
-        /// <param name="e">The event data associated with the button click.</param>
-        private void SidebarButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (sender is not Button btn)
-                return;
-
-            //UserControl? targetPage = (btn.Tag?.ToString()) switch
-            //{
-            //    "Dashboard" => _currentPage is DashboardView ? _currentPage : DashboardView.Instance,
-            //    "Inventory" => _currentPage is InventoryView ? _currentPage : InventoryView.Instance,
-            //    "Settings" => _currentPage is SettingsView ? _currentPage : SettingsView.Instance,
-            //    "Help" => _currentPage is HelpView ? _currentPage : HelpView.Instance,
-            //    _ => null
-            //};
-
-            //if (targetPage is not null)
-            //    SwitchPage(targetPage);
-        }
         /// <summary>
         /// Closes the application
         /// </summary>
@@ -370,7 +233,6 @@ namespace CrosshairY
             Topmost = true;
             Topmost = false; // Focus steal fix
         }
-        #region Event Handlers
         /// <summary>
         /// Starts an asynchronous server that listens for activation messages on a named pipe and brings the
         /// application window to the foreground when an activation request is received.
@@ -403,6 +265,122 @@ namespace CrosshairY
                     }
                 }
             });
+        }
+        private void Navigate(Type pageType)
+        {
+            if (MainFrame == null)
+                return;
+
+            Page page = (Page)Activator.CreateInstance(pageType)!;
+            MainFrame.Navigate(page);
+
+            // 🔁 Sync sidebar state
+            NavHome.IsChecked = pageType == typeof(HomePage);
+            NavDesigner.IsChecked = pageType == typeof(DesignerPage);
+            NavLibrary.IsChecked = pageType == typeof(LibraryPage);
+            NavSettings.IsChecked = pageType == typeof(SettingsPage);
+        }
+
+        #region Event Handlers
+        private void WhenNavButtonIsChecked(object sender, RoutedEventArgs e)
+        {
+            if (sender == NavHome)
+                AppNavigationService.Navigate<HomePage>();
+            else if (sender == NavDesigner)
+                AppNavigationService.Navigate<DesignerPage>();
+            else if (sender == NavLibrary)
+                AppNavigationService.Navigate<LibraryPage>();
+            else if (sender == NavSettings)
+                AppNavigationService.Navigate<SettingsPage>();
+        }
+        private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
+        {
+            StartActivationServer();
+
+            FileVersionInfo localVersionInfo = FileVersionInfo.GetVersionInfo(Helper.GetExePath());
+            VersionString = localVersionInfo.FileVersion ?? "N/A";
+
+            string basePath = Path.Combine(Environment.ExpandEnvironmentVariables("%APPDATA%"), "CrosshairY");
+            string updatePath = Path.Combine(basePath, "Update");
+
+            string[] args = Environment.GetCommandLineArgs();
+
+            foreach (string arg in args)
+            {
+                switch (arg)
+                {
+                    case "--updating":
+                        Thread.Sleep(3000); // Allow other instance(s) to close before finalizing the update
+
+                        // Delete all files and folders from the base path (%appdata% + \\CrosshairY)
+                        // except update/runtime state and user data.
+                        string[] foldersToKeep =
+                        [
+                            "Update"
+                        ];
+
+                        string[] filesToKeep =
+                        [
+                            "Settings.json"
+                        ];
+
+                        // Delete all files, except for the ones in filesToKeep
+                        foreach (string file in Directory.GetFiles(basePath))
+                        {
+                            string fileName = Path.GetFileName(file);
+                            if (Array.Exists(filesToKeep, f => f.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
+                                continue;
+
+                            File.Delete(file);
+                        }
+
+                        foreach (string directory in Directory.GetDirectories(basePath))
+                        {
+                            string dirName = Path.GetFileName(directory);
+                            if (Array.Exists(foldersToKeep, f => f.Equals(dirName, StringComparison.OrdinalIgnoreCase)))
+                                continue;
+
+                            Directory.Delete(directory, true);
+                        }
+
+                        // Move update files to base path
+                        foreach (string file in Directory.GetFiles(updatePath, "*", SearchOption.AllDirectories))
+                        {
+                            string relativePath = Path.GetRelativePath(updatePath, file);
+                            string destinationPath = Path.Combine(basePath, relativePath);
+                            string destinationDir = Path.GetDirectoryName(destinationPath)!;
+
+                            if (!Directory.Exists(destinationDir))
+                                Directory.CreateDirectory(destinationDir);
+
+                            File.Copy(file, destinationPath, true);
+                        }
+
+                        // Start the real, updated app
+                        Process.Start(Path.Combine(basePath, "CrosshairY"), "--updated");
+                        Environment.Exit(0);
+                        break;
+                    case "--updated":
+                        // Start normally, but delete the Update folder after a delay
+                        Task.Run(() =>
+                        {
+                            Thread.Sleep(10 * 1000); // Wait 10 seconds to ensure the app has started properly
+                            try
+                            {
+                                if (Directory.Exists(updatePath))
+                                    Directory.Delete(updatePath, true);
+                            }
+                            catch (Exception)
+                            { }
+                        });
+
+                        NotificationManager.ShowNotification("CrosshairY", "Application updated successfully!");
+                        break;
+                    case "--minimize":
+                        EnterTrayMode();
+                        break;
+                }
+            }
         }
         /// <summary>
         /// Event handler for when the window header is clicked

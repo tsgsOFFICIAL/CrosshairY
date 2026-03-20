@@ -18,9 +18,9 @@ namespace CrosshairY.Pages
     /// <summary>
     /// Interaction logic for CrosshairsPage.xaml
     /// </summary>
-    public partial class CrosshairsPage : Page
+    public partial class LibraryPage : Page
     {
-        public CrosshairsPage()
+        public LibraryPage()
         {
             InitializeComponent();
         }

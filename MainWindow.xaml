@@ -4,6 +4,7 @@
         xmlns:tb="http://www.hardcodet.net/taskbar"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
         xmlns:local="clr-namespace:CrosshairY"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen" FontFamily="Segoe UI"        
@@ -27,39 +28,6 @@
                 <RowDefinition Height="93*"/>
             </Grid.RowDefinitions>
 
-            <!-- Sidebar -->
-            <Border Grid.Row="1" Background="{StaticResource SidebarBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,1,0">
-                <StackPanel>
-                    <RadioButton x:Name="NavHome" Style="{StaticResource NavButton}" IsChecked="True" Checked="NavButton_Checked" Margin="0,0,0,4">
-                        <StackPanel Orientation="Horizontal">
-                            <Path Data="M10,20 L10,14 L6,14 L6,20 L2,20 L2,8 L8,2 L14,8 L14,20 Z" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" StrokeThickness="1.5" Width="16" Height="16" Stretch="Uniform" Margin="0,0,12,0" />
-                            <TextBlock Text="Home" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </RadioButton>
-
-                    <RadioButton x:Name="NavDesigner" Style="{StaticResource NavButton}" Checked="NavButton_Checked" Margin="0,0,0,4">
-                        <StackPanel Orientation="Horizontal">
-                            <Path Data="M8,0 L8,6 M8,10 L8,16 M0,8 L6,8 M10,8 L16,8" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" StrokeThickness="1.5" Width="16" Height="16" Stretch="Uniform" Margin="0,0,12,0" />
-                            <TextBlock Text="Designer" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </RadioButton>
-
-                    <RadioButton x:Name="NavCrosshairs" Style="{StaticResource NavButton}" Checked="NavButton_Checked" Margin="0,0,0,4">
-                        <StackPanel Orientation="Horizontal">
-                            <Path Data="M0,0 L5,0 L5,5 L0,5 Z M6,0 L11,0 L11,5 L6,5 Z M0,6 L5,6 L5,11 L0,11 Z M6,6 L11,6 L11,11 L6,11 Z" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" StrokeThickness="1" Width="16" Height="16" Stretch="Uniform" Margin="0,0,12,0" />
-                            <TextBlock Text="Crosshairs" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </RadioButton>
-
-                    <RadioButton x:Name="NavSettings" Style="{StaticResource NavButton}" Checked="NavButton_Checked">
-                        <StackPanel Orientation="Horizontal">
-                            <Path Data="M8,5 A3,3 0 1,1 8,11 A3,3 0 1,1 8,5 M8,0 L8,2 M8,14 L8,16 M0,8 L2,8 M14,8 L16,8" Stroke="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" StrokeThickness="1.5" Width="16" Height="16" Stretch="Uniform" Margin="0,0,12,0" />
-                            <TextBlock Text="Settings" VerticalAlignment="Center" />
-                        </StackPanel>
-                    </RadioButton>
-                </StackPanel>
-            </Border>
-
             <!-- Custom Title Bar -->
             <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Grid.Row="0" Grid.ColumnSpan="2" MouseLeftButtonDown="OnWindowHeaderMouseDown" Background="{StaticResource SidebarBrush}" >
                 <Image Source="/assets/logo.png" MaxHeight="60" Margin="10"/>
@@ -67,24 +35,24 @@
                 <Viewbox Stretch="Uniform" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="8" MaxHeight="40">
                     <StackPanel Orientation="Horizontal">
                         <StackPanel Orientation="Vertical">
-                            <TextBlock Text="CrosshairY" Foreground="{StaticResource ForegroundBrush}" FontWeight="Medium" FontSize="14" VerticalAlignment="Center"/>
-                            <TextBlock Text="by tsgsOFFICIAL" FontStyle="Italic" FontFamily="Roboto" Foreground="{StaticResource ForegroundBrush}"/>
+                            <TextBlock Text="CrosshairY" Foreground="{StaticResource ForegroundBrush}" FontWeight="Medium" FontSize="16" VerticalAlignment="Center"/>
+                            <TextBlock Text="by tsgsOFFICIAL" FontStyle="Italic" Foreground="{StaticResource ForegroundBrush}"/>
                         </StackPanel>
 
-                        <TextBlock Text="{Binding VersionString, StringFormat='Version {0}', FallbackValue='Version N/A'}" Margin="10,0,0,0" FontStyle="Italic" FontFamily="Roboto" Foreground="{StaticResource ForegroundBrush}"/>
+                        <TextBlock Text="{Binding VersionString, StringFormat='Version {0}', FallbackValue='Version N/A'}" Margin="10,0,0,0" FontStyle="Italic" Foreground="{StaticResource ForegroundBrush}" VerticalAlignment="Bottom"/>
                     </StackPanel>
                 </Viewbox>
             </StackPanel>
 
             <!-- Window Controls -->
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.ColumnSpan="2">
-                <Button x:Name="MinimizeButton" Width="44" Height="40" Background="Transparent" BorderThickness="0" Click="OnMinimizeButtonClicked">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Stretch" Grid.ColumnSpan="2">
+                <Button x:Name="MinimizeButton" Width="44" Background="Transparent" BorderThickness="0" Click="OnMinimizeButtonClicked">
                     <Path Data="M0,5 L10,5" Stroke="{StaticResource MutedForegroundBrush}" StrokeThickness="1"/>
                 </Button>
-                <Button x:Name="MaximizeButton" Width="44" Height="40" Background="Transparent" BorderThickness="0" Click="OnMaximizeButtonClicked">
+                <Button x:Name="MaximizeButton" Width="44" Background="Transparent" BorderThickness="0" Click="OnMaximizeButtonClicked">
                     <Rectangle Width="10" Height="10" Stroke="{StaticResource MutedForegroundBrush}" StrokeThickness="1"/>
                 </Button>
-                <Button x:Name="CloseButton" Width="44" Height="40" Background="Transparent" BorderThickness="0" Click="OnCloseButtonClicked">
+                <Button x:Name="CloseButton" Width="44" Background="Transparent" BorderThickness="0" Click="OnCloseButtonClicked">
                     <Button.Style>
                         <Style TargetType="Button">
                             <Style.Triggers>
@@ -97,6 +65,39 @@
                     <Path Data="M0,0 L10,10 M10,0 L0,10" Stroke="{StaticResource MutedForegroundBrush}" StrokeThickness="1"/>
                 </Button>
             </StackPanel>
+
+            <!-- Sidebar -->
+            <Border Grid.Row="1" Background="{StaticResource SidebarBrush}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,1,0">
+                <StackPanel>
+                    <RadioButton x:Name="NavHome" Style="{StaticResource NavButton}" IsChecked="True" Checked="WhenNavButtonIsChecked" Margin="0,0,0,4">
+                        <StackPanel Orientation="Horizontal">
+                            <icon:PackIconGameIcons Kind="House" Width="16" Height="16" Margin="0,0,12,0" VerticalAlignment="Center" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
+                            <TextBlock Text="Home" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </RadioButton>
+
+                    <RadioButton x:Name="NavDesigner" Style="{StaticResource NavButton}" Checked="WhenNavButtonIsChecked" Margin="0,0,0,4">
+                        <StackPanel Orientation="Horizontal">
+                            <icon:PackIconGameIcons Kind="Crosshair" Width="16" Height="16" Margin="0,0,12,0" VerticalAlignment="Center" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
+                            <TextBlock Text="Designer" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </RadioButton>
+
+                    <RadioButton x:Name="NavLibrary" Style="{StaticResource NavButton}" Checked="WhenNavButtonIsChecked" Margin="0,0,0,4">
+                        <StackPanel Orientation="Horizontal">
+                            <icon:PackIconGameIcons Kind="Bookshelf" Width="16" Height="16" Margin="0,0,12,0" VerticalAlignment="Center" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
+                            <TextBlock Text="Library" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </RadioButton>
+
+                    <RadioButton x:Name="NavSettings" Style="{StaticResource NavButton}" Checked="WhenNavButtonIsChecked">
+                        <StackPanel Orientation="Horizontal">
+                            <icon:PackIconGameIcons Kind="SettingsKnobs" Width="16" Height="16" Margin="0,0,12,0" VerticalAlignment="Center" Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType=RadioButton}}" />
+                            <TextBlock Text="Settings" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </RadioButton>
+                </StackPanel>
+            </Border>
 
             <!-- Page Content -->
             <Frame x:Name="MainFrame" Grid.Column="1" Grid.Row="1" NavigationUIVisibility="Hidden" Background="{StaticResource BackgroundBrush}" />
@@ -141,7 +142,7 @@
                             <Style TargetType="MenuItem">
                                 <Setter Property="Background" Value="#353535"/>
                                 <Setter Property="Foreground" Value="White"/>
-                                <Setter Property="FontFamily" Value="Roboto"/>
+                                <Setter Property="FontFamily" Value="Segoe UI"/>
                                 <Setter Property="FontSize" Value="14"/>
                                 <Setter Property="Padding" Value="10, 6"/>
                                 <Setter Property="BorderThickness" Value="0"/>

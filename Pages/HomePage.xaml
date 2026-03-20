@@ -24,9 +24,10 @@
             <StackPanel Orientation="Horizontal" Margin="0,0,0,24">
                 <Button Content="Open Designer" 
                         Style="{StaticResource PrimaryButton}" 
-                        Margin="0,0,12,0"/>
+                        Margin="0,0,12,0" Click="OnOpenDesignerButtonClicked"/>
                 <Button Content="Browse Crosshairs" 
-                        Style="{StaticResource SecondaryButton}"/>
+                        Style="{StaticResource SecondaryButton}"
+                        Click="OnBrowseCrosshairsButtonClicked"/>
             </StackPanel>
 
             <!-- Cards Grid -->
@@ -65,12 +66,12 @@
                                     CornerRadius="4" 
                                     Padding="16,8" 
                                     Margin="0,0,8,0">
-                                <TextBlock Text="F6" 
+                                <TextBlock Text="{Binding ToggleCrosshairString, FallbackValue='None'}" 
                                            Foreground="{StaticResource ForegroundBrush}" 
                                            FontFamily="Consolas" 
                                            FontWeight="SemiBold"/>
                             </Border>
-                            <Button Content="Change" Style="{StaticResource SecondaryButton}"/>
+                            <Button Content="Change" Style="{StaticResource SecondaryButton}" Click="OnChangeHotkeyButtonClicked"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>

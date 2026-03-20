@@ -1,6 +1,7 @@
 ﻿using System.Windows.Controls;
 using System.Windows.Shapes;
 using System.Windows.Media;
+using CrosshairY.Models;
 
 namespace CrosshairY
 {

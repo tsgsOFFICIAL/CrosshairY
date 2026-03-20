@@ -1,8 +1,9 @@
 ﻿using System.Runtime.InteropServices;
 using System.Windows.Interop;
+using CrosshairY.Models;
 using System.Windows;
 
-namespace CrosshairY
+namespace CrosshairY.Windows
 {
     public partial class OverlayWindow : Window
     {
@@ -16,25 +17,25 @@ namespace CrosshairY
             Loaded += (_, _) => MakeClickThrough();
         }
 
-        public void UpdateCrosshair(CrosshairSettings s)
+        public void UpdateCrosshair(CrosshairSettings crosshair)
         {
-            var isActive = IsActive;
-            var isShowing = IsVisible;
+            bool isActive = IsActive;
+            bool isShowing = IsVisible;
             if (!IsLoaded)
             {
-                Loaded += (_, _) => UpdateCrosshair(s);
+                Loaded += (_, _) => UpdateCrosshair(crosshair);
                 return;
             }
             double correctedWidth, correctedHeight;
-            if (s.Outline)
-                correctedWidth = correctedHeight = (s.Length + s.Gap + s.Thickness + s.OutlineThickness) * 2 + 50;
+            if (crosshair.Outline)
+                correctedWidth = correctedHeight = (crosshair.Length + crosshair.Gap + crosshair.Thickness + crosshair.OutlineThickness) * 2 + 50;
             else
-                correctedWidth = correctedHeight = (s.Length + s.Gap + s.Thickness) * 2 + 50;
+                correctedWidth = correctedHeight = (crosshair.Length + crosshair.Gap + crosshair.Thickness) * 2 + 50;
 
             Width = (int)(correctedWidth / 2) * 2;
             Height = (int)(correctedHeight / 2) * 2;
 
-            CrosshairRenderer.Render(OverlayCanvas, s);
+            CrosshairRenderer.Render(OverlayCanvas, crosshair);
 
             Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
             Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
