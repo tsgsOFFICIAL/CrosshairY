@@ -57,7 +57,7 @@ namespace CrosshairY.Utility
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Stream Drop Collector", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.Message, "CrosshairY", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -74,7 +74,7 @@ namespace CrosshairY.Utility
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Stream Drop Collector", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(ex.Message, "CrosshairY", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
