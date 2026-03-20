@@ -1,0 +1,231 @@
+﻿<Page x:Class="CrosshairY.Pages.DesignerPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:CrosshairY.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Designer"
+      Background="{StaticResource BackgroundBrush}">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="320"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Settings Panel -->
+        <Border Grid.Column="0" 
+                Background="{StaticResource CardBrush}"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="0,0,1,0">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="16">
+                <StackPanel>
+
+                    <!-- Shape Settings Card -->
+                    <Border Style="{StaticResource Card}" 
+                            Background="{StaticResource SecondaryBrush}" 
+                            Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="Shape Settings" 
+                                       Style="{StaticResource SubheadingText}" 
+                                       FontSize="13"
+                                       Margin="0,0,0,16"/>
+
+                            <!-- Gap Slider -->
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Gap" Style="{StaticResource BodyText}"/>
+                                <TextBlock Grid.Column="1" Text="4" Style="{StaticResource MutedText}"/>
+                            </Grid>
+                            <Slider x:Name="GapSlider" 
+                                    Minimum="0" Maximum="20" Value="4" 
+                                    Margin="0,0,0,16"/>
+
+                            <!-- Length Slider -->
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Length" Style="{StaticResource BodyText}"/>
+                                <TextBlock Grid.Column="1" Text="8" Style="{StaticResource MutedText}"/>
+                            </Grid>
+                            <Slider x:Name="LengthSlider" 
+                                    Minimum="0" Maximum="30" Value="8" 
+                                    Margin="0,0,0,16"/>
+
+                            <!-- Thickness Slider -->
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Thickness" Style="{StaticResource BodyText}"/>
+                                <TextBlock Grid.Column="1" Text="2" Style="{StaticResource MutedText}"/>
+                            </Grid>
+                            <Slider x:Name="ThicknessSlider" 
+                                    Minimum="1" Maximum="10" Value="2" 
+                                    Margin="0,0,0,16"/>
+
+                            <!-- Checkboxes -->
+                            <CheckBox x:Name="OutlineCheckbox" 
+                                      Content="Draw Outline" 
+                                      Margin="0,0,0,8"/>
+
+                            <!-- Outline Thickness (conditional) -->
+                            <StackPanel x:Name="OutlineThicknessPanel" 
+                                        Margin="24,0,0,12" 
+                                        Visibility="Collapsed">
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Outline Thickness" Style="{StaticResource BodyText}"/>
+                                    <TextBlock Grid.Column="1" Text="1" Style="{StaticResource MutedText}"/>
+                                </Grid>
+                                <Slider x:Name="OutlineThicknessSlider" 
+                                        Minimum="1" Maximum="5" Value="1"/>
+                            </StackPanel>
+
+                            <CheckBox x:Name="CenterDotCheckbox" 
+                                      Content="Center Dot" 
+                                      Margin="0,0,0,8"/>
+
+                            <CheckBox x:Name="TStyleCheckbox" 
+                                      Content="T-Style"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Color Card -->
+                    <Border Style="{StaticResource Card}" 
+                            Background="{StaticResource SecondaryBrush}" 
+                            Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="Color" 
+                                       Style="{StaticResource SubheadingText}" 
+                                       FontSize="13"
+                                       Margin="0,0,0,16"/>
+
+                            <!-- Color Preview and Picker -->
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                                <Border x:Name="ColorPreview" 
+                                        Width="40" Height="40" 
+                                        CornerRadius="6" 
+                                        BorderBrush="{StaticResource BorderBrush}"
+                                        BorderThickness="1"
+                                        Background="#00FF00" 
+                                        Margin="0,0,12,0"/>
+                                <Button Content="Pick Color" 
+                                        Style="{StaticResource SecondaryButton}"/>
+                            </StackPanel>
+
+                            <!-- R Slider -->
+                            <Grid Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Red" Style="{StaticResource BodyText}"/>
+                                <TextBlock Grid.Column="1" Text="0" Style="{StaticResource MutedText}"/>
+                            </Grid>
+                            <Slider x:Name="RedSlider" 
+                                    Minimum="0" Maximum="255" Value="0" 
+                                    Margin="0,0,0,12"/>
+
+                            <!-- G Slider -->
+                            <Grid Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Green" Style="{StaticResource BodyText}"/>
+                                <TextBlock Grid.Column="1" Text="255" Style="{StaticResource MutedText}"/>
+                            </Grid>
+                            <Slider x:Name="GreenSlider" 
+                                    Minimum="0" Maximum="255" Value="255" 
+                                    Margin="0,0,0,12"/>
+
+                            <!-- B Slider -->
+                            <Grid Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Blue" Style="{StaticResource BodyText}"/>
+                                <TextBlock Grid.Column="1" Text="0" Style="{StaticResource MutedText}"/>
+                            </Grid>
+                            <Slider x:Name="BlueSlider" 
+                                    Minimum="0" Maximum="255" Value="0" 
+                                    Margin="0,0,0,12"/>
+
+                            <!-- A Slider -->
+                            <Grid Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Alpha" Style="{StaticResource BodyText}"/>
+                                <TextBlock Grid.Column="1" Text="255" Style="{StaticResource MutedText}"/>
+                            </Grid>
+                            <Slider x:Name="AlphaSlider" 
+                                    Minimum="0" Maximum="255" Value="255"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Actions Card -->
+                    <Border Style="{StaticResource Card}" 
+                            Background="{StaticResource SecondaryBrush}">
+                        <StackPanel>
+                            <TextBlock Text="Actions" 
+                                       Style="{StaticResource SubheadingText}" 
+                                       FontSize="13"
+                                       Margin="0,0,0,16"/>
+
+                            <Button Content="Copy Crosshair Code" 
+                                    Style="{StaticResource SecondaryButton}" 
+                                    HorizontalAlignment="Stretch"
+                                    Margin="0,0,0,8"/>
+                            <Button Content="Import Crosshair Code" 
+                                    Style="{StaticResource SecondaryButton}" 
+                                    HorizontalAlignment="Stretch"
+                                    Margin="0,0,0,8"/>
+                            <Button Content="Save Crosshair" 
+                                    Style="{StaticResource PrimaryButton}" 
+                                    HorizontalAlignment="Stretch"
+                                    Margin="0,0,0,8"/>
+                            <Button Content="Reset to Default" 
+                                    Background="Transparent"
+                                    Foreground="{StaticResource MutedForegroundBrush}"
+                                    BorderThickness="0"
+                                    HorizontalAlignment="Left"
+                                    Cursor="Hand"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <!-- Preview Canvas -->
+        <Grid Grid.Column="1">
+            <Border Background="{StaticResource SecondaryBrush}" 
+                    CornerRadius="8" 
+                    Width="400" Height="400"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="1">
+                <Canvas x:Name="CrosshairCanvas">
+                    <!-- Crosshair will be drawn here dynamically -->
+                    <Rectangle x:Name="TopLine" Canvas.Left="198" Canvas.Top="160" Width="4" Height="32" Fill="#00FF00"/>
+                    <Rectangle x:Name="BottomLine" Canvas.Left="198" Canvas.Top="208" Width="4" Height="32" Fill="#00FF00"/>
+                    <Rectangle x:Name="LeftLine" Canvas.Left="160" Canvas.Top="198" Width="32" Height="4" Fill="#00FF00"/>
+                    <Rectangle x:Name="RightLine" Canvas.Left="208" Canvas.Top="198" Width="32" Height="4" Fill="#00FF00"/>
+                </Canvas>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

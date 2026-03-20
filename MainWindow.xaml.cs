@@ -1,129 +1,497 @@
-﻿using GlobalHotKey;
-using System.ComponentModel;
-using System.Windows;
+﻿using System.Runtime.InteropServices;
+using System.Windows.Media.Animation;
 using System.Windows.Input;
+using CrosshairY.Managers;
+using CrosshairY.Utility;
+using System.Diagnostics;
+using CrosshairY.Pages;
+using System.IO.Pipes;
+using System.Windows;
+using System.IO;
 
 namespace CrosshairY
 {
     public partial class MainWindow : Window
     {
-        private readonly SettingsManager _settingsManager = new();
-        private CrosshairSettings _currentSettings = new();
-        private readonly OverlayWindow _overlay;
+        [DllImport("user32.dll")]
+        private static extern int GetWindowLong(IntPtr hwnd, int index);
 
-        private bool _isLoading = true;
+        [DllImport("user32.dll")]
+        private static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
+
+        public ICommand? JoinDiscordCommand { get; }
+        public ICommand? ToggleWindowCommand { get; }
+        public ICommand? CloseCommand { get; }
+        public ICommand? OpenGithubCommand { get; }
+
+        private bool _isTrayIconVisible;
+        public bool IsTrayIconVisible
+        {
+            get => _isTrayIconVisible;
+            set
+            {
+                _isTrayIconVisible = value;
+                UpdateTrayIconVisibility();
+            }
+        }
+
+        private bool _isInTrayMode = false;
+        private double _savedLeft;
+        private double _savedTop;
+
+        private const int WS_EX_TOOLWINDOW = 0x00000080;
+        private const int GWL_EXSTYLE = -20;
+
+        private UserControl? _currentPage;
 
         public MainWindow()
         {
             InitializeComponent();
-            _overlay = new OverlayWindow();
 
             Loaded += OnMainWindowLoaded;
+
+            IsTrayIconVisible = true;
+
+            // Initialize commands
+            ToggleWindowCommand = new RelayCommand(o => ToggleWindowState());
+            CloseCommand = new RelayCommand(o => CloseApplication());
+            OpenGithubCommand = new RelayCommand(o => Helper.LaunchWeb("https://github.com/tsgsOFFICIAL/CrosshairY"));
+            JoinDiscordCommand = new RelayCommand(o => Helper.LaunchWeb("https://discord.gg/Cddu5aJ"));
+
+            // Event handler for double-click on TaskbarIcon
+            MyNotifyIcon.TrayMouseDoubleClick += OnTrayIconDoubleClick;
+
+            // Default page
+            MainFrame.Navigate(new HomePage());
+        }
+
+        private void NavButton_Checked(object sender, RoutedEventArgs e)
+        {
+            if (MainFrame == null)
+                return;
+
+            if (NavHome.IsChecked == true)
+                MainFrame.Navigate(new HomePage());
+            else if (NavDesigner.IsChecked == true)
+                MainFrame.Navigate(new DesignerPage());
+            else if (NavCrosshairs.IsChecked == true)
+                MainFrame.Navigate(new CrosshairsPage());
+            else if (NavSettings.IsChecked == true)
+                MainFrame.Navigate(new SettingsPage());
         }
 
         private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
         {
-            // Load settings first
-            _currentSettings = _settingsManager.Load() ?? new CrosshairSettings();
+            StartActivationServer();
 
-            ApplySettingsToUI(); // ← this may trigger events, but we ignore them
+            FileVersionInfo localVersionInfo = FileVersionInfo.GetVersionInfo(Helper.GetExePath());
+            //VersionString = localVersionInfo.FileVersion ?? "N/A";
 
-            _isLoading = false;
+            string basePath = Path.Combine(Environment.ExpandEnvironmentVariables("%APPDATA%"), "CrosshairY");
+            string updatePath = Path.Combine(basePath, "Update");
 
-            // Now do the first real render with loaded values
-            UpdateAll();
+            string[] args = Environment.GetCommandLineArgs();
 
-            // Hotkey (Ctrl+F1)
-            HotKeyManager hotkey = new HotKeyManager();
-            hotkey.KeyPressed += (_, _) => ToggleOverlay();
-            hotkey.Register(Key.F1, ModifierKeys.Control);
-
-        }
-
-        private void ApplySettingsToUI(CrosshairSettings? settings = null)
-        {
-            settings ??= _currentSettings;
-
-            GapSlider.Value = settings.Gap;
-            LengthSlider.Value = settings.Length;
-            ThicknessSlider.Value = settings.Thickness;
-            OutlineSlider.Value = settings.OutlineThickness;
-            DotCheck.IsChecked = settings.Dot;
-            TStyleCheck.IsChecked = settings.TStyle;
-            OutlineCheck.IsChecked = settings.Outline;
-            RedSlider.Value = settings.ColorR;
-            GreenSlider.Value = settings.ColorG;
-            BlueSlider.Value = settings.ColorB;
-            AlphaSlider.Value = settings.Alpha;
-        }
-
-        private void OnSliderChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            if (_isLoading)
-                return;
-
-            UpdateAll();
-        }
-
-        private void OnCheckboxChanged(object sender, RoutedEventArgs e)
-        {
-            if (_isLoading)
-                return;
-
-            UpdateAll();
-        }
-
-        private void UpdateAll()
-        {
-            if (_isLoading)
-                return;
-
-            _currentSettings = new CrosshairSettings
+            foreach (string arg in args)
             {
-                Gap = (float)GapSlider.Value,
-                Length = (float)LengthSlider.Value,
-                Thickness = (float)ThicknessSlider.Value,
-                OutlineThickness = (float)OutlineSlider.Value,
-                Dot = DotCheck.IsChecked ?? false,
-                TStyle = TStyleCheck.IsChecked ?? false,
-                Outline = OutlineCheck.IsChecked ?? true,
-                ColorR = (byte)RedSlider.Value,
-                ColorG = (byte)GreenSlider.Value,
-                ColorB = (byte)BlueSlider.Value,
-                Alpha = (byte)AlphaSlider.Value
-            };
-
-            RenderPreview();
-            _overlay.UpdateCrosshair(_currentSettings);
-            _settingsManager.Save(_currentSettings);
-        }
-
-        private void RenderPreview() => CrosshairRenderer.Render(PreviewCanvas, _currentSettings);
-
-        private void CopyShareCode_Click(object sender, RoutedEventArgs e)
-        {
-            string shareCode = ShareCode.Encode(_currentSettings);
-            System.Windows.Clipboard.SetText(shareCode);
-            System.Windows.MessageBox.Show($"Share code copied!\n{shareCode}", "Crosshair Y");
-        }
-
-        private async void ImportShareCode_Click(object sender, RoutedEventArgs e)
-        {
-            string code = Microsoft.VisualBasic.Interaction.InputBox("Paste share code:", "Import");
-            if (!string.IsNullOrEmpty(code))
-            {
-                CrosshairSettings? imported = ShareCode.Decode(code);
-                if (imported != null)
+                switch (arg)
                 {
-                    ApplySettingsToUI(imported);
-                    UpdateAll();
+                    case "--updating":
+                        Thread.Sleep(3000); // Allow other instance(s) to close before finalizing the update
+
+                        // Delete all files and folders from the base path (%appdata% + \\CrosshairY)
+                        // except update/runtime state and user data.
+                        string[] foldersToKeep =
+                        [
+                            "Update"
+                        ];
+
+                        string[] filesToKeep =
+                        [
+                            "Settings.json"
+                        ];
+
+                        // Delete all files, except for the ones in filesToKeep
+                        foreach (string file in Directory.GetFiles(basePath))
+                        {
+                            string fileName = Path.GetFileName(file);
+                            if (Array.Exists(filesToKeep, f => f.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
+                                continue;
+
+                            File.Delete(file);
+                        }
+
+                        foreach (string directory in Directory.GetDirectories(basePath))
+                        {
+                            string dirName = Path.GetFileName(directory);
+                            if (Array.Exists(foldersToKeep, f => f.Equals(dirName, StringComparison.OrdinalIgnoreCase)))
+                                continue;
+
+                            Directory.Delete(directory, true);
+                        }
+
+                        // Move update files to base path
+                        foreach (string file in Directory.GetFiles(updatePath, "*", SearchOption.AllDirectories))
+                        {
+                            string relativePath = Path.GetRelativePath(updatePath, file);
+                            string destinationPath = Path.Combine(basePath, relativePath);
+                            string destinationDir = Path.GetDirectoryName(destinationPath)!;
+
+                            if (!Directory.Exists(destinationDir))
+                                Directory.CreateDirectory(destinationDir);
+
+                            File.Copy(file, destinationPath, true);
+                        }
+
+                        // Start the real, updated app
+                        Process.Start(Path.Combine(basePath, "CrosshairY"), "--updated");
+                        Environment.Exit(0);
+                        break;
+                    case "--updated":
+                        // Start normally, but delete the Update folder after a delay
+                        Task.Run(() =>
+                        {
+                            Thread.Sleep(10 * 1000); // Wait 10 seconds to ensure the app has started properly
+                            try
+                            {
+                                if (Directory.Exists(updatePath))
+                                    Directory.Delete(updatePath, true);
+                            }
+                            catch (Exception)
+                            { }
+                        });
+
+                        NotificationManager.ShowNotification("CrosshairY", "Application updated successfully!");
+                        break;
+                    case "--minimize":
+                        EnterTrayMode();
+                        break;
                 }
             }
         }
 
-        private void Toggle_Click(object sender, RoutedEventArgs e) => ToggleOverlay();
-        private void ToggleOverlay() => _overlay.ToggleVisibility();
+        /// <summary>
+        /// Replaces the current page displayed in the main content area with the specified page, applying a fade
+        /// animation during the transition.
+        /// </summary>
+        /// <remarks>If the specified page is already displayed, no action is taken. The transition uses a
+        /// fade-out animation for the current page followed by a fade-in animation for the new page to provide a smooth
+        /// visual effect.</remarks>
+        /// <param name="newPage">The new <see cref="UserControl"/> to display as the main content. Cannot be null.</param>
+        private void SwitchPage(UserControl newPage)
+        {
+            // Same instance? Do nothing (prevents flicker + no new WebViews)
+            if (ReferenceEquals(_currentPage, newPage))
+                return;
 
-        protected override void OnClosing(CancelEventArgs e) => Environment.Exit(0);
+            //// Animate out -> in
+            //if (_currentPage is not null)
+            //{
+            //    DoubleAnimation fadeOut = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(120));
+            //    fadeOut.Completed += (_, __) =>
+            //    {
+            //        MainContent.Content = _currentPage = newPage;
+            //        DoubleAnimation fadeIn = new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(160));
+            //        newPage.BeginAnimation(OpacityProperty, fadeIn);
+            //    };
+
+            //    _currentPage.BeginAnimation(OpacityProperty, fadeOut);
+            //}
+            //else
+            //{
+            //    // First load
+            //    _currentPage = newPage;
+            //    MainContent.Content = newPage;
+
+            //    newPage.Opacity = 0;
+            //    DoubleAnimation fadeIn = new DoubleAnimation(0, 1, TimeSpan.FromMilliseconds(200));
+
+            //    newPage.BeginAnimation(OpacityProperty, fadeIn);
+            //}
+        }
+        /// <summary>
+        /// Handles the Click event for sidebar navigation buttons, switching the displayed page based on the button's
+        /// tag.
+        /// </summary>
+        /// <remarks>The method expects the sender to be a Button whose Tag property is set to a
+        /// recognized page identifier (such as "Dashboard", "Inventory", "Settings", or "Help"). If the Tag does not
+        /// match a known page, no action is taken.</remarks>
+        /// <param name="sender">The source of the event, expected to be a Button with its Tag property indicating the target page.</param>
+        /// <param name="e">The event data associated with the button click.</param>
+        private void SidebarButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not Button btn)
+                return;
+
+            //UserControl? targetPage = (btn.Tag?.ToString()) switch
+            //{
+            //    "Dashboard" => _currentPage is DashboardView ? _currentPage : DashboardView.Instance,
+            //    "Inventory" => _currentPage is InventoryView ? _currentPage : InventoryView.Instance,
+            //    "Settings" => _currentPage is SettingsView ? _currentPage : SettingsView.Instance,
+            //    "Help" => _currentPage is HelpView ? _currentPage : HelpView.Instance,
+            //    _ => null
+            //};
+
+            //if (targetPage is not null)
+            //    SwitchPage(targetPage);
+        }
+        /// <summary>
+        /// Closes the application
+        /// </summary>
+        private void CloseApplication()
+        {
+            Close();
+            Environment.Exit(0);
+        }
+        /// <summary>
+        /// Updates the visibility of the tray icon to reflect the current value of the IsTrayIconVisible property.
+        /// </summary>
+        /// <remarks>Call this method after changing the IsTrayIconVisible property to ensure the tray
+        /// icon's visibility is updated accordingly.</remarks>
+        private void UpdateTrayIconVisibility()
+        {
+            // Show or hide the tray icon based on IsTrayIconVisible
+            MyNotifyIcon.Visibility =
+                IsTrayIconVisible ? Visibility.Visible
+                : Visibility.Collapsed;
+        }
+        /// <summary>
+        /// Toggles the window state between normal mode and tray mode.
+        /// </summary>
+        /// <remarks>If the window is currently in tray mode, this method restores it to normal mode.
+        /// Otherwise, it minimizes the window to the system tray. This method is typically used to provide a quick way
+        /// for users to hide or restore the application window.</remarks>
+        private void ToggleWindowState()
+        {
+            if (_isInTrayMode)
+                ExitTrayMode();
+            else
+                EnterTrayMode();
+        }
+        /// <summary>
+        /// Switches the application window to tray mode, minimizing it to the system tray while keeping background
+        /// operations active.
+        /// </summary>
+        /// <remarks>When tray mode is activated, the window is hidden from the taskbar and ALT+TAB, and a
+        /// notification is displayed to inform the user that background processing continues. The window's previous
+        /// position is saved and can be restored when exiting tray mode.</remarks>
+        private void EnterTrayMode()
+        {
+            if (_isInTrayMode)
+                return;
+
+            _isInTrayMode = true;
+
+            // Save current position (only if valid)
+            if (!double.IsNaN(Left) && !double.IsNaN(Top))
+            {
+                _savedLeft = Left;
+                _savedTop = Top;
+            }
+
+            ShowInTaskbar = false;
+
+            // Move off-screen, but keep Normal and visible to OS
+            Left = -32000;
+            Top = -32000;
+
+            // Hide from ALT+TAB
+            IntPtr hwnd = new System.Windows.Interop.WindowInteropHelper(this).Handle;
+            int extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+            SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TOOLWINDOW);
+
+            NotificationManager.ShowNotification("CrosshairY", "Minimized to tray - drops still farming!");
+            MinimizeAndRestore.Header = "Restore";
+            MyNotifyIcon.ToolTipText = "CrosshairY - Farming in background";
+        }
+        /// <summary>
+        /// Restores the application's main window from tray mode to its normal state and updates its appearance and
+        /// position.
+        /// </summary>
+        /// <remarks>This method reverses the changes made when entering tray mode, including restoring
+        /// the window's position, showing it in the taskbar and ALT+TAB, and updating related UI elements. It should be
+        /// called only when the application is currently in tray mode.</remarks>
+        private void ExitTrayMode()
+        {
+            if (!_isInTrayMode)
+                return;
+
+            _isInTrayMode = false;
+
+            ShowInTaskbar = true;
+
+            // Restore position
+            Left = _savedLeft;
+            Top = _savedTop;
+
+            // Show in ALT+TAB again
+            IntPtr hwnd = new System.Windows.Interop.WindowInteropHelper(this).Handle;
+            int extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+            SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle & ~WS_EX_TOOLWINDOW);
+
+            // Bring to front
+            Activate();
+            Topmost = true;
+            Topmost = false;
+
+            MinimizeAndRestore.Header = "Minimize";
+            MyNotifyIcon.ToolTipText = "CrosshairY by tsgsOFFICIAL";
+        }
+        /// <summary>
+        /// Brings the window to the foreground, restoring it if minimized and ensuring it is visible and active.
+        /// </summary>
+        /// <remarks>This method restores the window from a minimized state if necessary, makes it
+        /// visible, and activates it. It also adjusts the window's Z-order to ensure it appears above other windows,
+        /// addressing platform-specific behavior on Windows.</remarks>
+        private void BringToFront()
+        {
+            // Exit tray mode if active
+            if (_isInTrayMode)
+            {
+                _isInTrayMode = false;
+
+                ShowInTaskbar = true;
+
+                // Restore position
+                Left = _savedLeft;
+                Top = _savedTop;
+
+                MinimizeAndRestore.Header = "Minimize";
+                MyNotifyIcon.ToolTipText = "CrosshairY by tsgsOFFICIAL";
+            }
+
+            // Always ensure visible and focused
+            if (!IsVisible)
+                Show();
+
+            WindowState = WindowState.Normal; // In case it was maximized/minimized
+
+            Activate();
+            Topmost = true;
+            Topmost = false; // Focus steal fix
+        }
+        #region Event Handlers
+        /// <summary>
+        /// Starts an asynchronous server that listens for activation messages on a named pipe and brings the
+        /// application window to the foreground when an activation request is received.
+        /// </summary>
+        /// <remarks>This method runs the activation server in a background task and does not block the
+        /// calling thread. The server continuously waits for incoming connections and responds to activation messages.
+        /// This is typically used to allow external processes to activate the application window. The method should be
+        /// called once during application startup to enable activation functionality.</remarks>
+        private void StartActivationServer()
+        {
+            Task.Run(async () =>
+            {
+                while (true)
+                {
+                    using NamedPipeServerStream server = new NamedPipeServerStream(
+                        App.PipeName,
+                        PipeDirection.In,
+                        1,
+                        PipeTransmissionMode.Message,
+                        PipeOptions.Asynchronous);
+
+                    await server.WaitForConnectionAsync();
+
+                    using StreamReader reader = new StreamReader(server);
+                    string? message = await reader.ReadLineAsync();
+
+                    if (message == "ACTIVATE")
+                    {
+                        Dispatcher.Invoke(BringToFront);
+                    }
+                }
+            });
+        }
+        /// <summary>
+        /// Event handler for when the window header is clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnWindowHeaderMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ClickCount == 2)
+            {
+                // Double-click: Maximize or restore the window
+                WindowState = (WindowState == WindowState.Normal)
+                    ? WindowState.Maximized
+                    : WindowState.Normal;
+            }
+            else
+            {
+                // Single click: Drag the window
+                if (WindowState == WindowState.Maximized)
+                {
+                    // Get the absolute mouse position *before* restoring
+                    System.Windows.Point mousePosition = PointToScreen(e.GetPosition(this));
+
+                    // Get the active screen where the mouse is located
+                    Screen activeScreen = Screen.FromPoint(new System.Drawing.Point((int)mousePosition.X, (int)mousePosition.Y));
+                    Rectangle screenBounds = activeScreen.WorkingArea; // Use WorkingArea to exclude taskbar
+
+                    // Calculate cursor position as percentage of the screen's working area
+                    double percentX = (mousePosition.X - screenBounds.X) / screenBounds.Width;
+                    double percentY = (mousePosition.Y - screenBounds.Y) / screenBounds.Height;
+
+                    // Restore the window
+                    WindowState = WindowState.Normal;
+
+                    // Calculate new position based on restored size
+                    double newWidth = RestoreBounds.Width;
+                    double newHeight = RestoreBounds.Height;
+
+                    // Adjust Left and Top to keep cursor at the same relative percentage
+                    Left = mousePosition.X - (percentX * newWidth);
+                    Top = mousePosition.Y - (percentY * newHeight);
+
+                    // Clamp to ensure the window stays within the screen bounds
+                    Left = Math.Max(screenBounds.X, Math.Min(Left, screenBounds.Right - newWidth));
+                    Top = Math.Max(screenBounds.Y, Math.Min(Top, screenBounds.Bottom - newHeight));
+                }
+
+                DragMove();
+            }
+        }
+        /// <summary>
+        /// Event handler for when the minimize button is clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMinimizeButtonClicked(object sender, RoutedEventArgs e)
+        {
+            EnterTrayMode();
+        }
+        /// <summary>
+        /// Event handler for when the maximize button is clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void OnMaximizeButtonClicked(object sender, RoutedEventArgs e)
+        {
+            if (WindowState.Equals(WindowState.Maximized))
+                WindowState = WindowState.Normal;
+            else
+                WindowState = WindowState.Maximized;
+        }
+        /// <summary>
+        /// Event handler for when the close button is clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnCloseButtonClicked(object sender, RoutedEventArgs e)
+        {
+            CloseApplication();
+        }
+        /// <summary>
+        /// Handles the double-click event on the tray icon to display and restore the window.
+        /// </summary>
+        /// <param name="sender">The source of the event, typically the tray icon control.</param>
+        /// <param name="e">The event data associated with the double-click action.</param>
+        private void OnTrayIconDoubleClick(object sender, RoutedEventArgs e)
+        {
+            ExitTrayMode();
+        }
+        #endregion
     }
 }
