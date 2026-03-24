@@ -42,11 +42,11 @@
                                 <TextBlock Text="Gap" Style="{StaticResource BodyText}"/>
                                 <TextBlock Grid.Column="1" Text="{Binding Gap, StringFormat=F1}" Style="{StaticResource MutedText}"/>
                             </Grid>
-                            <Slider Minimum="0" Maximum="20"
+                            <Slider Minimum="-20" Maximum="20"
                                 Value="{Binding Gap, Mode=TwoWay}"
-                                TickFrequency="0.5"
+                                Margin="0,0,0,16" TickFrequency="0.1"
                                 IsSnapToTickEnabled="True"
-                                Margin="0,0,0,16"/>
+                                SmallChange="0.1" LargeChange="0.1"/>
 
                             <!-- Length Slider -->
                             <Grid Margin="0,0,0,12">
@@ -55,10 +55,12 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Text="Length" Style="{StaticResource BodyText}"/>
-                                <TextBlock Grid.Column="1" Text="8" Style="{StaticResource MutedText}"/>
+                                <TextBlock Grid.Column="1" Text="{Binding Length, StringFormat=F1}" Style="{StaticResource MutedText}"/>
                             </Grid>
-                            <Slider x:Name="LengthSlider" 
-                                    Minimum="0" Maximum="30" Value="8" 
+                            <Slider Minimum="0" Maximum="200" Value="{Binding Length, Mode=TwoWay}"
+                                    TickFrequency="0.1"
+                                    IsSnapToTickEnabled="True"
+                                    SmallChange="0.1" LargeChange="0.1"
                                     Margin="0,0,0,16"/>
 
                             <!-- Thickness Slider -->
@@ -68,38 +70,52 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Text="Thickness" Style="{StaticResource BodyText}"/>
-                                <TextBlock Grid.Column="1" Text="2" Style="{StaticResource MutedText}"/>
+                                <TextBlock Grid.Column="1" Text="{Binding Thickness, StringFormat=F1}" Style="{StaticResource MutedText}"/>
                             </Grid>
-                            <Slider x:Name="ThicknessSlider" 
-                                    Minimum="1" Maximum="10" Value="2" 
+                            <Slider Minimum="0.1" Maximum="10"
+                                Value="{Binding Thickness, Mode=TwoWay}"
+                                    TickFrequency="0.1"
+                                    IsSnapToTickEnabled="True"
+                                    SmallChange="0.1" LargeChange="0.1"
                                     Margin="0,0,0,16"/>
 
                             <!-- Checkboxes -->
-                            <CheckBox x:Name="OutlineCheckbox" 
+                            <CheckBox IsChecked="{Binding Outline, Mode=TwoWay}"
                                       Content="Draw Outline" 
                                       Margin="0,0,0,8"/>
 
                             <!-- Outline Thickness (conditional) -->
-                            <StackPanel x:Name="OutlineThicknessPanel" 
-                                        Margin="24,0,0,12" 
-                                        Visibility="Collapsed">
+                            <StackPanel Margin="24,0,0,12">
+                                <StackPanel.Style>
+                                    <Style TargetType="StackPanel">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Outline}" Value="True">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </StackPanel.Style>
+                                
                                 <Grid Margin="0,0,0,8">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="Outline Thickness" Style="{StaticResource BodyText}"/>
-                                    <TextBlock Grid.Column="1" Text="1" Style="{StaticResource MutedText}"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding OutlineThickness, StringFormat=F1}" Style="{StaticResource MutedText}"/>
                                 </Grid>
-                                <Slider x:Name="OutlineThicknessSlider" 
-                                        Minimum="1" Maximum="5" Value="1"/>
+                                <Slider Minimum="0.1" Maximum="5" Value="{Binding OutlineThickness, Mode=TwoWay}"
+                                    TickFrequency="0.1"
+                                    IsSnapToTickEnabled="True"
+                                    SmallChange="0.1" LargeChange="0.1"/>
                             </StackPanel>
 
-                            <CheckBox x:Name="CenterDotCheckbox" 
+                            <CheckBox IsChecked="{Binding Dot, Mode=TwoWay}"
                                       Content="Center Dot" 
                                       Margin="0,0,0,8"/>
 
-                            <CheckBox x:Name="TStyleCheckbox" 
+                            <CheckBox IsChecked="{Binding TStyle, Mode=TwoWay}"
                                       Content="T-Style"/>
                         </StackPanel>
                     </Border>
@@ -134,11 +150,12 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Text="Red" Style="{StaticResource BodyText}"/>
-                                <TextBlock Grid.Column="1" Text="0" Style="{StaticResource MutedText}"/>
+                                <TextBlock Grid.Column="1" Text="{Binding ColorR}" Style="{StaticResource MutedText}"/>
                             </Grid>
-                            <Slider x:Name="RedSlider" 
-                                    Minimum="0" Maximum="255" Value="0" 
-                                    Margin="0,0,0,12"/>
+                            <Slider Minimum="0" Maximum="255" Value="{Binding ColorR, Mode=TwoWay}" Margin="0,0,0,12"
+                                    TickFrequency="1"
+                                    IsSnapToTickEnabled="True"
+                                    SmallChange="1" LargeChange="1"/>
 
                             <!-- G Slider -->
                             <Grid Margin="0,0,0,8">
@@ -147,11 +164,12 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Text="Green" Style="{StaticResource BodyText}"/>
-                                <TextBlock Grid.Column="1" Text="255" Style="{StaticResource MutedText}"/>
+                                <TextBlock Grid.Column="1" Text="{Binding ColorG}" Style="{StaticResource MutedText}"/>
                             </Grid>
-                            <Slider x:Name="GreenSlider" 
-                                    Minimum="0" Maximum="255" Value="255" 
-                                    Margin="0,0,0,12"/>
+                            <Slider Minimum="0" Maximum="255" Value="{Binding ColorG, Mode=TwoWay}" Margin="0,0,0,12"
+                                TickFrequency="1"
+                                IsSnapToTickEnabled="True"
+                                SmallChange="1" LargeChange="1"/>
 
                             <!-- B Slider -->
                             <Grid Margin="0,0,0,8">
@@ -160,11 +178,12 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Text="Blue" Style="{StaticResource BodyText}"/>
-                                <TextBlock Grid.Column="1" Text="0" Style="{StaticResource MutedText}"/>
+                                <TextBlock Grid.Column="1" Text="{Binding ColorB}" Style="{StaticResource MutedText}"/>
                             </Grid>
-                            <Slider x:Name="BlueSlider" 
-                                    Minimum="0" Maximum="255" Value="0" 
-                                    Margin="0,0,0,12"/>
+                            <Slider Minimum="0" Maximum="255" Value="{Binding ColorB, Mode=TwoWay}" Margin="0,0,0,12"
+                                TickFrequency="1"
+                                IsSnapToTickEnabled="True"
+                                SmallChange="1" LargeChange="1"/>
 
                             <!-- A Slider -->
                             <Grid Margin="0,0,0,8">
@@ -173,10 +192,12 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Text="Alpha" Style="{StaticResource BodyText}"/>
-                                <TextBlock Grid.Column="1" Text="255" Style="{StaticResource MutedText}"/>
+                                <TextBlock Grid.Column="1" Text="{Binding Alpha}" Style="{StaticResource MutedText}"/>
                             </Grid>
-                            <Slider x:Name="AlphaSlider" 
-                                    Minimum="0" Maximum="255" Value="255"/>
+                            <Slider Minimum="0" Maximum="255" Value="{Binding Alpha, Mode=TwoWay}" Margin="0,0,0,12"
+                                TickFrequency="1"
+                                IsSnapToTickEnabled="True"
+                                SmallChange="1" LargeChange="1"/>
                         </StackPanel>
                     </Border>
 
@@ -220,13 +241,7 @@
                     Width="400" Height="400"
                     BorderBrush="{StaticResource BorderBrush}"
                     BorderThickness="1">
-                <Canvas x:Name="CrosshairCanvas">
-                    <!-- Crosshair will be drawn here dynamically -->
-                    <Rectangle x:Name="TopLine" Canvas.Left="198" Canvas.Top="160" Width="4" Height="32" Fill="#00FF00"/>
-                    <Rectangle x:Name="BottomLine" Canvas.Left="198" Canvas.Top="208" Width="4" Height="32" Fill="#00FF00"/>
-                    <Rectangle x:Name="LeftLine" Canvas.Left="160" Canvas.Top="198" Width="32" Height="4" Fill="#00FF00"/>
-                    <Rectangle x:Name="RightLine" Canvas.Left="208" Canvas.Top="198" Width="32" Height="4" Fill="#00FF00"/>
-                </Canvas>
+                <Canvas x:Name="CrosshairCanvas"></Canvas>
             </Border>
         </Grid>
     </Grid>
