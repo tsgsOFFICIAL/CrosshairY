@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Windows.Input;
 using CrosshairY.Managers;
 using CrosshairY.Windows;
+using CrosshairY.Models;
 using System.Windows;
 
 namespace CrosshairY.Pages
@@ -49,10 +50,25 @@ namespace CrosshairY.Pages
             InitializeComponent();
             DataContext = this;
 
-            App.Settings.Hotkey.ToggleCrosshairHotkeyChanged += Hotkey_ToggleCrosshairHotkeyChanged;
+            App.Settings.Hotkey.ToggleCrosshairHotkeyChanged += OnToggleCrosshairHotkeyChanged;
+            CrosshairManager.Instance.CrosshairChanged += OnCrosshairChanged;
+            ActiveCrosshairCanvas.SizeChanged += OnActiveCrosshairCanvasSizeChanged;
         }
 
-        private void Hotkey_ToggleCrosshairHotkeyChanged()
+        private void OnActiveCrosshairCanvasSizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (e.NewSize.Width > 1 && e.NewSize.Height > 1)  // avoid tiny initial values
+            {
+                CrosshairRenderer.Render(ActiveCrosshairCanvas, App.Settings.Crosshair);
+            }
+        }
+
+        private void OnCrosshairChanged(CrosshairSettings settings)
+        {
+            CrosshairRenderer.Render(ActiveCrosshairCanvas, settings);
+        }
+
+        private void OnToggleCrosshairHotkeyChanged()
         {
             KeyGesture? toggleCrosshair = App.Settings.Hotkey.ToggleCrosshair;
             ToggleCrosshairString = toggleCrosshair == null ? "None" : $"{(toggleCrosshair.Modifiers == ModifierKeys.None ? "" : $"{toggleCrosshair.Modifiers} + ")}{toggleCrosshair.Key}"; ;

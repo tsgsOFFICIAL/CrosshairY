@@ -53,8 +53,7 @@ namespace CrosshairY
             Settings.Apply(loaded);
 
             Settings.Hotkey.Initialize();
-
-            Overlay.UpdateCrosshair(loaded.Crosshair);
+            CrosshairManager.Instance.Initialize();
         }
 
         protected override void OnExit(ExitEventArgs e)

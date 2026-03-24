@@ -92,18 +92,13 @@
                                     Width="96" Height="96" 
                                     Margin="0,0,16,0">
                                 <!-- Crosshair Preview Canvas -->
-                                <Canvas>
-                                    <Rectangle Canvas.Left="46" Canvas.Top="30" Width="4" Height="16" Fill="#00FF00"/>
-                                    <Rectangle Canvas.Left="46" Canvas.Top="50" Width="4" Height="16" Fill="#00FF00"/>
-                                    <Rectangle Canvas.Left="30" Canvas.Top="46" Width="16" Height="4" Fill="#00FF00"/>
-                                    <Rectangle Canvas.Left="50" Canvas.Top="46" Width="16" Height="4" Fill="#00FF00"/>
-                                </Canvas>
+                                <Canvas x:Name="ActiveCrosshairCanvas"></Canvas>
                             </Border>
                             <StackPanel VerticalAlignment="Center">
-                                <TextBlock Text="Default Green" 
+                                <TextBlock Text="Crosshair name" 
                                            Style="{StaticResource BodyText}" 
                                            FontWeight="Medium"/>
-                                <TextBlock Text="Classic crosshair style" 
+                                <TextBlock Text="Short description, about this long" 
                                            Style="{StaticResource MutedText}"/>
                             </StackPanel>
                         </StackPanel>
