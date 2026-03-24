@@ -8,8 +8,7 @@ namespace CrosshairY.Managers
 {
     public static class SettingsService
     {
-        private static readonly string Path =
-            System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Settings.json");
+        private static readonly string Path = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Settings.json");
 
         private static readonly JsonSerializerOptions Options = new()
         {

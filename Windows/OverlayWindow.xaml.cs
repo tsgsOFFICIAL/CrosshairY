@@ -19,14 +19,14 @@ namespace CrosshairY.Windows
 
         public void UpdateCrosshair(CrosshairSettings crosshair)
         {
-            bool isActive = IsActive;
-            bool isShowing = IsVisible;
             if (!IsLoaded)
             {
                 Loaded += (_, _) => UpdateCrosshair(crosshair);
                 return;
             }
+         
             double correctedWidth, correctedHeight;
+            
             if (crosshair.Outline)
                 correctedWidth = correctedHeight = (crosshair.Length + crosshair.Gap + crosshair.Thickness + crosshair.OutlineThickness) * 2 + 50;
             else
