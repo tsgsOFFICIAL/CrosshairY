@@ -40,11 +40,13 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Text="Gap" Style="{StaticResource BodyText}"/>
-                                <TextBlock Grid.Column="1" Text="4" Style="{StaticResource MutedText}"/>
+                                <TextBlock Grid.Column="1" Text="{Binding Gap, StringFormat=F1}" Style="{StaticResource MutedText}"/>
                             </Grid>
-                            <Slider x:Name="GapSlider" 
-                                    Minimum="0" Maximum="20" Value="4" 
-                                    Margin="0,0,0,16"/>
+                            <Slider Minimum="0" Maximum="20"
+                                Value="{Binding Gap, Mode=TwoWay}"
+                                TickFrequency="0.5"
+                                IsSnapToTickEnabled="True"
+                                Margin="0,0,0,16"/>
 
                             <!-- Length Slider -->
                             <Grid Margin="0,0,0,12">
