@@ -1,6 +1,7 @@
 ﻿using System.Windows.Threading;
 using CrosshairY.Models.Dto;
 using CrosshairY.Managers;
+using CrosshairY.Windows;
 using CrosshairY.Models;
 using System.IO.Pipes;
 using System.Windows;
@@ -11,6 +12,7 @@ namespace CrosshairY
     public partial class App : System.Windows.Application
     {
         public static Settings Settings { get; private set; } = new();
+        public static readonly OverlayWindow Overlay = new();
 
         private const string RegistryKeyPath = @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize";
         private const string RegistryValueName = "AppsUseLightTheme";
