@@ -1,4 +1,6 @@
-﻿using CrosshairY.Models;
+﻿using CrosshairY.Models.Dto;
+using System.Windows.Input;
+using CrosshairY.Models;
 using System.Text.Json;
 using System.IO;
 
@@ -14,25 +16,31 @@ namespace CrosshairY.Managers
             WriteIndented = true
         };
 
-        public static async Task<Settings> LoadAsync()
+        public static async Task<SettingsDto> LoadAsync()
         {
             if (!File.Exists(Path))
-                return new Settings();
+                return new SettingsDto();
 
-            try
-            {
-                string json = await File.ReadAllTextAsync(Path);
-                return JsonSerializer.Deserialize<Settings>(json) ?? new Settings();
-            }
-            catch
-            {
-                return new Settings();
-            }
+            string json = await File.ReadAllTextAsync(Path);
+            return JsonSerializer.Deserialize<SettingsDto>(json) ?? new SettingsDto();
         }
 
         public static Task SaveAsync(Settings settings)
         {
-            string json = JsonSerializer.Serialize(settings, Options);
+            SettingsDto dto = new SettingsDto
+            {
+                Crosshair = settings.Crosshair,
+                Hotkeys = new Dictionary<string, HotkeyDto>
+                {
+                    ["ToggleCrosshair"] = new HotkeyDto
+                    {
+                        Key = (int)(settings.Hotkey.ToggleCrosshair?.Key ?? Key.None),
+                        Modifiers = (int)(settings.Hotkey.ToggleCrosshair?.Modifiers ?? ModifierKeys.None)
+                    }
+                }
+            };
+
+            string json = JsonSerializer.Serialize(dto, Options);
             return File.WriteAllTextAsync(Path, json);
         }
     }

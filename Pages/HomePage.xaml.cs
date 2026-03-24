@@ -1,6 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Windows.Controls;
 using System.ComponentModel;
+using System.Windows.Input;
 using CrosshairY.Managers;
 using CrosshairY.Windows;
 using System.Windows;
@@ -34,7 +35,7 @@ namespace CrosshairY.Pages
 
         public string ToggleCrosshairString
         {
-            get => string.IsNullOrEmpty(_toggleCrosshairString) ? "N/A" : _toggleCrosshairString;
+            get => string.IsNullOrEmpty(_toggleCrosshairString) ? "None" : _toggleCrosshairString;
             set
             {
                 _toggleCrosshairString = value;
@@ -47,9 +48,17 @@ namespace CrosshairY.Pages
         {
             InitializeComponent();
             DataContext = this;
+
+            App.Settings.Hotkey.ToggleCrosshairHotkeyChanged += Hotkey_ToggleCrosshairHotkeyChanged;
         }
 
-        private void OnChangeHotkeyButtonClicked(object sender, RoutedEventArgs e)
+        private void Hotkey_ToggleCrosshairHotkeyChanged()
+        {
+            KeyGesture? toggleCrosshair = App.Settings.Hotkey.ToggleCrosshair;
+            ToggleCrosshairString = toggleCrosshair == null ? "None" : $"{(toggleCrosshair.Modifiers == ModifierKeys.None ? "" : $"{toggleCrosshair.Modifiers} + ")}{toggleCrosshair.Key}"; ;
+        }
+
+        private async void OnChangeHotkeyButtonClicked(object sender, RoutedEventArgs e)
         {
             HotkeyDialog hotkeyDialog = new HotkeyDialog
             {
@@ -60,18 +69,11 @@ namespace CrosshairY.Pages
             {
                 if (hotkeyDialog.SelectedHotkey != null)
                 {
-                    // Unbind previous hotkey (if any)
-
                     // Bind new hotkey
                     App.Settings.Hotkey.ToggleCrosshair = hotkeyDialog.SelectedHotkey;
 
                     // Save settings file
-
-
-
-
-
-                    ToggleCrosshairString = $"{(hotkeyDialog.SelectedHotkey.Modifiers == System.Windows.Input.ModifierKeys.None ? "" : $"{hotkeyDialog.SelectedHotkey.Modifiers} + ")}{hotkeyDialog.SelectedHotkey.Key}";
+                    await SettingsService.SaveAsync(App.Settings);
                 }
             }
         }

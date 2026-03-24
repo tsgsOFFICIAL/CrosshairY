@@ -1,4 +1,5 @@
 ﻿using System.Windows.Threading;
+using CrosshairY.Models.Dto;
 using CrosshairY.Managers;
 using CrosshairY.Models;
 using System.IO.Pipes;
@@ -10,7 +11,6 @@ namespace CrosshairY
     public partial class App : System.Windows.Application
     {
         public static Settings Settings { get; private set; } = new();
-        public static HotkeyService Hotkeys { get; private set; } = new HotkeyService();
 
         private const string RegistryKeyPath = @"Software\Microsoft\Windows\CurrentVersion\Themes\Personalize";
         private const string RegistryValueName = "AppsUseLightTheme";
@@ -46,8 +46,17 @@ namespace CrosshairY
             }
 
             base.OnStartup(e);
-            
-            Settings = await SettingsService.LoadAsync();
+
+            SettingsDto loaded = await SettingsService.LoadAsync();
+            Settings.Apply(loaded);
+
+            Settings.Hotkey.Initialize();
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            Settings.Hotkey.Shutdown();
+            base.OnExit(e);
         }
 
         private void OnDispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

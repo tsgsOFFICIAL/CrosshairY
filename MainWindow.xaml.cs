@@ -78,6 +78,7 @@ namespace CrosshairY
             InitializeComponent();
 
             Loaded += OnMainWindowLoaded;
+            App.Settings.Hotkey.ToggleCrosshairHotkeyPressed += OnToggleCrosshairHotkeyPressed;
 
             // Initialize tray icon visibility
             IsTrayIconVisible = true;
@@ -282,6 +283,10 @@ namespace CrosshairY
         }
 
         #region Event Handlers
+        private void OnToggleCrosshairHotkeyPressed()
+        {
+            Debug.WriteLine("test");
+        }
         private void WhenNavButtonIsChecked(object sender, RoutedEventArgs e)
         {
             if (sender == NavHome)

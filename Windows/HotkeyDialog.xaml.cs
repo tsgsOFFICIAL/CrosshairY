@@ -19,23 +19,41 @@ namespace CrosshairY.Windows
 
         private void HotkeyDialog_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
+            // Prevent the event from bubbling up further if we handle it
+            e.Handled = true;
+
             try
             {
-                if (e.Key == Key.Escape || e.Key == Key.LeftCtrl || e.Key == Key.RightCtrl || e.Key == Key.LeftAlt || e.Key == Key.RightAlt || e.Key == Key.LeftShift || e.Key == Key.RightShift)
+                System.Diagnostics.Debug.WriteLine($"Key pressed: {e.Key}, Modifiers: {Keyboard.Modifiers}");
+
+                // Ignore modifier keys by themselves (Ctrl, Alt, Shift, etc.)
+                if (IsModifierKey(e.Key))
                 {
                     return;
                 }
 
+                // Also ignore Escape (used for cancel)
+                if (e.Key == Key.Escape)
+                {
+                    DialogResult = false;
+                    Close();
+                    return;
+                }
+
                 ModifierKeys modifiers = Keyboard.Modifiers;
+
+                // Create the hotkey
                 SelectedHotkey = new KeyGesture(e.Key, modifiers);
 
-                HotkeyText.Text = $"Selected Hotkey: {modifiers} + {e.Key}";
+                // Update display text
+                HotkeyText.Text = FormatHotkeyDisplay(modifiers, e.Key);
 
                 DialogResult = true;
                 Close();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"Hotkey capture error: {ex.Message}");
                 DialogResult = false;
                 Close();
             }
@@ -51,6 +69,23 @@ namespace CrosshairY.Windows
         {
             DialogResult = true;
             Close();
+        }
+
+        private static bool IsModifierKey(Key key)
+        {
+            return key is Key.LeftCtrl or Key.RightCtrl or
+                   Key.LeftAlt or Key.RightAlt or
+                   Key.LeftShift or Key.RightShift or
+                   Key.LWin or Key.RWin or
+                   Key.System; // AltGr often appears as System
+        }
+
+        private static string FormatHotkeyDisplay(ModifierKeys modifiers, Key key)
+        {
+            if (modifiers == ModifierKeys.None)
+                return key.ToString();
+
+            return $"{modifiers} + {key}";
         }
     }
 }
