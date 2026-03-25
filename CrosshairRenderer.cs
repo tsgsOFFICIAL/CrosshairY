@@ -14,13 +14,14 @@ namespace CrosshairY
             double centerY = canvas.ActualHeight / 2;
             double halfLen = s.Length / 2;
             double gap = s.Gap;
+            bool centerOnly = s.Length == 0;
 
             System.Windows.Media.Color color = System.Windows.Media.Color.FromArgb(s.Alpha, s.ColorR, s.ColorG, s.ColorB);
             SolidColorBrush brush = new SolidColorBrush(color);
             SolidColorBrush outlineBrush = new SolidColorBrush(System.Windows.Media.Color.FromArgb(s.Alpha, 0, 0, 0));
 
             // Outline first – now using full outside growth via thicker centered stroke
-            if (s.Outline)
+            if (s.Outline && !centerOnly)
             {
                 double outlineTotalThick = s.Thickness + s.OutlineThickness * 2;  // ← key: *2 so full OutlineThickness per side
 
@@ -40,14 +41,17 @@ namespace CrosshairY
                 AddLine(canvas, centerX, centerY + gap, centerX, centerY + halfLen + gap, outlineTotalThick, outlineBrush);
             }
 
-            // Main lines
-            AddLine(canvas, centerX - halfLen - gap, centerY, centerX - gap, centerY, s.Thickness, brush); // left
-            AddLine(canvas, centerX + gap, centerY, centerX + halfLen + gap, centerY, s.Thickness, brush); // right
+            if (!centerOnly)
+            {
+                // Main lines
+                AddLine(canvas, centerX - halfLen - gap, centerY, centerX - gap, centerY, s.Thickness, brush); // left
+                AddLine(canvas, centerX + gap, centerY, centerX + halfLen + gap, centerY, s.Thickness, brush); // right
 
-            if (!s.TStyle)
-                AddLine(canvas, centerX, centerY - halfLen - gap, centerX, centerY - gap, s.Thickness, brush); // top
+                if (!s.TStyle)
+                    AddLine(canvas, centerX, centerY - halfLen - gap, centerX, centerY - gap, s.Thickness, brush); // top
 
-            AddLine(canvas, centerX, centerY + gap, centerX, centerY + halfLen + gap, s.Thickness, brush); // bottom
+                AddLine(canvas, centerX, centerY + gap, centerX, centerY + halfLen + gap, s.Thickness, brush); // bottom
+            }
 
             // Dot with outline
             if (s.Dot)
