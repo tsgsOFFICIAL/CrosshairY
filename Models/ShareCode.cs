@@ -6,7 +6,7 @@ namespace CrosshairY.Models
     public static class ShareCode
     {
         private const string Prefix = "TSGS-";
-        private const byte Version = 1;
+        private const byte Version = 2;
 
         private const string Alphabet = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789"; // Custom Base57
         private static readonly int BaseN = Alphabet.Length;
@@ -32,6 +32,9 @@ namespace CrosshairY.Models
             bw.Write(crosshair.ColorB);
             bw.Write(crosshair.Alpha);
 
+            WriteString(bw, crosshair.CrosshairName ?? "");
+            WriteString(bw, crosshair.Description ?? "");
+
             byte[] data = ms.ToArray();
 
             string encoded = EncodeBaseN(data);
@@ -53,7 +56,7 @@ namespace CrosshairY.Models
 
             try
             {
-                string raw = code.Substring(Prefix.Length).Replace("-", "");
+                string raw = code[Prefix.Length..].Replace("-", "");
 
                 byte[] data = DecodeBaseN(raw);
 
@@ -65,6 +68,7 @@ namespace CrosshairY.Models
                 return version switch
                 {
                     1 => DecodeV1(br),
+                    2 => DecodeV2(br),
                     _ => null,
                 };
             }
@@ -94,6 +98,45 @@ namespace CrosshairY.Models
             };
 
             return c;
+        }
+
+        private static CrosshairSettings DecodeV2(BinaryReader br)
+        {
+            CrosshairSettings c = new CrosshairSettings
+            {
+                Gap = br.ReadSingle(),
+                Length = br.ReadSingle(),
+                Thickness = br.ReadSingle(),
+                OutlineThickness = br.ReadSingle(),
+
+                Dot = br.ReadBoolean(),
+                TStyle = br.ReadBoolean(),
+                Outline = br.ReadBoolean(),
+
+                ColorR = br.ReadByte(),
+                ColorG = br.ReadByte(),
+                ColorB = br.ReadByte(),
+                Alpha = br.ReadByte(),
+                
+                CrosshairName = ReadString(br),
+                Description = ReadString(br)
+            };
+
+            return c;
+        }
+
+        private static void WriteString(BinaryWriter bw, string value)
+        {
+            byte[] bytes = Encoding.UTF8.GetBytes(value);
+            bw.Write((ushort)bytes.Length);   // max 65,535 chars
+            bw.Write(bytes);
+        }
+
+        private static string ReadString(BinaryReader br)
+        {
+            ushort length = br.ReadUInt16();
+            byte[] bytes = br.ReadBytes(length);
+            return Encoding.UTF8.GetString(bytes);
         }
 
         // ---------- Base-N Encoding ----------
