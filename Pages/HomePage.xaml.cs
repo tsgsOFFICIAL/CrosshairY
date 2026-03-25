@@ -90,6 +90,14 @@ namespace CrosshairY.Pages
             ToggleCrosshairString = toggleCrosshair == null ? "None" : $"{(toggleCrosshair.Modifiers == ModifierKeys.None ? "" : $"{toggleCrosshair.Modifiers} + ")}{toggleCrosshair.Key}"; ;
         }
 
+        private async void OnUnbindHotkeyButtonClicked(object sender, RoutedEventArgs e)
+        {
+            // Unbind hotkey
+            App.Settings.Hotkey.ToggleCrosshair = null;
+            // Save settings file
+            await SettingsService.SaveAsync(App.Settings);
+        }
+
         private async void OnChangeHotkeyButtonClicked(object sender, RoutedEventArgs e)
         {
             HotkeyDialog hotkeyDialog = new HotkeyDialog

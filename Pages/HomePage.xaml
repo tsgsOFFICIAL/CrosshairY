@@ -71,7 +71,8 @@
                                            FontFamily="Consolas" 
                                            FontWeight="SemiBold"/>
                             </Border>
-                            <Button Content="Change" Style="{StaticResource SecondaryButton}" Click="OnChangeHotkeyButtonClicked"/>
+                            <Button Content="Unbind" Style="{StaticResource SecondaryButton}" Click="OnUnbindHotkeyButtonClicked" Margin="0,0,8,0"/>
+                            <Button Content="Change" Style="{StaticResource PrimaryButton}" Click="OnChangeHotkeyButtonClicked"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>
