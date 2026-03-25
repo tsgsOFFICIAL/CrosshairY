@@ -9,9 +9,6 @@ using System.Windows;
 
 namespace CrosshairY.Pages
 {
-    /// <summary>
-    /// Interaction logic for HomePage.xaml
-    /// </summary>
     public partial class HomePage : Page, INotifyPropertyChanged
     {
         /// <summary>
