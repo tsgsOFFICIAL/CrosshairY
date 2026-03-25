@@ -136,11 +136,11 @@ namespace CrosshairY.Pages
             LoadCrosshairs();
         }
 
-        private void OnApplyButtonClicked(object sender, RoutedEventArgs e)
+        private async void OnApplyButtonClicked(object sender, RoutedEventArgs e)
         {
             if (sender is System.Windows.Controls.Button btn && btn.Tag is CrosshairSettings crosshair)
             {
-                CrosshairManager.Instance.UpdateCrosshair(crosshair);
+                await CrosshairManager.Instance.UpdateCrosshair(crosshair);
             }
         }
 

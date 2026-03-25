@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using System.Collections.ObjectModel;
 using System.Windows.Controls;
 using System.ComponentModel;
 using System.Windows.Input;
@@ -53,6 +54,8 @@ namespace CrosshairY.Pages
             }
         }
 
+        public ObservableCollection<CrosshairSettings> RecentCrosshairs => CrosshairManager.Instance.RecentCrosshairs;
+
         public HomePage()
         {
             InitializeComponent();
@@ -69,6 +72,14 @@ namespace CrosshairY.Pages
         {
             OnToggleCrosshairHotkeyChanged();
             Crosshair = App.Settings.Crosshair;
+        }
+
+        private void OnRecentCrosshairCanvasLoaded(object sender, RoutedEventArgs e)
+        {
+            if (sender is Canvas canvas && canvas.Tag is CrosshairSettings settings)
+            {
+                CrosshairRenderer.Render(canvas, settings);
+            }
         }
 
         private void OnActiveCrosshairCanvasSizeChanged(object sender, SizeChangedEventArgs e)

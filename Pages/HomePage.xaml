@@ -91,7 +91,8 @@
                             <Border Background="{StaticResource SecondaryBrush}" 
                                     CornerRadius="8" 
                                     Width="96" Height="96" 
-                                    Margin="0,0,16,0">
+                                    Margin="0,0,16,0"
+                                    ClipToBounds="True">
                                 <!-- Crosshair Preview Canvas -->
                                 <Canvas x:Name="ActiveCrosshairCanvas"></Canvas>
                             </Border>
@@ -117,87 +118,47 @@
                                Style="{StaticResource MutedText}" 
                                Margin="0,0,0,16"/>
 
-                    <WrapPanel>
-                        <!-- Crosshair Item 1 -->
-                        <Border Background="{StaticResource SecondaryBrush}" 
-                                BorderBrush="{StaticResource BorderBrush}" 
-                                BorderThickness="1" 
-                                CornerRadius="8" 
-                                Padding="12" 
-                                Margin="0,0,12,12">
-                            <StackPanel HorizontalAlignment="Center">
-                                <Canvas Width="56" Height="56">
-                                    <Rectangle Canvas.Left="26" Canvas.Top="14" Width="4" Height="12" Fill="#00FF00"/>
-                                    <Rectangle Canvas.Left="26" Canvas.Top="30" Width="4" Height="12" Fill="#00FF00"/>
-                                    <Rectangle Canvas.Left="14" Canvas.Top="26" Width="12" Height="4" Fill="#00FF00"/>
-                                    <Rectangle Canvas.Left="30" Canvas.Top="26" Width="12" Height="4" Fill="#00FF00"/>
-                                </Canvas>
-                                <TextBlock Text="Default Green" 
-                                           Style="{StaticResource MutedText}" 
-                                           FontSize="11" 
-                                           HorizontalAlignment="Center"/>
-                            </StackPanel>
-                        </Border>
+                    <ItemsControl ItemsSource="{Binding RecentCrosshairs}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
 
-                        <!-- Crosshair Item 2 -->
-                        <Border Background="{StaticResource SecondaryBrush}" 
-                                BorderBrush="{StaticResource BorderBrush}" 
-                                BorderThickness="1" 
-                                CornerRadius="8" 
-                                Padding="12" 
-                                Margin="0,0,12,12">
-                            <StackPanel HorizontalAlignment="Center">
-                                <Canvas Width="56" Height="56">
-                                    <Ellipse Canvas.Left="24" Canvas.Top="24" Width="8" Height="8" Fill="#FF0000"/>
-                                </Canvas>
-                                <TextBlock Text="Red Dot" 
-                                           Style="{StaticResource MutedText}" 
-                                           FontSize="11" 
-                                           HorizontalAlignment="Center"/>
-                            </StackPanel>
-                        </Border>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{StaticResource SecondaryBrush}" 
+                                    BorderBrush="{StaticResource BorderBrush}" 
+                                    BorderThickness="1" 
+                                    CornerRadius="8" 
+                                    Padding="12"
+                                    Width="192"
+                                    Margin="0,0,12,12">
 
-                        <!-- Crosshair Item 3 -->
-                        <Border Background="{StaticResource SecondaryBrush}" 
-                                BorderBrush="{StaticResource BorderBrush}" 
-                                BorderThickness="1" 
-                                CornerRadius="8" 
-                                Padding="12" 
-                                Margin="0,0,12,12">
-                            <StackPanel HorizontalAlignment="Center">
-                                <Canvas Width="56" Height="56">
-                                    <Rectangle Canvas.Left="26" Canvas.Top="30" Width="4" Height="12" Fill="#00AAFF"/>
-                                    <Rectangle Canvas.Left="14" Canvas.Top="26" Width="12" Height="4" Fill="#00AAFF"/>
-                                    <Rectangle Canvas.Left="30" Canvas.Top="26" Width="12" Height="4" Fill="#00AAFF"/>
-                                </Canvas>
-                                <TextBlock Text="Blue T-Style" 
-                                           Style="{StaticResource MutedText}" 
-                                           FontSize="11" 
-                                           HorizontalAlignment="Center"/>
-                            </StackPanel>
-                        </Border>
+                                    <StackPanel HorizontalAlignment="Center">
+                                        <Border Background="{StaticResource SecondaryBrush}"
+                                            CornerRadius="6"
+                                            Width="128"
+                                            Height="128"
+                                            Margin="0,0,0,8"
+                                            ClipToBounds="True">
 
-                        <!-- Crosshair Item 4 -->
-                        <Border Background="{StaticResource SecondaryBrush}" 
-                                BorderBrush="{StaticResource BorderBrush}" 
-                                BorderThickness="1" 
-                                CornerRadius="8" 
-                                Padding="12" 
-                                Margin="0,0,12,12">
-                            <StackPanel HorizontalAlignment="Center">
-                                <Canvas Width="56" Height="56">
-                                    <Rectangle Canvas.Left="26" Canvas.Top="14" Width="4" Height="12" Fill="#FFFF00"/>
-                                    <Rectangle Canvas.Left="26" Canvas.Top="30" Width="4" Height="12" Fill="#FFFF00"/>
-                                    <Rectangle Canvas.Left="14" Canvas.Top="26" Width="12" Height="4" Fill="#FFFF00"/>
-                                    <Rectangle Canvas.Left="30" Canvas.Top="26" Width="12" Height="4" Fill="#FFFF00"/>
-                                </Canvas>
-                                <TextBlock Text="Yellow Classic" 
+                                            <Canvas
+                                                Loaded="OnRecentCrosshairCanvasLoaded"
+                                                Tag="{Binding}"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"/>
+                                        </Border>
+
+                                        <TextBlock Text="{Binding CrosshairName}"
                                            Style="{StaticResource MutedText}" 
                                            FontSize="11" 
                                            HorizontalAlignment="Center"/>
-                            </StackPanel>
-                        </Border>
-                    </WrapPanel>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
                 </StackPanel>
             </Border>
         </StackPanel>
