@@ -1,5 +1,6 @@
-﻿using System.Collections.ObjectModel;
-using CrosshairY.Models;
+﻿using CrosshairY.Models;
+using System.Collections.ObjectModel;
+using System.Text.Json;
 
 namespace CrosshairY.Managers
 {
@@ -27,7 +28,13 @@ namespace CrosshairY.Managers
             if (crosshair == null)
                 return;
 
+            App.Settings.Crosshair = JsonSerializer.Deserialize<CrosshairSettings>(
+                JsonSerializer.Serialize(crosshair)!
+            )!;
+
             App.Overlay.UpdateCrosshair(crosshair);
+
+            SettingsService.SaveAsync(App.Settings);
 
             CrosshairChanged?.Invoke(crosshair);
         }
