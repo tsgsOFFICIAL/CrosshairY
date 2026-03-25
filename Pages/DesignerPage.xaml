@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:CrosshairY.Pages"
+      xmlns:colorpicker="clr-namespace:ColorPicker;assembly=ColorPicker"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Designer"
@@ -96,7 +97,7 @@
                                         </Style.Triggers>
                                     </Style>
                                 </StackPanel.Style>
-                                
+
                                 <Grid Margin="0,0,0,8">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
@@ -132,15 +133,25 @@
 
                             <!-- Color Preview and Picker -->
                             <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
-                                <Border x:Name="ColorPreview" 
-                                        Width="40" Height="40" 
-                                        CornerRadius="6" 
-                                        BorderBrush="{StaticResource BorderBrush}"
-                                        BorderThickness="1"
-                                        Background="#00FF00" 
-                                        Margin="0,0,12,0"/>
-                                <Button Content="Pick Color" 
-                                        Style="{StaticResource SecondaryButton}"/>
+                                <Border Width="40" Height="40" 
+                                    CornerRadius="12" 
+                                    BorderBrush="{StaticResource BorderBrush}"
+                                    BorderThickness="1"
+                                    Background="Transparent"
+                                    Margin="0,0,12,0">
+
+                                    <Border.Clip>
+                                        <RectangleGeometry Rect="0,0,40,40" RadiusX="12" RadiusY="12"/>
+                                    </Border.Clip>
+
+                                    <colorpicker:PortableColorPicker 
+                                        x:Name="ColorPicker"
+                                        Style="{StaticResource DefaultColorPickerStyle}" SmallChange="5"
+                                        UseHintColor="True" HintColor="Lime"                                                                  
+                                        ShowFractionalPart="False"
+                                        ShowAlpha="True"
+                                        SelectedColor="{Binding Color, Mode=TwoWay}"/>
+                                </Border>
                             </StackPanel>
 
                             <!-- R Slider -->

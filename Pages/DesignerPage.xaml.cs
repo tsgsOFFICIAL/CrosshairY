@@ -1,8 +1,9 @@
-﻿using CrosshairY.Models;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using System.Windows.Controls;
+using System.ComponentModel;
 using System.Windows.Media;
+using CrosshairY.Models;
+using System.Windows;
 
 namespace CrosshairY.Pages
 {
@@ -18,6 +19,34 @@ namespace CrosshairY.Pages
             InitializeComponent();
             DataContext = this;
         }
+
+        private System.Windows.Media.Color _color;
+
+        public System.Windows.Media.Color Color
+        {
+            get => _color;
+            set
+            {
+                if (_color == value)
+                    return;
+
+                _color = value;
+
+                // Sync into settings
+                _settings.ColorR = value.R;
+                _settings.ColorG = value.G;
+                _settings.ColorB = value.B;
+                _settings.Alpha = value.A;
+
+                // Notify / Update UI
+                Notify();
+                Notify(nameof(ColorR));
+                Notify(nameof(ColorG));
+                Notify(nameof(ColorB));
+                Notify(nameof(Alpha));
+            }
+        }
+
         // ---- Shape ----
         public float Gap
         {
@@ -64,28 +93,31 @@ namespace CrosshairY.Pages
         // ---- Color ----
         public byte ColorR
         {
-            get => _settings.ColorR;
-            set { _settings.ColorR = value; Notify(); Notify(nameof(ColorBrush)); }
+            get => Color.R;
+            set => Color = System.Windows.Media.Color.FromArgb(Color.A, value, Color.G, Color.B);
         }
 
         public byte ColorG
         {
-            get => _settings.ColorG;
-            set { _settings.ColorG = value; Notify(); Notify(nameof(ColorBrush)); }
+            get => Color.G;
+            set => Color = System.Windows.Media.Color.FromArgb(Color.A, Color.R, value, Color.B);
         }
 
         public byte ColorB
         {
-            get => _settings.ColorB;
-            set { _settings.ColorB = value; Notify(); Notify(nameof(ColorBrush)); }
+            get => Color.B;
+            set => Color = System.Windows.Media.Color.FromArgb(Color.A, Color.R, Color.G, value);
         }
 
         public byte Alpha
         {
-            get => _settings.Alpha;
-            set { _settings.Alpha = value; Notify(); Notify(nameof(ColorBrush)); }
+            get => Color.A;
+            set => Color = System.Windows.Media.Color.FromArgb(value, Color.R, Color.G, Color.B);
         }
 
-        public System.Windows.Media.Brush ColorBrush => new SolidColorBrush(System.Windows.Media.Color.FromArgb(Alpha, ColorR, ColorG, ColorB));
+        //private void OnColorPickerColorChanged(object sender, RoutedEventArgs e)
+        //{
+        //    Color = ColorPicker.SelectedColor;
+        //}
     }
 }
