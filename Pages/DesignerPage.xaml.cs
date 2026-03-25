@@ -242,6 +242,13 @@ namespace CrosshairY.Pages
 
             Color = System.Windows.Media.Color.FromArgb(_crosshair.Alpha, _crosshair.ColorR, _crosshair.ColorG, _crosshair.ColorB);
 
+            Notify(nameof(Gap));
+            Notify(nameof(Length));
+            Notify(nameof(Thickness));
+            Notify(nameof(OutlineThickness));
+            Notify(nameof(Dot));
+            Notify(nameof(TStyle));
+            Notify(nameof(Outline));
             Notify(nameof(CrosshairName));
             Notify(nameof(Description));
         }
@@ -279,13 +286,7 @@ namespace CrosshairY.Pages
         }
         private void OnSaveCrosshairButtonClicked(object sender, RoutedEventArgs e)
         {
-            App.Settings.Crosshair = JsonSerializer.Deserialize<CrosshairSettings>(
-                JsonSerializer.Serialize(_crosshair)!
-            )!;
-
             CrosshairManager.Instance.UpdateCrosshair(_crosshair);
-
-            SettingsService.SaveAsync(App.Settings);
 
             System.Windows.MessageBox.Show("Crosshair saved!", "CrosshairY");
         }
