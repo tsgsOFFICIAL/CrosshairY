@@ -86,6 +86,9 @@ namespace CrosshairY.Models
 
     public class CrosshairSettings
     {
+        public string CrosshairName { get; set; } = "My Crosshair";
+        public string Description { get; set; } = "A very cool crosshair";
+
         public float Gap { get; set; } = 0;
         public float Length { get; set; } = 10;
         public float Thickness { get; set; } = 1;

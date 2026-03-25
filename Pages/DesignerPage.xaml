@@ -23,6 +23,46 @@
                 BorderThickness="0,0,1,0">
             <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="16">
                 <StackPanel>
+                    <Border Style="{StaticResource Card}"
+                            Background="{StaticResource SecondaryBrush}"
+                            Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="Crosshair Information"
+                                       Style="{StaticResource SubheadingText}"
+                                       FontSize="13"
+                                       Margin="0,0,0,16"/>
+
+                            <!-- Crosshair Name -->
+                            <TextBlock Text="Name" 
+                                       Style="{StaticResource BodyText}" 
+                                       Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding CrosshairName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     MaxLength="25"
+                                     Margin="0,0,0,16"
+                                     Background="{StaticResource SecondaryBrush}"
+                                     Foreground="{StaticResource ForegroundBrush}"
+                                     BorderBrush="{StaticResource BorderBrush}"
+                                     Padding="8,6"
+                                     FontSize="14"
+                                     VerticalContentAlignment="Center"/>
+
+                            <!-- Short Description -->
+                            <TextBlock Text="Description (max 50 characters)" 
+                                       Style="{StaticResource BodyText}" 
+                                       Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     MaxLength="50"
+                                     AcceptsReturn="True"
+                                     TextWrapping="Wrap"
+                                     Height="55"
+                                     VerticalScrollBarVisibility="Auto"
+                                     Background="{StaticResource SecondaryBrush}"
+                                     Foreground="{StaticResource ForegroundBrush}"
+                                     BorderBrush="{StaticResource BorderBrush}"
+                                     Padding="8,6"
+                                     FontSize="14"/>
+                        </StackPanel>
+                    </Border>
 
                     <!-- Shape Settings Card -->
                     <Border Style="{StaticResource Card}" 

@@ -95,10 +95,10 @@
                                 <Canvas x:Name="ActiveCrosshairCanvas"></Canvas>
                             </Border>
                             <StackPanel VerticalAlignment="Center">
-                                <TextBlock Text="Crosshair name" 
+                                <TextBlock Text="{Binding Crosshair.CrosshairName}" 
                                            Style="{StaticResource BodyText}" 
                                            FontWeight="Medium"/>
-                                <TextBlock Text="Short description, about this long" 
+                                <TextBlock Text="{Binding Crosshair.Description}" 
                                            Style="{StaticResource MutedText}"/>
                             </StackPanel>
                         </StackPanel>

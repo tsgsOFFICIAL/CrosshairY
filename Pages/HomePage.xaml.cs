@@ -44,6 +44,17 @@ namespace CrosshairY.Pages
             }
         }
 
+        private CrosshairSettings _crosshair = new();
+
+        public CrosshairSettings Crosshair
+        {
+            get => _crosshair;
+            set
+            {
+                _crosshair = value;
+                OnPropertyChanged();
+            }
+        }
 
         public HomePage()
         {
@@ -60,6 +71,7 @@ namespace CrosshairY.Pages
         private void OnPageLoaded(object sender, RoutedEventArgs e)
         {
             OnToggleCrosshairHotkeyChanged();
+            Crosshair = App.Settings.Crosshair;
         }
 
         private void OnActiveCrosshairCanvasSizeChanged(object sender, SizeChangedEventArgs e)

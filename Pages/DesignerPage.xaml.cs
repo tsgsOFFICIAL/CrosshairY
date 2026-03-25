@@ -45,6 +45,33 @@ namespace CrosshairY.Pages
             }
         }
 
+        // ---- Metadata ----
+        public string CrosshairName
+        {
+            get => _crosshair.CrosshairName;
+            set
+            {
+                if (_crosshair.CrosshairName == value)
+                    return;
+
+                _crosshair.CrosshairName = value;
+                Notify(nameof(CrosshairName));
+            }
+        }
+
+        public string Description
+        {
+            get => _crosshair.Description;
+            set
+            {
+                if (_crosshair.Description == value)
+                    return;
+
+                _crosshair.Description = value;
+                Notify(nameof(Description));
+            }
+        }
+
         // ---- Shape ----
         public float Gap
         {
@@ -214,6 +241,9 @@ namespace CrosshairY.Pages
             CrosshairRenderer.Render(CrosshairCanvas, _crosshair);
 
             Color = System.Windows.Media.Color.FromArgb(_crosshair.Alpha, _crosshair.ColorR, _crosshair.ColorG, _crosshair.ColorB);
+
+            Notify(nameof(CrosshairName));
+            Notify(nameof(Description));
         }
         private void OnCopyShareCodeButtonClicked(object sender, RoutedEventArgs e)
         {
@@ -235,13 +265,15 @@ namespace CrosshairY.Pages
 
                     Color = System.Windows.Media.Color.FromArgb(_crosshair.Alpha, _crosshair.ColorR, _crosshair.ColorG, _crosshair.ColorB);
 
-                    Notify("Gap");
-                    Notify("Length");
-                    Notify("Thickness");
-                    Notify("OutlineThickness");
-                    Notify("Dot");
-                    Notify("TStyle");
-                    Notify("Outline");
+                    Notify(nameof(Gap));
+                    Notify(nameof(Length));
+                    Notify(nameof(Thickness));
+                    Notify(nameof(OutlineThickness));
+                    Notify(nameof(Dot));
+                    Notify(nameof(TStyle));
+                    Notify(nameof(Outline));
+                    Notify(nameof(CrosshairName));
+                    Notify(nameof(Description));
                 }
             }
         }
@@ -270,13 +302,15 @@ namespace CrosshairY.Pages
 
                 Color = System.Windows.Media.Color.FromArgb(_crosshair.Alpha, _crosshair.ColorR, _crosshair.ColorG, _crosshair.ColorB);
 
-                Notify("Gap");
-                Notify("Length");
-                Notify("Thickness");
-                Notify("OutlineThickness");
-                Notify("Dot");
-                Notify("TStyle");
-                Notify("Outline");
+                Notify(nameof(Gap));
+                Notify(nameof(Length));
+                Notify(nameof(Thickness));
+                Notify(nameof(OutlineThickness));
+                Notify(nameof(Dot));
+                Notify(nameof(TStyle));
+                Notify(nameof(Outline));
+                Notify(nameof(CrosshairName));
+                Notify(nameof(Description));
             }
         }
         #endregion
