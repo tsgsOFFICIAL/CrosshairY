@@ -50,9 +50,16 @@ namespace CrosshairY.Pages
             InitializeComponent();
             DataContext = this;
 
+            Loaded += OnPageLoaded;
+
             App.Settings.Hotkey.ToggleCrosshairHotkeyChanged += OnToggleCrosshairHotkeyChanged;
             CrosshairManager.Instance.CrosshairChanged += OnCrosshairChanged;
             ActiveCrosshairCanvas.SizeChanged += OnActiveCrosshairCanvasSizeChanged;
+        }
+
+        private void OnPageLoaded(object sender, RoutedEventArgs e)
+        {
+            OnToggleCrosshairHotkeyChanged();
         }
 
         private void OnActiveCrosshairCanvasSizeChanged(object sender, SizeChangedEventArgs e)
