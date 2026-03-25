@@ -3,7 +3,6 @@ using System.Windows.Controls;
 using System.ComponentModel;
 using System.Windows.Media;
 using CrosshairY.Models;
-using System.Windows;
 
 namespace CrosshairY.Pages
 {
@@ -114,10 +113,5 @@ namespace CrosshairY.Pages
             get => Color.A;
             set => Color = System.Windows.Media.Color.FromArgb(value, Color.R, Color.G, Color.B);
         }
-
-        //private void OnColorPickerColorChanged(object sender, RoutedEventArgs e)
-        //{
-        //    Color = ColorPicker.SelectedColor;
-        //}
     }
 }
