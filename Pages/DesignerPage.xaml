@@ -224,21 +224,21 @@
                             <Button Content="Copy Crosshair Code" 
                                     Style="{StaticResource SecondaryButton}" 
                                     HorizontalAlignment="Stretch"
-                                    Margin="0,0,0,8"/>
+                                    Margin="0,0,0,8" Click="OnCopyShareCodeButtonClicked"/>
                             <Button Content="Import Crosshair Code" 
                                     Style="{StaticResource SecondaryButton}" 
                                     HorizontalAlignment="Stretch"
-                                    Margin="0,0,0,8"/>
+                                    Margin="0,0,0,8" Click="OnImportShareCodeButtonClicked"/>
                             <Button Content="Save Crosshair" 
                                     Style="{StaticResource PrimaryButton}" 
                                     HorizontalAlignment="Stretch"
-                                    Margin="0,0,0,8"/>
+                                    Margin="0,0,0,8" Click="OnSaveCrosshairButtonClicked"/>
                             <Button Content="Reset to Default" 
                                     Background="Transparent"
                                     Foreground="{StaticResource MutedForegroundBrush}"
                                     BorderThickness="0"
                                     HorizontalAlignment="Left"
-                                    Cursor="Hand"/>
+                                    Cursor="Hand" Click="OnResetCrosshairButtonClicked"/>
                         </StackPanel>
                     </Border>
                 </StackPanel>

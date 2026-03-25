@@ -2,6 +2,7 @@
 using System.Windows.Controls;
 using System.ComponentModel;
 using System.Windows.Media;
+using CrosshairY.Managers;
 using CrosshairY.Models;
 using System.Text.Json;
 using System.Windows;
@@ -197,6 +198,13 @@ namespace CrosshairY.Pages
             Loaded += OnPageLoaded;
         }
 
+        private void SetAndRender(string propertyName)
+        {
+            Notify(propertyName);
+            CrosshairRenderer.Render(CrosshairCanvas, _crosshair);
+        }
+
+        #region Event Handlers
         private void OnPageLoaded(object sender, RoutedEventArgs e)
         {
             _crosshair = App.Settings.Crosshair == null ? new() : JsonSerializer.Deserialize<CrosshairSettings>(
@@ -207,11 +215,70 @@ namespace CrosshairY.Pages
 
             Color = System.Windows.Media.Color.FromArgb(_crosshair.Alpha, _crosshair.ColorR, _crosshair.ColorG, _crosshair.ColorB);
         }
-
-        private void SetAndRender(string propertyName)
+        private void OnCopyShareCodeButtonClicked(object sender, RoutedEventArgs e)
         {
-            Notify(propertyName);
-            CrosshairRenderer.Render(CrosshairCanvas, _crosshair);
+            string shareCode = ShareCode.Encode(_crosshair);
+            System.Windows.Clipboard.SetText(shareCode);
+            System.Windows.MessageBox.Show($"Share code copied!\n{shareCode}", "CrosshairY");
         }
+        private void OnImportShareCodeButtonClicked(object sender, RoutedEventArgs e)
+        {
+            string code = Microsoft.VisualBasic.Interaction.InputBox("Paste share code:", "Import");
+            if (!string.IsNullOrEmpty(code))
+            {
+                CrosshairSettings? imported = ShareCode.Decode(code);
+                if (imported != null)
+                {
+                    _crosshair = imported;
+
+                    CrosshairRenderer.Render(CrosshairCanvas, _crosshair);
+
+                    Color = System.Windows.Media.Color.FromArgb(_crosshair.Alpha, _crosshair.ColorR, _crosshair.ColorG, _crosshair.ColorB);
+
+                    Notify("Gap");
+                    Notify("Length");
+                    Notify("Thickness");
+                    Notify("OutlineThickness");
+                    Notify("Dot");
+                    Notify("TStyle");
+                    Notify("Outline");
+                }
+            }
+        }
+        private void OnSaveCrosshairButtonClicked(object sender, RoutedEventArgs e)
+        {
+            App.Settings.Crosshair = JsonSerializer.Deserialize<CrosshairSettings>(
+                JsonSerializer.Serialize(_crosshair)!
+            )!;
+
+            CrosshairManager.Instance.UpdateCrosshair(_crosshair);
+
+            SettingsService.SaveAsync(App.Settings);
+
+            System.Windows.MessageBox.Show("Crosshair saved!", "CrosshairY");
+        }
+        private void OnResetCrosshairButtonClicked(object sender, RoutedEventArgs e)
+        {
+            string defaultCrosshairCode = "TSGS-FRpV8-zVGEc-CUKFU-uhf2x-wFYym-ng8Hq-gi"; // ← pre-encoded default crosshair settings
+
+            CrosshairSettings? imported = ShareCode.Decode(defaultCrosshairCode);
+            if (imported != null)
+            {
+                _crosshair = imported;
+
+                CrosshairRenderer.Render(CrosshairCanvas, _crosshair);
+
+                Color = System.Windows.Media.Color.FromArgb(_crosshair.Alpha, _crosshair.ColorR, _crosshair.ColorG, _crosshair.ColorB);
+
+                Notify("Gap");
+                Notify("Length");
+                Notify("Thickness");
+                Notify("OutlineThickness");
+                Notify("Dot");
+                Notify("TStyle");
+                Notify("Outline");
+            }
+        }
+        #endregion
     }
 }
