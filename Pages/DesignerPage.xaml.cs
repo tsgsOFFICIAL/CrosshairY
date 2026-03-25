@@ -3,6 +3,8 @@ using System.Windows.Controls;
 using System.ComponentModel;
 using System.Windows.Media;
 using CrosshairY.Models;
+using System.Text.Json;
+using System.Windows;
 
 namespace CrosshairY.Pages
 {
@@ -11,13 +13,7 @@ namespace CrosshairY.Pages
         public event PropertyChangedEventHandler? PropertyChanged;
         private void Notify([CallerMemberName] string? name = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 
-        private readonly CrosshairSettings _settings = new();
-
-        public DesignerPage()
-        {
-            InitializeComponent();
-            DataContext = this;
-        }
+        private CrosshairSettings _crosshair = new();
 
         private System.Windows.Media.Color _color;
 
@@ -32,10 +28,10 @@ namespace CrosshairY.Pages
                 _color = value;
 
                 // Sync into settings
-                _settings.ColorR = value.R;
-                _settings.ColorG = value.G;
-                _settings.ColorB = value.B;
-                _settings.Alpha = value.A;
+                _crosshair.ColorR = value.R;
+                _crosshair.ColorG = value.G;
+                _crosshair.ColorB = value.B;
+                _crosshair.Alpha = value.A;
 
                 // Notify / Update UI
                 Notify();
@@ -43,75 +39,179 @@ namespace CrosshairY.Pages
                 Notify(nameof(ColorG));
                 Notify(nameof(ColorB));
                 Notify(nameof(Alpha));
+
+                CrosshairRenderer.Render(CrosshairCanvas, _crosshair);
             }
         }
 
         // ---- Shape ----
         public float Gap
         {
-            get => _settings.Gap;
-            set { _settings.Gap = value; Notify(); }
+            get => _crosshair.Gap;
+            set
+            {
+                if (_crosshair.Gap == value)
+                    return;
+
+                _crosshair.Gap = value;
+                SetAndRender(nameof(Gap));
+            }
         }
 
         public float Length
         {
-            get => _settings.Length;
-            set { _settings.Length = value; Notify(); }
+            get => _crosshair.Length;
+            set
+            {
+                if (_crosshair.Length == value)
+                    return;
+
+                _crosshair.Length = value;
+                SetAndRender(nameof(Length));
+            }
         }
 
         public float Thickness
         {
-            get => _settings.Thickness;
-            set { _settings.Thickness = value; Notify(); }
+            get => _crosshair.Thickness;
+            set
+            {
+                if (_crosshair.Thickness == value)
+                    return;
+
+                _crosshair.Thickness = value;
+                SetAndRender(nameof(Thickness));
+            }
         }
 
         public float OutlineThickness
         {
-            get => _settings.OutlineThickness;
-            set { _settings.OutlineThickness = value; Notify(); }
+            get => _crosshair.OutlineThickness;
+            set
+            {
+                if (_crosshair.OutlineThickness == value)
+                    return;
+
+                _crosshair.OutlineThickness = value;
+                SetAndRender(nameof(OutlineThickness));
+            }
         }
 
         public bool Dot
         {
-            get => _settings.Dot;
-            set { _settings.Dot = value; Notify(); }
+            get => _crosshair.Dot;
+            set
+            {
+                if (_crosshair.Dot == value)
+                    return;
+
+                _crosshair.Dot = value;
+                SetAndRender(nameof(Dot));
+            }
         }
 
         public bool TStyle
         {
-            get => _settings.TStyle;
-            set { _settings.TStyle = value; Notify(); }
+            get => _crosshair.TStyle;
+            set
+            {
+                if (_crosshair.TStyle == value)
+                    return;
+
+                _crosshair.TStyle = value;
+                SetAndRender(nameof(TStyle));
+            }
         }
 
         public bool Outline
         {
-            get => _settings.Outline;
-            set { _settings.Outline = value; Notify(); }
+            get => _crosshair.Outline;
+            set
+            {
+                if (_crosshair.Outline == value)
+                    return;
+
+                _crosshair.Outline = value;
+                SetAndRender(nameof(Outline));
+            }
         }
 
         // ---- Color ----
         public byte ColorR
         {
             get => Color.R;
-            set => Color = System.Windows.Media.Color.FromArgb(Color.A, value, Color.G, Color.B);
+            set
+            {
+                if (Color.R == value)
+                    return;
+
+                Color = System.Windows.Media.Color.FromArgb(Color.A, value, Color.G, Color.B);
+                SetAndRender(nameof(ColorR));
+            }
         }
 
         public byte ColorG
         {
             get => Color.G;
-            set => Color = System.Windows.Media.Color.FromArgb(Color.A, Color.R, value, Color.B);
+            set
+            {
+                if (Color.G == value)
+                    return;
+
+                Color = System.Windows.Media.Color.FromArgb(Color.A, Color.R, value, Color.B);
+                SetAndRender(nameof(ColorG));
+            }
         }
 
         public byte ColorB
         {
             get => Color.B;
-            set => Color = System.Windows.Media.Color.FromArgb(Color.A, Color.R, Color.G, value);
+            set
+            {
+                if (Color.B == value)
+                    return;
+
+                Color = System.Windows.Media.Color.FromArgb(Color.A, Color.R, Color.G, value);
+                SetAndRender(nameof(ColorB));
+            }
         }
 
         public byte Alpha
         {
             get => Color.A;
-            set => Color = System.Windows.Media.Color.FromArgb(value, Color.R, Color.G, Color.B);
+            set
+            {
+                if (Color.A == value)
+                    return;
+
+                Color = System.Windows.Media.Color.FromArgb(value, Color.R, Color.G, Color.B);
+                SetAndRender(nameof(Alpha));
+            }
+        }
+
+        public DesignerPage()
+        {
+            InitializeComponent();
+            DataContext = this;
+
+            Loaded += OnPageLoaded;
+        }
+
+        private void OnPageLoaded(object sender, RoutedEventArgs e)
+        {
+            _crosshair = App.Settings.Crosshair == null ? new() : JsonSerializer.Deserialize<CrosshairSettings>(
+                JsonSerializer.Serialize(App.Settings.Crosshair)!
+            )!;
+
+            CrosshairRenderer.Render(CrosshairCanvas, _crosshair);
+
+            Color = System.Windows.Media.Color.FromArgb(_crosshair.Alpha, _crosshair.ColorR, _crosshair.ColorG, _crosshair.ColorB);
+        }
+
+        private void SetAndRender(string propertyName)
+        {
+            Notify(propertyName);
+            CrosshairRenderer.Render(CrosshairCanvas, _crosshair);
         }
     }
 }

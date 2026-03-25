@@ -43,7 +43,7 @@
                                 <TextBlock Text="Gap" Style="{StaticResource BodyText}"/>
                                 <TextBlock Grid.Column="1" Text="{Binding Gap, StringFormat=F1}" Style="{StaticResource MutedText}"/>
                             </Grid>
-                            <Slider Minimum="-20" Maximum="20"
+                            <Slider Minimum="-20" Maximum="50"
                                 Value="{Binding Gap, Mode=TwoWay}"
                                 Margin="0,0,0,16" TickFrequency="0.1"
                                 IsSnapToTickEnabled="True"
