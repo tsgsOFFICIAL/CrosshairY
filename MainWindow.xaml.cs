@@ -164,9 +164,9 @@ namespace CrosshairY
             int extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
             SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TOOLWINDOW);
 
-            NotificationManager.ShowNotification("CrosshairY", "Minimized to tray - drops still farming!");
+            NotificationManager.ShowNotification("CrosshairY", "Minimized to tray");
             MinimizeAndRestore.Header = "Restore";
-            MyNotifyIcon.ToolTipText = "CrosshairY - Farming in background";
+            MyNotifyIcon.ToolTipText = "CrosshairY by tsgsOFFICIAL";
         }
         /// <summary>
         /// Restores the application's main window from tray mode to its normal state and updates its appearance and
