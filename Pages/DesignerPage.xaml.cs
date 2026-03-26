@@ -1,11 +1,14 @@
-﻿using System.Runtime.CompilerServices;
-using System.Windows.Controls;
-using System.ComponentModel;
-using System.Windows.Media;
-using CrosshairY.Managers;
+﻿using CrosshairY.Managers;
 using CrosshairY.Models;
+using System.ComponentModel;
+using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace CrosshairY.Pages
 {
@@ -231,6 +234,12 @@ namespace CrosshairY.Pages
             CrosshairRenderer.Render(CrosshairCanvas, _crosshair);
         }
 
+        private static string GetProposedText(System.Windows.Controls.TextBox textBox, string input)
+        {
+            string text = textBox.Text.Remove(textBox.SelectionStart, textBox.SelectionLength);
+            return text.Insert(textBox.SelectionStart, input);
+        }
+
         #region Event Handlers
         private void OnPageLoaded(object sender, RoutedEventArgs e)
         {
@@ -252,6 +261,7 @@ namespace CrosshairY.Pages
             Notify(nameof(CrosshairName));
             Notify(nameof(Description));
         }
+
         private void OnCopyShareCodeButtonClicked(object sender, RoutedEventArgs e)
         {
             string shareCode = ShareCode.Encode(_crosshair);
@@ -284,11 +294,10 @@ namespace CrosshairY.Pages
                 }
             }
         }
-        private void OnSaveCrosshairButtonClicked(object sender, RoutedEventArgs e)
-        {
-            CrosshairManager.Instance.UpdateCrosshair(_crosshair);
 
-            System.Windows.MessageBox.Show("Crosshair saved!", "CrosshairY");
+        private async void OnSaveCrosshairButtonClicked(object sender, RoutedEventArgs e)
+        {
+            await CrosshairManager.Instance.UpdateCrosshair(_crosshair);
         }
         private void OnResetCrosshairButtonClicked(object sender, RoutedEventArgs e)
         {
@@ -312,6 +321,160 @@ namespace CrosshairY.Pages
                 Notify(nameof(Outline));
                 Notify(nameof(CrosshairName));
                 Notify(nameof(Description));
+            }
+        }
+
+        private void OnGapSliderRightClick(object sender, MouseButtonEventArgs e)
+        {
+            GapTextBox.SelectAll();
+            GapTextBox.Focus();
+        }
+        private void OnLengthSliderRightClick(object sender, MouseButtonEventArgs e)
+        {
+            LengthTextBox.SelectAll();
+            LengthTextBox.Focus();
+        }
+        private void OnThicknessSliderRightClick(object sender, MouseButtonEventArgs e)
+        {
+            ThicknessTextBox.SelectAll();
+            ThicknessTextBox.Focus();
+        }
+        private void OnOutlineThicknessSliderRightClick(object sender, MouseButtonEventArgs e)
+        {
+            OutlineThicknessTextBox.SelectAll();
+            OutlineThicknessTextBox.Focus();
+        }
+        private void OnColorRSliderRightClick(object sender, MouseButtonEventArgs e)
+        {
+            ColorRTextBox.SelectAll();
+            ColorRTextBox.Focus();
+        }
+        private void OnColorGSliderRightClick(object sender, MouseButtonEventArgs e)
+        {
+            ColorGTextBox.SelectAll();
+            ColorGTextBox.Focus();
+        }
+        private void OnColorBSliderRightClick(object sender, MouseButtonEventArgs e)
+        {
+            ColorBTextBox.SelectAll();
+            ColorBTextBox.Focus();
+        }
+        private void OnColorASliderRightClick(object sender, MouseButtonEventArgs e)
+        {
+            ColorATextBox.SelectAll();
+            ColorATextBox.Focus();
+        }
+
+        private void OnRgbPreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            System.Windows.Controls.TextBox textBox = (System.Windows.Controls.TextBox)sender;
+
+            // Block whitespace immediately
+            if (string.IsNullOrWhiteSpace(e.Text))
+            {
+                e.Handled = true;
+                return;
+            }
+
+            string newText = GetProposedText(textBox, e.Text);
+
+            // Only allow digits
+            if (!int.TryParse(newText, out int value))
+            {
+                e.Handled = true;
+                return;
+            }
+
+            // Clamp instead of blocking
+            if (value > 255)
+            {
+                textBox.Text = "255";
+                textBox.CaretIndex = textBox.Text.Length;
+                e.Handled = true;
+            }
+        }
+        private void OnRgbPreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            // Block anything that's not a digit or control key
+            if (!(e.Key >= Key.D0 && e.Key <= Key.D9) &&
+                !(e.Key >= Key.NumPad0 && e.Key <= Key.NumPad9) &&
+                e.Key != Key.Back &&
+                e.Key != Key.Delete &&
+                e.Key != Key.Left &&
+                e.Key != Key.Right &&
+                e.Key != Key.Tab &&
+                e.Key != Key.End &&
+                e.Key != Key.Home &&
+                e.Key != Key.PageUp &&
+                e.Key != Key.PageDown)
+            {
+                e.Handled = true;
+            }
+        }
+
+        private void OnDecimalPreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            System.Windows.Controls.TextBox textBox = (System.Windows.Controls.TextBox)sender;
+
+            string proposed = GetProposedText(textBox, e.Text).Replace(',', '.');
+
+            // Allow empty or incomplete numbers
+            if (string.IsNullOrEmpty(proposed) || Regex.IsMatch(proposed, @"^-?(\d+)?(\.\d*)?$"))
+            {
+                // If fully numeric, clamp immediately
+                if (double.TryParse(proposed, NumberStyles.Float, CultureInfo.InvariantCulture, out double value) && textBox.Tag is Slider slider)
+                {
+                    if (value > slider.Maximum)
+                    {
+                        textBox.Text = slider.Maximum.ToString("F1", CultureInfo.InvariantCulture);
+                        textBox.CaretIndex = textBox.Text.Length;
+                        e.Handled = true;
+                    }
+                    else if (value < slider.Minimum)
+                    {
+                        textBox.Text = slider.Minimum.ToString("F1", CultureInfo.InvariantCulture);
+                        textBox.CaretIndex = textBox.Text.Length;
+                        e.Handled = true;
+                    }
+                }
+
+                // Allow typing
+                return;
+            }
+
+            // Block anything else (letters, symbols, etc.)
+            e.Handled = true;
+        }
+        private void OnDecimalTextBoxPasting(object sender, DataObjectPastingEventArgs e)
+        {
+            if (e.DataObject.GetDataPresent(System.Windows.DataFormats.Text))
+            {
+                System.Windows.Controls.TextBox textBox = (System.Windows.Controls.TextBox)sender;
+                string pasteText = ((string)e.DataObject.GetData(System.Windows.DataFormats.Text)).Replace(',', '.');
+
+                // Get proposed text after paste
+                string proposed = GetProposedText(textBox, pasteText);
+
+                // Clamp if fully numeric
+                if (double.TryParse(proposed, NumberStyles.Float, CultureInfo.InvariantCulture, out double value) &&
+                    textBox.Tag is Slider slider)
+                {
+                    if (value > slider.Maximum) value = slider.Maximum;
+                    if (value < slider.Minimum) value = slider.Minimum;
+                    textBox.Text = value.ToString("F1", CultureInfo.InvariantCulture);
+                }
+                else
+                {
+                    // For incomplete forms or empty, just allow the paste
+                    textBox.Text = proposed;
+                }
+
+                textBox.CaretIndex = textBox.Text.Length;
+                e.CancelCommand();
+            }
+            else
+            {
+                e.CancelCommand();
             }
         }
         #endregion

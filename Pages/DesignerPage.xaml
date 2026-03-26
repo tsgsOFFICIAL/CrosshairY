@@ -81,13 +81,14 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Text="Gap" Style="{StaticResource BodyText}"/>
-                                <TextBlock Grid.Column="1" Text="{Binding Gap, StringFormat=F1}" Style="{StaticResource MutedText}"/>
+                                <TextBox x:Name="GapTextBox" Grid.Column="1" Text="{Binding Gap, StringFormat=F1, UpdateSourceTrigger=PropertyChanged}" Tag="{Binding ElementName=GapSlider}" PreviewTextInput="OnDecimalPreviewTextInput" DataObject.Pasting="OnDecimalTextBoxPasting"/>
                             </Grid>
-                            <Slider Minimum="-20" Maximum="50"
-                                Value="{Binding Gap, Mode=TwoWay}"
+                            <Slider x:Name="GapSlider" Minimum="-20" Maximum="50"
+                                Value="{Binding Gap, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                 Margin="0,0,0,16" TickFrequency="0.1"
                                 IsSnapToTickEnabled="True"
-                                SmallChange="0.1" LargeChange="0.1"/>
+                                SmallChange="0.1" LargeChange="0.1"
+                                MouseRightButtonDown="OnGapSliderRightClick"/>
 
                             <!-- Length Slider -->
                             <Grid Margin="0,0,0,12">
@@ -96,13 +97,14 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Text="Length" Style="{StaticResource BodyText}"/>
-                                <TextBlock Grid.Column="1" Text="{Binding Length, StringFormat=F1}" Style="{StaticResource MutedText}"/>
+                                <TextBox x:Name="LengthTextBox" Grid.Column="1" Text="{Binding Length, StringFormat=F1, UpdateSourceTrigger=PropertyChanged}" Tag="{Binding ElementName=LengthSlider}" PreviewTextInput="OnDecimalPreviewTextInput" DataObject.Pasting="OnDecimalTextBoxPasting"/>
                             </Grid>
-                            <Slider Minimum="0" Maximum="200" Value="{Binding Length, Mode=TwoWay}"
+                            <Slider x:Name="LengthSlider" Minimum="0" Maximum="200" Value="{Binding Length, Mode=TwoWay}"
                                     TickFrequency="0.1"
                                     IsSnapToTickEnabled="True"
                                     SmallChange="0.1" LargeChange="0.1"
-                                    Margin="0,0,0,16"/>
+                                    Margin="0,0,0,16"
+                                    MouseRightButtonDown="OnLengthSliderRightClick"/>
 
                             <!-- Thickness Slider -->
                             <Grid Margin="0,0,0,12">
@@ -111,14 +113,15 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Text="Thickness" Style="{StaticResource BodyText}"/>
-                                <TextBlock Grid.Column="1" Text="{Binding Thickness, StringFormat=F1}" Style="{StaticResource MutedText}"/>
+                                <TextBox x:Name="ThicknessTextBox" Grid.Column="1" Text="{Binding Thickness, StringFormat=F1, UpdateSourceTrigger=PropertyChanged}" Tag="{Binding ElementName=ThicknessSlider}" PreviewTextInput="OnDecimalPreviewTextInput" DataObject.Pasting="OnDecimalTextBoxPasting"/>
                             </Grid>
-                            <Slider Minimum="0.1" Maximum="10"
+                            <Slider x:Name="ThicknessSlider" Minimum="0.1" Maximum="10"
                                 Value="{Binding Thickness, Mode=TwoWay}"
-                                    TickFrequency="0.1"
-                                    IsSnapToTickEnabled="True"
-                                    SmallChange="0.1" LargeChange="0.1"
-                                    Margin="0,0,0,16"/>
+                                TickFrequency="0.1"
+                                IsSnapToTickEnabled="True"
+                                SmallChange="0.1" LargeChange="0.1"
+                                Margin="0,0,0,16"
+                                MouseRightButtonDown="OnThicknessSliderRightClick"/>
 
                             <!-- Checkboxes -->
                             <CheckBox IsChecked="{Binding Outline, Mode=TwoWay}"
@@ -144,12 +147,13 @@
                                         <ColumnDefinition Width="Auto"/>
                                     </Grid.ColumnDefinitions>
                                     <TextBlock Text="Outline Thickness" Style="{StaticResource BodyText}"/>
-                                    <TextBlock Grid.Column="1" Text="{Binding OutlineThickness, StringFormat=F1}" Style="{StaticResource MutedText}"/>
+                                    <TextBox x:Name="OutlineThicknessTextBox" Grid.Column="1" Text="{Binding OutlineThickness, StringFormat=F1, UpdateSourceTrigger=PropertyChanged}" Tag="{Binding ElementName=OutlineThicknessSlider}" PreviewTextInput="OnDecimalPreviewTextInput" DataObject.Pasting="OnDecimalTextBoxPasting"/>
                                 </Grid>
-                                <Slider Minimum="0.1" Maximum="5" Value="{Binding OutlineThickness, Mode=TwoWay}"
+                                <Slider x:Name="OutlineThicknessSlider" Minimum="0.1" Maximum="5" Value="{Binding OutlineThickness, Mode=TwoWay}"
                                     TickFrequency="0.1"
                                     IsSnapToTickEnabled="True"
-                                    SmallChange="0.1" LargeChange="0.1"/>
+                                    SmallChange="0.1" LargeChange="0.1"
+                                    MouseRightButtonDown="OnOutlineThicknessSliderRightClick"/>
                             </StackPanel>
 
                             <CheckBox IsChecked="{Binding Dot, Mode=TwoWay}"
@@ -190,7 +194,8 @@
                                         UseHintColor="True" HintColor="Lime"                                                                  
                                         ShowFractionalPart="False"
                                         ShowAlpha="True"
-                                        SelectedColor="{Binding Color, Mode=TwoWay}"/>
+                                        SelectedColor="{Binding Color, Mode=TwoWay}"
+                                        Cursor="Hand"/>
                                 </Border>
                             </StackPanel>
 
@@ -201,12 +206,13 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Text="Red" Style="{StaticResource BodyText}"/>
-                                <TextBlock Grid.Column="1" Text="{Binding ColorR}" Style="{StaticResource MutedText}"/>
+                                <TextBox x:Name="ColorRTextBox" Grid.Column="1" Text="{Binding ColorR, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="OnRgbPreviewTextInput" PreviewKeyDown="OnRgbPreviewKeyDown"/>
                             </Grid>
                             <Slider Minimum="0" Maximum="255" Value="{Binding ColorR, Mode=TwoWay}" Margin="0,0,0,12"
                                     TickFrequency="1"
                                     IsSnapToTickEnabled="True"
-                                    SmallChange="1" LargeChange="1"/>
+                                    SmallChange="1" LargeChange="1"
+                                    MouseRightButtonDown="OnColorRSliderRightClick"/>
 
                             <!-- G Slider -->
                             <Grid Margin="0,0,0,8">
@@ -215,12 +221,13 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Text="Green" Style="{StaticResource BodyText}"/>
-                                <TextBlock Grid.Column="1" Text="{Binding ColorG}" Style="{StaticResource MutedText}"/>
+                                <TextBox x:Name="ColorGTextBox" Grid.Column="1" Text="{Binding ColorG, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="OnRgbPreviewTextInput" PreviewKeyDown="OnRgbPreviewKeyDown"/>
                             </Grid>
                             <Slider Minimum="0" Maximum="255" Value="{Binding ColorG, Mode=TwoWay}" Margin="0,0,0,12"
                                 TickFrequency="1"
                                 IsSnapToTickEnabled="True"
-                                SmallChange="1" LargeChange="1"/>
+                                SmallChange="1" LargeChange="1"
+                                MouseRightButtonDown="OnColorGSliderRightClick"/>
 
                             <!-- B Slider -->
                             <Grid Margin="0,0,0,8">
@@ -229,12 +236,13 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Text="Blue" Style="{StaticResource BodyText}"/>
-                                <TextBlock Grid.Column="1" Text="{Binding ColorB}" Style="{StaticResource MutedText}"/>
+                                <TextBox x:Name="ColorBTextBox" Grid.Column="1" Text="{Binding ColorB, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="OnRgbPreviewTextInput" PreviewKeyDown="OnRgbPreviewKeyDown"/>
                             </Grid>
                             <Slider Minimum="0" Maximum="255" Value="{Binding ColorB, Mode=TwoWay}" Margin="0,0,0,12"
                                 TickFrequency="1"
                                 IsSnapToTickEnabled="True"
-                                SmallChange="1" LargeChange="1"/>
+                                SmallChange="1" LargeChange="1"
+                                MouseRightButtonDown="OnColorBSliderRightClick"/>
 
                             <!-- A Slider -->
                             <Grid Margin="0,0,0,8">
@@ -243,12 +251,13 @@
                                     <ColumnDefinition Width="Auto"/>
                                 </Grid.ColumnDefinitions>
                                 <TextBlock Text="Alpha" Style="{StaticResource BodyText}"/>
-                                <TextBlock Grid.Column="1" Text="{Binding Alpha}" Style="{StaticResource MutedText}"/>
+                                <TextBox x:Name="ColorATextBox" Grid.Column="1" Text="{Binding Alpha, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="OnRgbPreviewTextInput" PreviewKeyDown="OnRgbPreviewKeyDown"/>
                             </Grid>
                             <Slider Minimum="0" Maximum="255" Value="{Binding Alpha, Mode=TwoWay}" Margin="0,0,0,12"
                                 TickFrequency="1"
                                 IsSnapToTickEnabled="True"
-                                SmallChange="1" LargeChange="1"/>
+                                SmallChange="1" LargeChange="1"
+                                MouseRightButtonDown="OnColorASliderRightClick"/>
                         </StackPanel>
                     </Border>
 
@@ -273,8 +282,8 @@
                                     Style="{StaticResource PrimaryButton}" 
                                     HorizontalAlignment="Stretch"
                                     Margin="0,0,0,8" Click="OnSaveCrosshairButtonClicked"/>
-                            <Button Content="Reset to Default" 
-                                    Background="Transparent"
+                            <Button Content="Reset to Default"
+                                    Style="{StaticResource TextButton}"
                                     Foreground="{StaticResource MutedForegroundBrush}"
                                     BorderThickness="0"
                                     HorizontalAlignment="Left"
