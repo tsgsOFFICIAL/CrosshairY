@@ -15,7 +15,7 @@
 ---
 
 ## Live Demo
-![Demo](https://github.com/tsgsOFFICIAL/CrosshairY/blob/master/full_demo.gif)
+![Demo](https://github.com/tsgsOFFICIAL/CrosshairY/blob/master/full_demo_new.gif)
 
 *The program displays a customizable crosshair overlay on your screen, staying on top of any game.*
 
@@ -51,11 +51,6 @@ Open a [GitHub Issue](https://github.com/tsgsOFFICIAL/CrosshairY/issues) or cont
    - Create a folder named `CrosshairY` and extract the files here.
 3. **Create a shortcut**:
    - Right-click `CrosshairY.exe` > `Send to` > `Desktop (create shortcut)`.
-
----
-
-## Limitations
-- May require minor adjustments for non-standard resolutions.
 
 ---
 
