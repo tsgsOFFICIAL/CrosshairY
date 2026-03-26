@@ -18,17 +18,32 @@ namespace CrosshairY.Managers
         public static async Task<SettingsDto> LoadAsync()
         {
             if (!File.Exists(Path))
-                return new SettingsDto();
+                return new SettingsDto { Version = SettingsDto.CurrentVersion };
 
             string json = await File.ReadAllTextAsync(Path);
-            return JsonSerializer.Deserialize<SettingsDto>(json) ?? new SettingsDto();
+
+            SettingsDto dto;
+
+            try
+            {
+                dto = JsonSerializer.Deserialize<SettingsDto>(json) ?? new SettingsDto();
+            }
+            catch
+            {
+                return new SettingsDto { Version = SettingsDto.CurrentVersion };
+            }
+
+            return Upgrade(dto);
         }
 
         public static Task SaveAsync(Settings settings)
         {
             SettingsDto dto = new SettingsDto
             {
+                Version = SettingsDto.CurrentVersion, // Always latest
+
                 Crosshair = settings.Crosshair,
+
                 Hotkeys = new Dictionary<string, HotkeyDto>
                 {
                     ["ToggleCrosshair"] = new HotkeyDto
@@ -36,11 +51,47 @@ namespace CrosshairY.Managers
                         Key = (int)(settings.Hotkey.ToggleCrosshair?.Key ?? Key.None),
                         Modifiers = (int)(settings.Hotkey.ToggleCrosshair?.Modifiers ?? ModifierKeys.None)
                     }
+                },
+
+                App = new AppSettingsDto
+                {
+                    StartWithWindows = settings.App.StartWithWindows,
+                    StartMinimized = settings.App.StartMinimized,
+                    RunInBackground = settings.App.RunInBackground,
+                    AutoUpdate = settings.App.AutoUpdate,
                 }
             };
 
             string json = JsonSerializer.Serialize(dto, Options);
             return File.WriteAllTextAsync(Path, json);
+        }
+
+        private static SettingsDto UpgradeFrom1To2(SettingsDto dto)
+        {
+            dto.App ??= new AppSettingsDto
+            {
+                StartWithWindows = true,
+                StartMinimized = false,
+                RunInBackground = true,
+                AutoUpdate = true,
+            };
+
+            dto.Version = 2;
+            return dto;
+        }
+
+        private static SettingsDto Upgrade(SettingsDto dto)
+        {
+            while (dto.Version < SettingsDto.CurrentVersion)
+            {
+                dto = dto.Version switch
+                {
+                    1 => UpgradeFrom1To2(dto),
+                    _ => dto
+                };
+            }
+
+            return dto;
         }
     }
 }

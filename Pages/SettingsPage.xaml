@@ -55,9 +55,23 @@
                                            Style="{StaticResource MutedText}" 
                                            FontSize="12"/>
                             </StackPanel>
-                            <ToggleButton Grid.Column="1" 
-                                          Width="44" Height="24" 
-                                          VerticalAlignment="Center"/>
+                            <CheckBox Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding StartWithWindows, Mode=TwoWay}"/>
+                        </Grid>
+
+                        <!-- Start minimized on startup -->
+                        <Grid Margin="0,0,0,16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Minimize to system tray on startup" 
+                                           Style="{StaticResource BodyText}"/>
+                                <TextBlock Text="Launch CrosshairY to system tray when Windows starts" 
+                                           Style="{StaticResource MutedText}" 
+                                           FontSize="12"/>
+                            </StackPanel>
+                            <CheckBox Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding StartMinimized, Mode=TwoWay}" IsEnabled="{Binding StartWithWindows}"/>
                         </Grid>
 
                         <!-- Run in background -->
@@ -73,29 +87,7 @@
                                            Style="{StaticResource MutedText}" 
                                            FontSize="12"/>
                             </StackPanel>
-                            <ToggleButton Grid.Column="1" 
-                                          IsChecked="True"
-                                          Width="44" Height="24" 
-                                          VerticalAlignment="Center"/>
-                        </Grid>
-
-                        <!-- Show in system tray -->
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
-                            </Grid.ColumnDefinitions>
-                            <StackPanel>
-                                <TextBlock Text="Show in system tray" 
-                                           Style="{StaticResource BodyText}"/>
-                                <TextBlock Text="Display icon in the system tray" 
-                                           Style="{StaticResource MutedText}" 
-                                           FontSize="12"/>
-                            </StackPanel>
-                            <ToggleButton Grid.Column="1" 
-                                          IsChecked="True"
-                                          Width="44" Height="24" 
-                                          VerticalAlignment="Center"/>
+                            <CheckBox Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding RunInBackground, Mode=TwoWay}"/>
                         </Grid>
                     </StackPanel>
                 </Border>
@@ -128,7 +120,7 @@
                                     <TextBlock Text="You are up to date" 
                                                Style="{StaticResource BodyText}" 
                                                FontWeight="Medium"/>
-                                    <TextBlock Text="Version 1.2.3" 
+                                    <TextBlock Text="{Binding AppVersion, StringFormat='Version {0}'}" 
                                                Style="{StaticResource MutedText}" 
                                                FontSize="12"/>
                                 </StackPanel>
@@ -157,10 +149,7 @@
                                            Style="{StaticResource MutedText}" 
                                            FontSize="12"/>
                             </StackPanel>
-                            <ToggleButton Grid.Column="1" 
-                                          IsChecked="True"
-                                          Width="44" Height="24" 
-                                          VerticalAlignment="Center"/>
+                            <CheckBox Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding AutoUpdate, Mode=TwoWay}"/>
                         </Grid>
                     </StackPanel>
                 </Border>
@@ -181,7 +170,7 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="Version" Style="{StaticResource MutedText}"/>
-                            <TextBlock Grid.Column="1" Text="1.2.3" 
+                            <TextBlock Grid.Column="1" Text="{Binding AppVersion}" 
                                        Style="{StaticResource BodyText}" 
                                        FontFamily="Consolas"/>
                         </Grid>
@@ -192,7 +181,7 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="Build" Style="{StaticResource MutedText}"/>
-                            <TextBlock Grid.Column="1" Text="2024.03.15" 
+                            <TextBlock Grid.Column="1" Text="2026.03.26" 
                                        Style="{StaticResource BodyText}" 
                                        FontFamily="Consolas"/>
                         </Grid>
@@ -227,25 +216,7 @@
                                 Style="{StaticResource SecondaryButton}" 
                                 HorizontalAlignment="Stretch"
                                 Margin="0,0,0,8"/>
-                        <Button Content="Reset all settings" 
-                                Background="Transparent"
-                                Foreground="{StaticResource DestructiveBrush}"
-                                BorderBrush="{StaticResource BorderBrush}"
-                                BorderThickness="1"
-                                Padding="16,8"
-                                HorizontalAlignment="Stretch">
-                            <Button.Template>
-                                <ControlTemplate TargetType="Button">
-                                    <Border Background="{TemplateBinding Background}" 
-                                            BorderBrush="{TemplateBinding BorderBrush}"
-                                            BorderThickness="{TemplateBinding BorderThickness}"
-                                            CornerRadius="6" 
-                                            Padding="{TemplateBinding Padding}">
-                                        <ContentPresenter HorizontalAlignment="Left"/>
-                                    </Border>
-                                </ControlTemplate>
-                            </Button.Template>
-                        </Button>
+                        <Button Content="Reset all settings" Style="{StaticResource DestructiveButton}"/>
                     </StackPanel>
                 </Border>
             </Grid>

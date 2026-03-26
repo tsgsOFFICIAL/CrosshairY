@@ -9,7 +9,7 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen" FontFamily="Segoe UI"        
         Title="CrosshairY"
-        Height="700" Width="1100"
+        Height="710" Width="1100"
         MinHeight="500" MinWidth="800"
         WindowStyle="None" Background="{StaticResource BackgroundBrush}" ResizeMode="CanResizeWithGrip">
 
@@ -39,7 +39,7 @@
                             <TextBlock Text="by tsgsOFFICIAL" FontStyle="Italic" Foreground="{StaticResource ForegroundBrush}"/>
                         </StackPanel>
 
-                        <TextBlock Text="{Binding VersionString, StringFormat='Version {0} - BETA', FallbackValue='Version N/A'}" Margin="10,0,0,0" FontStyle="Italic" Foreground="{StaticResource ForegroundBrush}" VerticalAlignment="Bottom"/>
+                        <TextBlock Text="{Binding VersionString, StringFormat='Version {0}', FallbackValue='Version N/A'}" Margin="10,0,0,0" FontStyle="Italic" Foreground="{StaticResource ForegroundBrush}" VerticalAlignment="Bottom"/>
                     </StackPanel>
                 </Viewbox>
             </StackPanel>

@@ -8,6 +8,7 @@ namespace CrosshairY.Models
     {
         public CrosshairSettings Crosshair { get; set; } = new CrosshairSettings();
         public Hotkey Hotkey { get; set; } = new Hotkey();
+        public AppSettings App { get; set; } = new();
 
         public void Apply(SettingsDto dto)
         {
@@ -17,6 +18,8 @@ namespace CrosshairY.Models
             {
                 Hotkey.ToggleCrosshair = new KeyGesture((Key)hk.Key, (ModifierKeys)hk.Modifiers);
             }
+
+            App.Apply(dto.App!);
         }
     }
 

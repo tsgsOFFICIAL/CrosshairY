@@ -80,12 +80,12 @@ namespace CrosshairY.Utility
 
         public static string GetExePath()
         {
-            string? exeLocation5 = Process.GetCurrentProcess().MainModule?.FileName;
+            string? exeLocation = Process.GetCurrentProcess().MainModule?.FileName;
 
             string executingDir = AppDomain.CurrentDomain.BaseDirectory;
             string executingName = Path.GetFileNameWithoutExtension(Environment.GetCommandLineArgs()[0]);
 
-            return exeLocation5 ?? $"{Path.Combine(executingDir, executingName)}.exe";
+            return exeLocation ?? $"{Path.Combine(executingDir, executingName)}.exe";
         }
     }
 }

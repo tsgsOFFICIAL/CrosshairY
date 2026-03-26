@@ -152,7 +152,7 @@ namespace CrosshairY.Pages
             }
         }
 
-        private void OnDeleteButtonClicked(object sender, RoutedEventArgs e)
+        private async void OnDeleteButtonClicked(object sender, RoutedEventArgs e)
         {
             if (sender is System.Windows.Controls.Button btn && btn.Tag is CrosshairSettings itemToDelete)
             {
@@ -168,7 +168,7 @@ namespace CrosshairY.Pages
                 if (codeToRemove != null)
                 {
                     _myCrosshairCodes.Remove(codeToRemove);
-                    _ = SaveCrosshairsAsync();
+                    await SaveCrosshairsAsync();
                     LoadCrosshairs();        // Refresh the list
                 }
             }
