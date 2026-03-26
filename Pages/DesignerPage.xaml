@@ -197,6 +197,7 @@
                                         SelectedColor="{Binding Color, Mode=TwoWay}"
                                         Cursor="Hand"/>
                                 </Border>
+                                <TextBlock Text="&lt;- Click here to pick a color!" VerticalAlignment="Center" Style="{StaticResource MutedText}"/>
                             </StackPanel>
 
                             <!-- R Slider -->
