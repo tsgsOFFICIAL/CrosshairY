@@ -1,0 +1,57 @@
+{
+  "version": "2.0.3",
+  "type": "Alpha",
+  "changelog": "Implemented complete settings page, including automatic updates, start with windows, run in background when closed, etc.",
+  "historic_versions": [
+    {
+      "version": "2.0.2 - Beta",
+      "type": "Beta",
+      "changelog": "Implemented AppSettingsDTO with full versioning support.\nFinalized persistent \"My Crosshairs\" section with saved state.\nChanged renderer to support simple dot-only crosshair.\nAdded crosshair name and description fields.\nUpgraded sharecode to V2 (now includes name + description).\nAdded import, export, save & reset functionality.\nAdded unbind hotkey button and improved hotkey handling.\nAdded color picker with \"Click here\" hint.\nImproved Design page UI and added demo to Settings page.\nAdded active crosshair render on HomePage.\nFixed crosshair appearing in tabs and occasionally blocking the game.\nAdded static overlay support.\nCentralized logic, prettified code, upgraded overall UI.\nRemoved old builds, SDC references, and obsolete code.\nFixed various UI bugs."
+    },
+    {
+      "version": "2.0.1",
+      "type": "Beta",
+      "changelog": "Major progress on new UI.\nAdded initial settings system and AppSettingsDTO foundation.\nImproved hotkey handling and crosshair preview.\nBegan work on persistent crosshair features."
+    },
+    {
+      "version": "2.0.0",
+      "type": "Beta",
+      "changelog": "Started complete UI overhaul.\nIntroduced new modern interface structure.\nBegan migration to new settings architecture.\nAdded foundational changes for better crosshair rendering and customization."
+    },
+    {
+      "version": "1.0.15",
+      "type": "Patch",
+      "changelog": "Implemented a 'closest to 2px' policy to avoid going off center."
+    },
+    {
+      "version": "1.0.14",
+      "type": "Patch",
+      "changelog": "More crosshairs and included built version in the repository."
+    },
+    {
+      "version": "1.0.13",
+      "type": "Patch",
+      "changelog": "Made crosshair a 4-line version and improved preview functionality."
+    },
+    {
+      "version": "1.0.12",
+      "type": "Patch",
+      "changelog": "Semi-working crosshair implementation with color preview fixes in progress."
+    },
+    {
+      "version": "1.0.11",
+      "type": "Patch",
+      "changelog": "Added working example and multiple new crosshairs."
+    },
+    {
+      "version": "1.0.10",
+      "type": "Patch",
+      "changelog": "Added project files, initial setup, and basic crosshair structure."
+    },
+    {
+      "version": "1.0.0",
+      "type": "Alpha",
+      "changelog": "Initial Release - Basic crosshair overlay for any game."
+    }
+  ]
+}
