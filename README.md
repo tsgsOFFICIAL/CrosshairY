@@ -15,7 +15,7 @@
 ---
 
 ## Live Demo
-![Demo](https://github.com/tsgsOFFICIAL/CrosshairY/blob/feature/new-ui/full_demo_new.gif)
+![Demo](https://github.com/tsgsOFFICIAL/CrosshairY/blob/master/full_demo_new.gif)
 
 *The program displays a customizable crosshair overlay on your screen, staying on top of any game.*
 
