@@ -211,12 +211,12 @@
                         <Button Content="Export all crosshairs" 
                                 Style="{StaticResource SecondaryButton}" 
                                 HorizontalAlignment="Stretch"
-                                Margin="0,0,0,8"/>
+                                Margin="0,0,0,8" Click="OnExportButtonClicked"/>
                         <Button Content="Import crosshairs" 
                                 Style="{StaticResource SecondaryButton}" 
                                 HorizontalAlignment="Stretch"
-                                Margin="0,0,0,8"/>
-                        <Button Content="Reset all settings" Style="{StaticResource DestructiveButton}"/>
+                                Margin="0,0,0,8" Click="OnImportButtonClicked"/>
+                        <Button Content="Reset all settings" Style="{StaticResource DestructiveButton}" Click="OnResetButtonClicked"/>
                     </StackPanel>
                 </Border>
             </Grid>

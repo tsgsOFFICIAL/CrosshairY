@@ -89,7 +89,7 @@ namespace CrosshairY.Managers
 
                 client.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
 
-                serverUpdateInfo = JsonSerializer.Deserialize<UpdateInfo>(await client.GetStringAsync("https://raw.githubusercontent.com/tsgsOFFICIAL/CrosshairY/feature/new-ui/UpdateInfo.json")) ?? new UpdateInfo();
+                serverUpdateInfo = JsonSerializer.Deserialize<UpdateInfo>(await client.GetStringAsync("https://raw.githubusercontent.com/tsgsOFFICIAL/CrosshairY/master/UpdateInfo.json")) ?? new UpdateInfo();
             }
             catch (Exception)
             {

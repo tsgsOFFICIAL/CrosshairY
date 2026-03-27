@@ -5,6 +5,8 @@ using CrosshairY.Managers;
 using CrosshairY.Utility;
 using System.Diagnostics;
 using CrosshairY.Models;
+using System.Windows;
+using System.IO;
 
 namespace CrosshairY.Pages
 {
@@ -157,14 +159,109 @@ namespace CrosshairY.Pages
             { }
         }
 
-        private async void OnCheckForUpdatesButtonClicked(object sender, System.Windows.RoutedEventArgs e)
+        private async void OnCheckForUpdatesButtonClicked(object sender, RoutedEventArgs e)
         {
             UpdateAvailable = await UpdateManager.Instance.IsUpdateAvailableAsync();
         }
 
-        private async void OnUpdateButtonClicked(object sender, System.Windows.RoutedEventArgs e)
+        private async void OnUpdateButtonClicked(object sender, RoutedEventArgs e)
         {
             await UpdateManager.Instance.DownloadUpdate();
+        }
+
+        private void OnExportButtonClicked(object sender, RoutedEventArgs e)
+        {
+            string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyCrosshairs.json");
+
+            if (!File.Exists(path))
+            {
+                NotificationManager.ShowNotification("Export Failed", "No MyCrosshairs.json file found to export.");
+                return;
+            }
+
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = "explorer.exe",
+                Arguments = $"/select,\"{path}\"",
+                UseShellExecute = true
+            });
+        }
+
+        private async void OnImportButtonClicked(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog
+            {
+                Filter = "JSON files (*.json)|*.json",
+                Title = "Select MyCrosshairs.json"
+            };
+
+            if (dialog.ShowDialog() != DialogResult.OK)
+                return;
+
+            string targetPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "MyCrosshairs.json");
+            string backupPath = targetPath + ".bak";
+
+            try
+            {
+                // Backup existing file
+                if (File.Exists(targetPath))
+                {
+                    File.Copy(targetPath, backupPath, overwrite: true);
+                }
+
+                // Copy new file
+                File.Copy(dialog.FileName, targetPath, overwrite: true);
+
+                await App.LoadSettingsAsync();
+
+                NotificationManager.ShowNotification("Imported Successfully", "Crosshairs imported successfully");
+            }
+            catch (Exception ex)
+            {
+                System.Windows.MessageBox.Show($"Import failed:\n{ex.Message}", "CrosshairY", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async void OnResetButtonClicked(object sender, RoutedEventArgs e)
+        {
+            MessageBoxResult result = System.Windows.MessageBox.Show(
+                "This will reset all settings and crosshairs. Continue?",
+                "CrosshairY",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (result != MessageBoxResult.Yes)
+                return;
+
+            string baseDir = AppDomain.CurrentDomain.BaseDirectory;
+
+            string[] files =
+            [
+                Path.Combine(baseDir, "MyCrosshairs.json"),
+                Path.Combine(baseDir, "RecentCrosshairs.json"),
+                Path.Combine(baseDir, "Settings.json")
+            ];
+
+            try
+            {
+                foreach (string file in files)
+                {
+                    if (File.Exists(file))
+                    {
+                        // Create backup (*.bak)
+                        File.Copy(file, $"{file}.bak");
+
+                        // Delete
+                        File.Delete(file);
+                    }
+                }
+
+                await App.LoadSettingsAsync();
+            }
+            catch (Exception ex)
+            {
+                NotificationManager.ShowNotification("Reset Failed", $"An error occurred while resetting settings. See details.\n{ex.Message}");
+            }
         }
     }
 }

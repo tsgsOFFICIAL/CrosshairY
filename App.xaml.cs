@@ -49,6 +49,11 @@ namespace CrosshairY
 
             base.OnStartup(e);
 
+            await LoadSettingsAsync();
+        }
+
+        public static async Task LoadSettingsAsync()
+        {
             SettingsDto loaded = await SettingsService.LoadAsync();
             Settings.Apply(loaded);
 
