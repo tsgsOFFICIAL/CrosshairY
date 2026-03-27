@@ -45,7 +45,7 @@ Open a [GitHub Issue](https://github.com/tsgsOFFICIAL/CrosshairY/issues) or cont
 ---
 
 ## Installation
-1. **Download** the latest release [here](https://github.com/tsgsOFFICIAL/CrosshairY/releases/latest) (*preferred*) or via [direct link](https://download-directory.github.io/?url=https://github.com/tsgsOFFICIAL/CrosshairY/tree/master/bin/Release/net8.0-windows/publish/win-x64).
+1. **Download** the latest release [here](https://github.com/tsgsOFFICIAL/CrosshairY/releases/latest) (*preferred*) or via [direct link](https://download-directory.github.io/?url=https%3A%2F%2Fgithub.com%2FtsgsOFFICIAL%2FCrosshairY%2Ftree%2Ffeature%2Fnew-ui%2Fbin%2FRelease%2Fnet10.0-windows%2Fpublish%2Fwin-x64).
 2. **Extract** the ZIP to `%appdata%\CrosshairY`:
    - Press `Win + R`, type `%appdata%`, then press Enter.
    - Create a folder named `CrosshairY` and extract the files here.
