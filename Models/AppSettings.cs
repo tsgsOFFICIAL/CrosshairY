@@ -1,4 +1,5 @@
-﻿using CrosshairY.Models.Dto;
+﻿using System.Text.Json.Serialization;
+using CrosshairY.Models.Dto;
 using System.Text.Json;
 
 namespace CrosshairY.Models
@@ -9,6 +10,9 @@ namespace CrosshairY.Models
         public bool StartMinimized { get; set; }
         public bool RunInBackground { get; set; }
         public bool AutoUpdate { get; set; }
+
+        [JsonIgnore]
+        public bool UpdateAvailable { get; set; }
 
         public void Apply(AppSettingsDto dto)
         {

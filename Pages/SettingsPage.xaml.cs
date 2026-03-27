@@ -21,6 +21,7 @@ namespace CrosshairY.Pages
         private bool _startMinimized;
         private bool _runInBackground;
         private bool _autoUpdate;
+        private bool _updateAvailable;
 
         // Exposed properties bound to the UI
         public bool StartWithWindows
@@ -54,6 +55,12 @@ namespace CrosshairY.Pages
             set => SetField(ref _autoUpdate, value, nameof(AutoUpdate));
         }
 
+        public bool UpdateAvailable
+        {
+            get => _updateAvailable;
+            set => SetField(ref _updateAvailable, value, nameof(UpdateAvailable));
+        }
+
         public string AppVersion
         {
             get
@@ -69,14 +76,24 @@ namespace CrosshairY.Pages
 
             // Clone the live settings
             Settings = AppSettings.Clone(App.Settings.App);
+            Settings.UpdateAvailable = App.Settings.App.UpdateAvailable; // Json ignore forces us to manually copy this over
 
             // Initialize backing fields from the cloned settings
-            _startWithWindows = Settings.StartWithWindows;
-            _startMinimized = Settings.StartMinimized;
-            _runInBackground = Settings.RunInBackground;
-            _autoUpdate = Settings.AutoUpdate;
+            StartWithWindows = Settings.StartWithWindows;
+            StartMinimized = Settings.StartMinimized;
+            RunInBackground = Settings.RunInBackground;
+            AutoUpdate = Settings.AutoUpdate;
+            UpdateAvailable = Settings.UpdateAvailable;
 
             DataContext = this;
+
+            UpdateManager.Instance.UpdateAvailable += OnUpdateAvailable;
+        }
+
+        private void OnUpdateAvailable(object? sender, EventArgs e)
+        {
+            Settings.UpdateAvailable = App.Settings.App.UpdateAvailable; // Json ignore forces us to manually copy this over
+            UpdateAvailable = Settings.UpdateAvailable;
         }
 
         private bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
@@ -138,6 +155,16 @@ namespace CrosshairY.Pages
             }
             catch (Exception)
             { }
+        }
+
+        private async void OnCheckForUpdatesButtonClicked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            UpdateAvailable = await UpdateManager.Instance.IsUpdateAvailableAsync();
+        }
+
+        private async void OnUpdateButtonClicked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            await UpdateManager.Instance.DownloadUpdate();
         }
     }
 }

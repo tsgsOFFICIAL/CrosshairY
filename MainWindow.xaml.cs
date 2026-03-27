@@ -79,7 +79,7 @@ namespace CrosshairY
 
             Loaded += OnMainWindowLoaded;
             App.Settings.Hotkey.ToggleCrosshairHotkeyPressed += OnToggleCrosshairHotkeyPressed;
-
+            UpdateManager.Instance.UpdateAvailable += OnUpdateAvailable;
             // Initialize tray icon visibility
             IsTrayIconVisible = true;
             DataContext = this;
@@ -97,6 +97,14 @@ namespace CrosshairY
             MainFrame.Navigate(new HomePage());
 
             AppNavigationService.NavigateAction = Navigate;
+        }
+
+        private void OnUpdateAvailable(object? sender, EventArgs e)
+        {
+            if (App.Settings.App.AutoUpdate)
+                NotificationManager.ShowNotification("Update Available", "A new version of CrosshairY is available! The update will be downloaded and installed automatically in the background.");
+            else
+                NotificationManager.ShowNotification("Update Available", "A new version of CrosshairY is available! Please download it from the Settings tab.");
         }
 
         /// <summary>
@@ -326,7 +334,10 @@ namespace CrosshairY
 
                         string[] filesToKeep =
                         [
-                            "Settings.json"
+                            "Settings.json",
+                            "update_cache.tsgs",
+                            "RecentCrosshairs.json",
+                            "MyCrosshairs.json"
                         ];
 
                         // Delete all files, except for the ones in filesToKeep
@@ -464,7 +475,10 @@ namespace CrosshairY
         /// <param name="e"></param>
         private void OnCloseButtonClicked(object sender, RoutedEventArgs e)
         {
-            CloseApplication();
+            if (!App.Settings.App.RunInBackground)
+                CloseApplication();
+            else
+                EnterTrayMode();
         }
         /// <summary>
         /// Handles the double-click event on the tray icon to display and restore the window.

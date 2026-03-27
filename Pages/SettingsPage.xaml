@@ -130,10 +130,10 @@
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
                             <Button Content="Check for updates" 
                                     Style="{StaticResource SecondaryButton}" 
-                                    Margin="0,0,8,0"/>
+                                    Margin="0,0,8,0" Click="OnCheckForUpdatesButtonClicked"/>
                             <Button Content="Update now" 
                                     Style="{StaticResource PrimaryButton}" 
-                                    IsEnabled="False"/>
+                                    IsEnabled="{Binding UpdateAvailable, UpdateSourceTrigger=PropertyChanged}" Click="OnUpdateButtonClicked"/>
                         </StackPanel>
 
                         <!-- Auto-update -->
@@ -181,7 +181,7 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="Build" Style="{StaticResource MutedText}"/>
-                            <TextBlock Grid.Column="1" Text="2026.03.26" 
+                            <TextBlock Grid.Column="1" Text="2026.03.27" 
                                        Style="{StaticResource BodyText}" 
                                        FontFamily="Consolas"/>
                         </Grid>

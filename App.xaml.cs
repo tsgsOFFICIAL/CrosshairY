@@ -54,6 +54,7 @@ namespace CrosshairY
 
             Settings.Hotkey.Initialize();
             CrosshairManager.Instance.Initialize();
+            UpdateManager.Instance.Initialize();
         }
 
         protected override void OnExit(ExitEventArgs e)
