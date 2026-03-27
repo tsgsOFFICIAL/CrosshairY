@@ -1,523 +1,494 @@
-﻿using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
-using Color = System.Windows.Media.Color;
-using System.Windows.Media.Imaging;
-using SharpVectors.Renderers.Wpf;
-using SharpVectors.Converters;
+﻿using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Windows.Controls;
 using System.ComponentModel;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Text.Json;
+using CrosshairY.Managers;
+using CrosshairY.Utility;
+using System.Diagnostics;
+using CrosshairY.Pages;
+using System.IO.Pipes;
 using System.Windows;
-using GlobalHotKey;
 using System.IO;
 
 namespace CrosshairY
 {
-    /// <summary>
-    /// Represents the main application window for CrosshairY, managing the UI, settings, and crosshair overlay.
-    /// Handles user input for crosshair selection, size, opacity, and hotkey toggling.
-    /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        /// <summary>
-        /// The overlay window that displays the crosshair on top of other applications.
-        /// </summary>
-        private OverlayWindow _overlayWindow;
-        /// <summary>
-        /// The application settings, including crosshair path, size, and opacity.
-        /// </summary>
-        private Settings _settings;
-        /// <summary>
-        /// List of crosshair image names (without .png) available in the assets/crosshairs folder.
-        /// </summary>
-        private List<string> _crosshairImages;
-        /// <summary>
-        /// Indicates whether the crosshair overlay is currently enabled (visible).
-        /// </summary>
-        private bool _isCrosshairEnabled;
-        /// <summary>
-        /// Path to the assets/crosshairs folder in the build output directory.
-        /// </summary>
-        private readonly string _crosshairFolder;
-        /// <summary>
-        /// The color used for the crosshair when selected, defaulting to red.
-        /// </summary>
-        private Color _selectedColor = Color.FromRgb(255, 0, 0);
-        /// <summary>
-        /// Gets the brush representing the selected color for the crosshair.
-        /// </summary>
-        public SolidColorBrush SelectedColorBrush => new SolidColorBrush(_selectedColor);
-        /// <summary>
-        /// Manages the registration and handling of global hotkeys.
-        /// </summary>
-        /// <remarks>This field holds an instance of <see cref="HotKeyManager"/>, which is responsible for
-        /// managing global hotkey registrations and triggering associated actions when those hotkeys are
-        /// pressed.</remarks>
-        private HotKeyManager _hotKeyManager;
-        private KeyGesture _toggleHotKeyGesture = new KeyGesture(Key.F1, ModifierKeys.Control);
+        [DllImport("user32.dll")]
+        private static extern int GetWindowLong(IntPtr hwnd, int index);
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected void OnPropertyChanged(string propertyName)
+        [DllImport("user32.dll")]
+        private static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
+
+        public ICommand? JoinDiscordCommand { get; }
+        public ICommand? ToggleWindowCommand { get; }
+        public ICommand? CloseCommand { get; }
+        public ICommand? OpenGithubCommand { get; }
+
+        private bool _isTrayIconVisible;
+        public bool IsTrayIconVisible
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            get => _isTrayIconVisible;
+            set
+            {
+                _isTrayIconVisible = value;
+                UpdateTrayIconVisibility();
+            }
         }
 
+        private string _versionString = "";
+        public string VersionString
+        {
+            get => string.IsNullOrEmpty(_versionString) ? "N/A" : _versionString;
+            set
+            {
+                _versionString = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private bool _isInTrayMode = false;
+        private double _savedLeft;
+        private double _savedTop;
+
+        private const int WS_EX_TOOLWINDOW = 0x00000080;
+        private const int GWL_EXSTYLE = -20;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="MainWindow"/> class.
+        /// Occurs when a property value changes.
         /// </summary>
+        /// <remarks>This event is typically raised by the implementation of the INotifyPropertyChanged
+        /// interface to notify subscribers that a property value has changed. Handlers receive the name of the property
+        /// that changed in the event data. This event is commonly used in data binding scenarios to update UI elements
+        /// when underlying data changes.</remarks>
+        public event PropertyChangedEventHandler? PropertyChanged;
+        /// <summary>
+        /// Raises the PropertyChanged event to notify listeners that a property value has changed.
+        /// </summary>
+        /// <remarks>Use this method to implement the INotifyPropertyChanged interface in classes that
+        /// support data binding. Calling this method with the correct property name ensures that UI elements or other
+        /// listeners are updated when the property value changes.</remarks>
+        /// <param name="name">The name of the property that changed. This value is optional and is automatically provided when called from
+        /// a property setter.</param>
+        private void OnPropertyChanged([CallerMemberName] string? name = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
         public MainWindow()
         {
-            _overlayWindow = new OverlayWindow();
-            _crosshairFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "assets", "crosshairs");
-            _crosshairImages = LoadCrosshairLibrary();
-            _settings = LoadSettings(); // only loads data
+            InitializeComponent();
 
-            InitializeComponent(); // initializes the UI, sliders now exist
+            Loaded += OnMainWindowLoaded;
+            App.Settings.Hotkey.ToggleCrosshairHotkeyPressed += OnToggleCrosshairHotkeyPressed;
+            UpdateManager.Instance.UpdateAvailable += OnUpdateAvailable;
+            // Initialize tray icon visibility
+            IsTrayIconVisible = true;
             DataContext = this;
 
-            ApplySettingsToUI(); // manually assign loaded settings to controls
+            // Initialize commands
+            ToggleWindowCommand = new RelayCommand(o => ToggleWindowState());
+            CloseCommand = new RelayCommand(o => CloseApplication());
+            OpenGithubCommand = new RelayCommand(o => Helper.LaunchWeb("https://github.com/tsgsOFFICIAL/CrosshairY"));
+            JoinDiscordCommand = new RelayCommand(o => Helper.LaunchWeb("https://discord.gg/Cddu5aJ"));
 
-            _hotKeyManager = new HotKeyManager();
-            _hotKeyManager.KeyPressed += HotKeyManager_KeyPressed;
+            // Event handler for double-click on TaskbarIcon
+            MyNotifyIcon.TrayMouseDoubleClick += OnTrayIconDoubleClick;
 
-            _hotKeyManager.Register(_toggleHotKeyGesture.Key, _toggleHotKeyGesture.Modifiers);
+            // Default page
+            MainFrame.Navigate(new HomePage());
 
-            Closed += (s, e) =>
-            {
-                _overlayWindow?.Close();
-                _hotKeyManager.Dispose();
-            };
+            AppNavigationService.NavigateAction = Navigate;
+        }
+
+        private void OnUpdateAvailable(object? sender, EventArgs e)
+        {
+            if (App.Settings.App.AutoUpdate)
+                NotificationManager.ShowNotification("Update Available", "A new version of CrosshairY is available! The update will be downloaded and installed automatically in the background.");
+            else
+                NotificationManager.ShowNotification("Update Available", "A new version of CrosshairY is available! Please download it from the Settings tab.");
         }
 
         /// <summary>
-        /// Handles the <see cref="HotKeyManager.KeyPressed"/> event and toggles the application's state based on the
-        /// specified hotkey gesture.
+        /// Closes the application
         /// </summary>
-        /// <remarks>This method checks if the pressed hotkey matches the "ToggleOnOff" gesture defined in
-        /// the hotkey map. If a match is found, it toggles the application's state between active and inactive,
-        /// displaying a corresponding notification overlay. The method ensures that the notification is only displayed
-        /// if no other notification is currently open.</remarks>
-        /// <param name="sender">The source of the event. This parameter is typically not used.</param>
-        /// <param name="e">The <see cref="KeyPressedEventArgs"/> containing the details of the pressed hotkey.</param>
-        private void HotKeyManager_KeyPressed(object? sender, KeyPressedEventArgs e)
+        private void CloseApplication()
         {
-            // Check if the pressed hotkey matches the "ToggleOnOff" gesture
-            if (e.HotKey.Key == _toggleHotKeyGesture.Key && e.HotKey.Modifiers == _toggleHotKeyGesture.Modifiers)
-            {
-                // Toggle the application's state
-                ToggleCrosshair();
-            }
+            Close();
+            Environment.Exit(0);
         }
-
         /// <summary>
-        /// Applies the loaded settings to the UI elements, such as sliders and color preview.
+        /// Updates the visibility of the tray icon to reflect the current value of the IsTrayIconVisible property.
         /// </summary>
-        private void ApplySettingsToUI()
+        /// <remarks>Call this method after changing the IsTrayIconVisible property to ensure the tray
+        /// icon's visibility is updated accordingly.</remarks>
+        private void UpdateTrayIconVisibility()
         {
-            // Size and opacity
-            SizeSlider.Value = _settings.Size;
-            OpacitySlider.Value = _settings.Opacity;
-
-            // RGB sliders
-            RedSlider.Value = _settings.Red;
-            GreenSlider.Value = _settings.Green;
-            BlueSlider.Value = _settings.Blue;
-
-            // Color preview and internal color
-            _selectedColor = Color.FromRgb(_settings.Red, _settings.Green, _settings.Blue);
-            OnPropertyChanged(nameof(SelectedColorBrush));
-
-            // ComboBox selection (optional if needed)
-            if (!string.IsNullOrEmpty(_settings.CrosshairPath))
-                CrosshairComboBox.SelectedItem = _settings.CrosshairPath;
-
-            // Update overlay and preview
-            UpdateOverlay();
+            // Show or hide the tray icon based on IsTrayIconVisible
+            MyNotifyIcon.Visibility =
+                IsTrayIconVisible ? Visibility.Visible
+                : Visibility.Collapsed;
         }
-
         /// <summary>
-        /// Handles the Loaded event of the window, initializing UI elements with settings.
+        /// Toggles the window state between normal mode and tray mode.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The event arguments.</param>
-        private void OnWindowLoaded(object sender, RoutedEventArgs e)
+        /// <remarks>If the window is currently in tray mode, this method restores it to normal mode.
+        /// Otherwise, it minimizes the window to the system tray. This method is typically used to provide a quick way
+        /// for users to hide or restore the application window.</remarks>
+        private void ToggleWindowState()
         {
-            // Populate the ComboBox with crosshair image names
-            CrosshairComboBox.ItemsSource = _crosshairImages;
-            // Select the saved crosshair or the first one if none is saved
-            CrosshairComboBox.SelectedItem = _settings.CrosshairPath;
-
-            if (CrosshairComboBox.SelectedItem == null && _crosshairImages.Count > 0)
-            {
-                // Default to the first crosshair if no valid selection exists
-                CrosshairComboBox.SelectedItem = _crosshairImages[0];
-                _settings.CrosshairPath = _crosshairImages[0];
-            }
-
-            // Set slider values, ensuring they are within valid ranges
-            SizeSlider.Value = Math.Clamp(_settings.Size, 5, 200);
-            OpacitySlider.Value = Math.Clamp(_settings.Opacity, 0.1, 1.0);
-
-            // Update the overlay with the current settings
-            UpdateOverlay();
+            if (_isInTrayMode)
+                ExitTrayMode();
+            else
+                EnterTrayMode();
         }
-
         /// <summary>
-        /// Handles the Closing event of the window, saving settings and cleaning up resources.
+        /// Switches the application window to tray mode, minimizing it to the system tray while keeping background
+        /// operations active.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The event arguments.</param>
-        private void OnWindowClosing(object sender, CancelEventArgs e)
+        /// <remarks>When tray mode is activated, the window is hidden from the taskbar and ALT+TAB, and a
+        /// notification is displayed to inform the user that background processing continues. The window's previous
+        /// position is saved and can be restored when exiting tray mode.</remarks>
+        private void EnterTrayMode()
         {
-            // Save current settings to disk
-            SaveSettings();
-            // Unregister the global hotkey
-            _hotKeyManager.Unregister(_toggleHotKeyGesture.Key, _toggleHotKeyGesture.Modifiers);
-        }
-
-        /// <summary>
-        /// Handles the Click event of the Upload Image button, allowing users to upload a custom crosshair image.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The event arguments.</param>
-        private void OnUploadImageClick(object sender, RoutedEventArgs e)
-        {
-            // Configure the file dialog to accept only PNG images
-            OpenFileDialog openFileDialog = new OpenFileDialog
-            {
-                Filter = "Image Files (*.png;*.svg)|*.png;*.svg|PNG Image (*.png)|*.png|SVG Image (*.svg)|*.svg"
-            };
-
-            if (openFileDialog.ShowDialog() == true)
-            {
-                string fileNameWithExt = Path.GetFileName(openFileDialog.FileName);
-                string destinationPath = Path.Combine(_crosshairFolder, fileNameWithExt);
-
-                try
-                {
-                    Directory.CreateDirectory(_crosshairFolder);
-                    File.Copy(openFileDialog.FileName, destinationPath, true);
-
-                    _settings.CrosshairPath = fileNameWithExt;
-                    CrosshairComboBox.SelectedItem = fileNameWithExt;
-
-                    if (!_crosshairImages.Contains(fileNameWithExt))
-                        _crosshairImages.Add(fileNameWithExt);
-
-                    CrosshairComboBox.ItemsSource = null;
-                    CrosshairComboBox.ItemsSource = _crosshairImages;
-                    CrosshairComboBox.SelectedItem = fileNameWithExt;
-
-                    UpdateOverlay();
-                }
-                catch (Exception ex)
-                {
-                    StatusText.Text = $"Failed to upload image: {ex.Message}";
-                }
-            }
-        }
-
-        /// <summary>
-        /// Handles the SelectionChanged event of the Crosshair ComboBox, updating the selected crosshair.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The event arguments.</param>
-        private void OnCrosshairComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (CrosshairComboBox.SelectedItem != null)
-            {
-                // Update settings with the selected crosshair name
-                _settings.CrosshairPath = CrosshairComboBox.SelectedItem.ToString() ?? "";
-                // Refresh the overlay and preview
-                UpdateOverlay();
-            }
-        }
-
-        /// <summary>
-        /// Handles the ValueChanged event of the Size Slider, updating the crosshair size.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The event arguments.</param>
-        private void OnSizeSliderValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
-        {
-            // Avoid accessing UI elements before initialization
-            if (SizeValueText == null)
+            if (_isInTrayMode)
                 return;
 
-            // Correct the value to nearest integer that's divisible by 2 to prevent going off center
-            int correctedValue = (int)(SizeSlider.Value / 2) * 2;
+            _isInTrayMode = true;
 
-            // Update settings with the new size
-            _settings.Size = correctedValue;
-            // Display the size in pixels
-            SizeValueText.Text = $"{correctedValue}px";
-            // Refresh the overlay with the new size
-            UpdateOverlay();
+            // Save current position (only if valid)
+            if (!double.IsNaN(Left) && !double.IsNaN(Top))
+            {
+                _savedLeft = Left;
+                _savedTop = Top;
+            }
+
+            ShowInTaskbar = false;
+
+            // Move off-screen, but keep Normal and visible to OS
+            Left = -32000;
+            Top = -32000;
+
+            // Hide from ALT+TAB
+            IntPtr hwnd = new System.Windows.Interop.WindowInteropHelper(this).Handle;
+            int extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+            SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle | WS_EX_TOOLWINDOW);
+
+            NotificationManager.ShowNotification("CrosshairY", "Minimized to tray");
+            MinimizeAndRestore.Header = "Restore";
+            MyNotifyIcon.ToolTipText = "CrosshairY by tsgsOFFICIAL";
         }
-
         /// <summary>
-        /// Handles the ValueChanged event of the Opacity Slider, updating the crosshair opacity.
+        /// Restores the application's main window from tray mode to its normal state and updates its appearance and
+        /// position.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The event arguments.</param>
-        private void OnOpacitySliderValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        /// <remarks>This method reverses the changes made when entering tray mode, including restoring
+        /// the window's position, showing it in the taskbar and ALT+TAB, and updating related UI elements. It should be
+        /// called only when the application is currently in tray mode.</remarks>
+        private void ExitTrayMode()
         {
-            // Avoid accessing UI elements before initialization
-            if (OpacityValueText == null)
+            if (!_isInTrayMode)
                 return;
 
-            // Update settings with the new opacity
-            _settings.Opacity = OpacitySlider.Value;
-            // Display the opacity as a percentage
-            OpacityValueText.Text = $"{(int)(OpacitySlider.Value * 100)}%";
-            // Refresh the overlay with the new opacity
-            UpdateOverlay();
+            _isInTrayMode = false;
+
+            ShowInTaskbar = true;
+
+            // Restore position
+            Left = _savedLeft;
+            Top = _savedTop;
+
+            // Show in ALT+TAB again
+            IntPtr hwnd = new System.Windows.Interop.WindowInteropHelper(this).Handle;
+            int extendedStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+            SetWindowLong(hwnd, GWL_EXSTYLE, extendedStyle & ~WS_EX_TOOLWINDOW);
+
+            // Bring to front
+            Activate();
+            Topmost = true;
+            Topmost = false;
+
+            MinimizeAndRestore.Header = "Minimize";
+            MyNotifyIcon.ToolTipText = "CrosshairY by tsgsOFFICIAL";
         }
-
         /// <summary>
-        /// Handles the ValueChanged event of the color sliders, updating the selected color and overlay.
+        /// Brings the window to the foreground, restoring it if minimized and ensuring it is visible and active.
         /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The event arguments.</param>
-        private void OnColorSliderChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        /// <remarks>This method restores the window from a minimized state if necessary, makes it
+        /// visible, and activates it. It also adjusts the window's Z-order to ensure it appears above other windows,
+        /// addressing platform-specific behavior on Windows.</remarks>
+        private void BringToFront()
         {
-            if (RedSlider == null || GreenSlider == null || BlueSlider == null || RedValueText == null || GreenValueText == null || BlueValueText == null)
-                return; // Ensure UI elements are initialized
-
-            byte r = (byte)RedSlider.Value;
-            byte g = (byte)GreenSlider.Value;
-            byte b = (byte)BlueSlider.Value;
-
-            _selectedColor = Color.FromRgb(r, g, b);
-
-            RedValueText.Text = r.ToString();
-            GreenValueText.Text = g.ToString();
-            BlueValueText.Text = b.ToString();
-
-            OnPropertyChanged(nameof(SelectedColorBrush));
-
-            UpdateOverlay(); // Update overlay immediately with new color
-        }
-
-        /// <summary>
-        /// Handles the Click event of the Toggle Button, enabling or disabling the crosshair overlay.
-        /// </summary>
-        /// <param name="sender">The source of the event.</param>
-        /// <param name="e">The event arguments.</param>
-        private void OnToggleButtonClick(object sender, RoutedEventArgs e)
-        {
-            // Toggle the crosshair visibility
-            ToggleCrosshair();
-        }
-
-        /// <summary>
-        /// Updates the crosshair overlay and preview image based on current settings.
-        /// </summary>
-        private void UpdateOverlay()
-        {
-            try
+            // Exit tray mode if active
+            if (_isInTrayMode)
             {
-                string crosshairPath = Path.Combine(_crosshairFolder, _settings.CrosshairPath);
+                _isInTrayMode = false;
 
-                if (!string.IsNullOrEmpty(_settings.CrosshairPath) && File.Exists(crosshairPath))
+                ShowInTaskbar = true;
+
+                // Restore position
+                Left = _savedLeft;
+                Top = _savedTop;
+
+                MinimizeAndRestore.Header = "Minimize";
+                MyNotifyIcon.ToolTipText = "CrosshairY by tsgsOFFICIAL";
+            }
+
+            // Always ensure visible and focused
+            if (!IsVisible)
+                Show();
+
+            WindowState = WindowState.Normal; // In case it was maximized/minimized
+
+            Activate();
+            Topmost = true;
+            Topmost = false; // Focus steal fix
+        }
+        /// <summary>
+        /// Starts an asynchronous server that listens for activation messages on a named pipe and brings the
+        /// application window to the foreground when an activation request is received.
+        /// </summary>
+        /// <remarks>This method runs the activation server in a background task and does not block the
+        /// calling thread. The server continuously waits for incoming connections and responds to activation messages.
+        /// This is typically used to allow external processes to activate the application window. The method should be
+        /// called once during application startup to enable activation functionality.</remarks>
+        private void StartActivationServer()
+        {
+            Task.Run(async () =>
+            {
+                while (true)
                 {
-                    ImageSource previewSource;
-                    string extension = Path.GetExtension(crosshairPath).ToLowerInvariant();
+                    using NamedPipeServerStream server = new NamedPipeServerStream(
+                        App.PipeName,
+                        PipeDirection.In,
+                        1,
+                        PipeTransmissionMode.Message,
+                        PipeOptions.Asynchronous);
 
-                    if (extension == ".svg")
+                    await server.WaitForConnectionAsync();
+
+                    using StreamReader reader = new StreamReader(server);
+                    string? message = await reader.ReadLineAsync();
+
+                    if (message == "ACTIVATE")
                     {
-                        WpfDrawingSettings settings = new WpfDrawingSettings
+                        Dispatcher.Invoke(BringToFront);
+                    }
+                }
+            });
+        }
+        private void Navigate(Type pageType)
+        {
+            if (MainFrame == null)
+                return;
+
+            Page page = (Page)Activator.CreateInstance(pageType)!;
+            MainFrame.Navigate(page);
+
+            // 🔁 Sync sidebar state
+            NavHome.IsChecked = pageType == typeof(HomePage);
+            NavDesigner.IsChecked = pageType == typeof(DesignerPage);
+            NavLibrary.IsChecked = pageType == typeof(LibraryPage);
+            NavSettings.IsChecked = pageType == typeof(SettingsPage);
+        }
+
+        #region Event Handlers
+        private void OnToggleCrosshairHotkeyPressed()
+        {
+            App.Overlay.ToggleVisibility();
+        }
+        private void WhenNavButtonIsChecked(object sender, RoutedEventArgs e)
+        {
+            if (sender == NavHome)
+                AppNavigationService.Navigate<HomePage>();
+            else if (sender == NavDesigner)
+                AppNavigationService.Navigate<DesignerPage>();
+            else if (sender == NavLibrary)
+                AppNavigationService.Navigate<LibraryPage>();
+            else if (sender == NavSettings)
+                AppNavigationService.Navigate<SettingsPage>();
+        }
+        private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
+        {
+            StartActivationServer();
+
+            FileVersionInfo localVersionInfo = FileVersionInfo.GetVersionInfo(Helper.GetExePath());
+            VersionString = localVersionInfo.FileVersion ?? "N/A";
+
+            string basePath = Path.Combine(Environment.ExpandEnvironmentVariables("%APPDATA%"), "CrosshairY");
+            string updatePath = Path.Combine(basePath, "Update");
+
+            string[] args = Environment.GetCommandLineArgs();
+
+            foreach (string arg in args)
+            {
+                switch (arg)
+                {
+                    case "--updating":
+                        Thread.Sleep(3000); // Allow other instance(s) to close before finalizing the update
+
+                        // Delete all files and folders from the base path (%appdata% + \\CrosshairY)
+                        // except update/runtime state and user data.
+                        string[] foldersToKeep =
+                        [
+                            "Update"
+                        ];
+
+                        string[] filesToKeep =
+                        [
+                            "Settings.json",
+                            "update_cache.tsgs",
+                            "RecentCrosshairs.json",
+                            "MyCrosshairs.json"
+                        ];
+
+                        // Delete all files, except for the ones in filesToKeep
+                        foreach (string file in Directory.GetFiles(basePath))
                         {
-                            IncludeRuntime = true,
-                            TextAsGeometry = false
-                        };
-                        using (FileSvgReader reader = new FileSvgReader(settings))
-                        {
-                            DrawingGroup drawing = reader.Read(crosshairPath);
-                            if (drawing != null)
-                            {
-                                previewSource = new DrawingImage(drawing);
-                                drawing.Freeze();
-                            }
-                            else
-                            {
-                                throw new Exception("Failed to load SVG for preview");
-                            }
+                            string fileName = Path.GetFileName(file);
+                            if (Array.Exists(filesToKeep, f => f.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
+                                continue;
+
+                            File.Delete(file);
                         }
-                    }
-                    else // PNG
-                    {
-                        BitmapImage bitmap = new BitmapImage();
-                        bitmap.BeginInit();
-                        bitmap.UriSource = new Uri(crosshairPath);
-                        bitmap.EndInit();
-                        bitmap.Freeze();
-                        previewSource = bitmap;
-                    }
 
-                    _overlayWindow.UpdateCrosshair(crosshairPath, _settings.Size, _settings.Opacity, extension == ".svg" ? _selectedColor : null);
-                    PreviewImage.Source = previewSource;
+                        foreach (string directory in Directory.GetDirectories(basePath))
+                        {
+                            string dirName = Path.GetFileName(directory);
+                            if (Array.Exists(foldersToKeep, f => f.Equals(dirName, StringComparison.OrdinalIgnoreCase)))
+                                continue;
 
-                    StatusText.Text = "Crosshair updated";
+                            Directory.Delete(directory, true);
+                        }
+
+                        // Move update files to base path
+                        foreach (string file in Directory.GetFiles(updatePath, "*", SearchOption.AllDirectories))
+                        {
+                            string relativePath = Path.GetRelativePath(updatePath, file);
+                            string destinationPath = Path.Combine(basePath, relativePath);
+                            string destinationDir = Path.GetDirectoryName(destinationPath)!;
+
+                            if (!Directory.Exists(destinationDir))
+                                Directory.CreateDirectory(destinationDir);
+
+                            File.Copy(file, destinationPath, true);
+                        }
+
+                        // Start the real, updated app
+                        Process.Start(Path.Combine(basePath, "CrosshairY"), "--updated");
+                        Environment.Exit(0);
+                        break;
+                    case "--updated":
+                        // Start normally, but delete the Update folder after a delay
+                        Task.Run(() =>
+                        {
+                            Thread.Sleep(10 * 1000); // Wait 10 seconds to ensure the app has started properly
+                            try
+                            {
+                                if (Directory.Exists(updatePath))
+                                    Directory.Delete(updatePath, true);
+                            }
+                            catch (Exception)
+                            { }
+                        });
+
+                        NotificationManager.ShowNotification("CrosshairY", "Application updated successfully!");
+                        break;
+                    case "--minimize":
+                        EnterTrayMode();
+                        break;
                 }
-                else
-                {
-                    PreviewImage.Source = null;
-                    StatusText.Text = _crosshairImages.Count > 0 ? "Invalid crosshair image" : "No crosshairs found";
-                }
-            }
-            catch (Exception ex)
-            {
-                PreviewImage.Source = null;
-                StatusText.Text = $"Failed to load crosshair: {ex.Message}";
             }
         }
-
         /// <summary>
-        /// Toggles the visibility of the crosshair overlay and updates UI elements accordingly.
+        /// Event handler for when the window header is clicked
         /// </summary>
-        private void ToggleCrosshair()
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnWindowHeaderMouseDown(object sender, MouseButtonEventArgs e)
         {
-            // Toggle the enabled state
-            _isCrosshairEnabled = !_isCrosshairEnabled;
-            if (_isCrosshairEnabled)
+            if (e.ClickCount == 2)
             {
-                // Update the overlay with the latest settings before showing to prevent flicker
-                UpdateOverlay();
-
-                // Show the overlay and update UI
-                _overlayWindow.Show();
-                ToggleButtonText.Text = "Disable Crosshair";
-                StatusText.Text = "Crosshair Enabled";
+                // Double-click: Maximize or restore the window
+                WindowState = (WindowState == WindowState.Normal)
+                    ? WindowState.Maximized
+                    : WindowState.Normal;
             }
             else
             {
-                // Hide the overlay and update UI
-                _overlayWindow.Hide();
-                ToggleButtonText.Text = "Enable Crosshair";
-                StatusText.Text = "Crosshair Disabled";
+                // Single click: Drag the window
+                if (WindowState == WindowState.Maximized)
+                {
+                    // Get the absolute mouse position *before* restoring
+                    System.Windows.Point mousePosition = PointToScreen(e.GetPosition(this));
+
+                    // Get the active screen where the mouse is located
+                    Screen activeScreen = Screen.FromPoint(new System.Drawing.Point((int)mousePosition.X, (int)mousePosition.Y));
+                    Rectangle screenBounds = activeScreen.WorkingArea; // Use WorkingArea to exclude taskbar
+
+                    // Calculate cursor position as percentage of the screen's working area
+                    double percentX = (mousePosition.X - screenBounds.X) / screenBounds.Width;
+                    double percentY = (mousePosition.Y - screenBounds.Y) / screenBounds.Height;
+
+                    // Restore the window
+                    WindowState = WindowState.Normal;
+
+                    // Calculate new position based on restored size
+                    double newWidth = RestoreBounds.Width;
+                    double newHeight = RestoreBounds.Height;
+
+                    // Adjust Left and Top to keep cursor at the same relative percentage
+                    Left = mousePosition.X - (percentX * newWidth);
+                    Top = mousePosition.Y - (percentY * newHeight);
+
+                    // Clamp to ensure the window stays within the screen bounds
+                    Left = Math.Max(screenBounds.X, Math.Min(Left, screenBounds.Right - newWidth));
+                    Top = Math.Max(screenBounds.Y, Math.Min(Top, screenBounds.Bottom - newHeight));
+                }
+
+                DragMove();
             }
         }
-
         /// <summary>
-        /// Loads the list of available crosshair image names from the assets/crosshairs folder.
+        /// Event handler for when the minimize button is clicked
         /// </summary>
-        /// <returns>A list of crosshair image names (without .png extension).</returns>
-        private List<string> LoadCrosshairLibrary()
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnMinimizeButtonClicked(object sender, RoutedEventArgs e)
         {
-            List<string> images = new List<string>();
-
-            if (Directory.Exists(_crosshairFolder))
-            {
-                // Get all PNG and SVG files and extract their names without extensions
-                images.AddRange(Directory.GetFiles(_crosshairFolder, "*.png").Select(Path.GetFileName)!);
-                images.AddRange(Directory.GetFiles(_crosshairFolder, "*.svg").Select(Path.GetFileName)!);
-            }
-
-            // Return distinct names as a collection expression
-            return [.. images.Distinct()];
+            EnterTrayMode();
         }
-
         /// <summary>
-        /// Finds a crosshair file by name in the assets/crosshairs folder, checking both PNG and SVG formats.
+        /// Event handler for when the maximize button is clicked
         /// </summary>
-        /// <param name="fileName">The name of the crosshair file without extension.</param>
-        /// <returns>The file name with extension if found, otherwise null.</returns>
-        private string? FindCrosshairFile(string fileName)
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void OnMaximizeButtonClicked(object sender, RoutedEventArgs e)
         {
-            foreach (string ext in new[] { ".png", ".svg" })
-            {
-                string path = Path.Combine(_crosshairFolder, fileName + ext);
-                if (File.Exists(path))
-                    return Path.GetFileName(path);
-            }
-            return null;
+            if (WindowState.Equals(WindowState.Maximized))
+                WindowState = WindowState.Normal;
+            else
+                WindowState = WindowState.Maximized;
         }
-
         /// <summary>
-        /// Loads user settings from the settings.json file in the AppData folder.
+        /// Event handler for when the close button is clicked
         /// </summary>
-        /// <returns>The loaded or default <see cref="Settings"/> object.</returns>
-        private Settings LoadSettings()
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnCloseButtonClicked(object sender, RoutedEventArgs e)
         {
-            string settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CrosshairY", "settings.json");
-
-            if (File.Exists(settingsPath))
-            {
-                string json = File.ReadAllText(settingsPath);
-                Settings settings = JsonSerializer.Deserialize<Settings>(json) ?? new Settings();
-
-                settings.Size = Math.Clamp(settings.Size, 5, 200);
-                settings.Opacity = Math.Clamp(settings.Opacity, 0.1, 1.0);
-
-                if (string.IsNullOrEmpty(settings.CrosshairPath) && _crosshairImages.Count > 0)
-                    settings.CrosshairPath = _crosshairImages[0];
-
-                return settings;
-            }
-
-            Settings defaultSettings = new Settings();
-            if (_crosshairImages.Count > 0)
-                defaultSettings.CrosshairPath = _crosshairImages[0];
-
-            return defaultSettings;
+            if (!App.Settings.App.RunInBackground)
+                CloseApplication();
+            else
+                EnterTrayMode();
         }
-
         /// <summary>
-        /// Saves the current settings to the settings.json file in the AppData folder.
+        /// Handles the double-click event on the tray icon to display and restore the window.
         /// </summary>
-        private void SaveSettings()
+        /// <param name="sender">The source of the event, typically the tray icon control.</param>
+        /// <param name="e">The event data associated with the double-click action.</param>
+        private void OnTrayIconDoubleClick(object sender, RoutedEventArgs e)
         {
-            string settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CrosshairY", "settings.json");
-            Directory.CreateDirectory(Path.GetDirectoryName(settingsPath)!);
-
-            // Save current RGB color
-            _settings.Red = (byte)RedSlider.Value;
-            _settings.Green = (byte)GreenSlider.Value;
-            _settings.Blue = (byte)BlueSlider.Value;
-
-            string json = JsonSerializer.Serialize(_settings, new JsonSerializerOptions
-            {
-                WriteIndented = true
-            });
-            File.WriteAllText(settingsPath, json);
+            ExitTrayMode();
         }
-    }
-
-    /// <summary>
-    /// Represents the user settings for the CrosshairY application.
-    /// </summary>
-    public class Settings
-    {
-        /// <summary>
-        /// Gets or sets the name of the selected crosshair image (without .png extension).
-        /// </summary>
-        public string CrosshairPath { get; set; } = "";
-
-        /// <summary>
-        /// Gets or sets the size of the crosshair in pixels (10 to 200).
-        /// </summary>
-        public double Size { get; set; } = 50;
-
-        /// <summary>
-        /// Gets or sets the opacity of the crosshair (0.1 to 1.0).
-        /// </summary>
-        public double Opacity { get; set; } = 1.0;
-
-        /// <summary>
-        /// Gets or sets the red component of the crosshair color (0 to 255).
-        /// </summary>
-        public byte Red { get; set; } = 255;
-
-        /// <summary>
-        /// Gets or sets the green component of the crosshair color (0 to 255).
-        /// </summary>
-        public byte Green { get; set; } = 0;
-
-        /// <summary>
-        /// Gets or sets the blue component of the crosshair color (0 to 255).
-        /// </summary>
-        public byte Blue { get; set; } = 0;
+        #endregion
     }
 }

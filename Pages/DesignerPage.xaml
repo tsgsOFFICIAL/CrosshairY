@@ -1,0 +1,309 @@
+﻿<Page x:Class="CrosshairY.Pages.DesignerPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:CrosshairY.Pages"
+      xmlns:colorpicker="clr-namespace:ColorPicker;assembly=ColorPicker"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Designer"
+      Background="{StaticResource BackgroundBrush}">
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="320"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Settings Panel -->
+        <Border Grid.Column="0" 
+                Background="{StaticResource CardBrush}"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="0,0,1,0">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="16">
+                <StackPanel>
+                    <Border Style="{StaticResource Card}"
+                            Background="{StaticResource SecondaryBrush}"
+                            Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="Crosshair Information"
+                                       Style="{StaticResource SubheadingText}"
+                                       FontSize="13"
+                                       Margin="0,0,0,16"/>
+
+                            <!-- Crosshair Name -->
+                            <TextBlock Text="Name" 
+                                       Style="{StaticResource BodyText}" 
+                                       Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding CrosshairName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     MaxLength="25"
+                                     Margin="0,0,0,16"
+                                     Background="{StaticResource SecondaryBrush}"
+                                     Foreground="{StaticResource ForegroundBrush}"
+                                     BorderBrush="{StaticResource BorderBrush}"
+                                     Padding="8,6"
+                                     FontSize="14"
+                                     VerticalContentAlignment="Center"/>
+
+                            <!-- Short Description -->
+                            <TextBlock Text="Description (max 50 characters)" 
+                                       Style="{StaticResource BodyText}" 
+                                       Margin="0,0,0,4"/>
+                            <TextBox Text="{Binding Description, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                     MaxLength="50"
+                                     AcceptsReturn="True"
+                                     TextWrapping="Wrap"
+                                     Height="55"
+                                     VerticalScrollBarVisibility="Auto"
+                                     Background="{StaticResource SecondaryBrush}"
+                                     Foreground="{StaticResource ForegroundBrush}"
+                                     BorderBrush="{StaticResource BorderBrush}"
+                                     Padding="8,6"
+                                     FontSize="14"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Shape Settings Card -->
+                    <Border Style="{StaticResource Card}" 
+                            Background="{StaticResource SecondaryBrush}" 
+                            Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="Shape Settings" 
+                                       Style="{StaticResource SubheadingText}" 
+                                       FontSize="13"
+                                       Margin="0,0,0,16"/>
+
+                            <!-- Gap Slider -->
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Gap" Style="{StaticResource BodyText}"/>
+                                <TextBox x:Name="GapTextBox" Grid.Column="1" Text="{Binding Gap, StringFormat=F1, UpdateSourceTrigger=PropertyChanged}" Tag="{Binding ElementName=GapSlider}" PreviewTextInput="OnDecimalPreviewTextInput" DataObject.Pasting="OnDecimalTextBoxPasting"/>
+                            </Grid>
+                            <Slider x:Name="GapSlider" Minimum="-20" Maximum="50"
+                                Value="{Binding Gap, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                Margin="0,0,0,16" TickFrequency="0.1"
+                                IsSnapToTickEnabled="True"
+                                SmallChange="0.1" LargeChange="0.1"
+                                MouseRightButtonDown="OnGapSliderRightClick"/>
+
+                            <!-- Length Slider -->
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Length" Style="{StaticResource BodyText}"/>
+                                <TextBox x:Name="LengthTextBox" Grid.Column="1" Text="{Binding Length, StringFormat=F1, UpdateSourceTrigger=PropertyChanged}" Tag="{Binding ElementName=LengthSlider}" PreviewTextInput="OnDecimalPreviewTextInput" DataObject.Pasting="OnDecimalTextBoxPasting"/>
+                            </Grid>
+                            <Slider x:Name="LengthSlider" Minimum="0" Maximum="200" Value="{Binding Length, Mode=TwoWay}"
+                                    TickFrequency="0.1"
+                                    IsSnapToTickEnabled="True"
+                                    SmallChange="0.1" LargeChange="0.1"
+                                    Margin="0,0,0,16"
+                                    MouseRightButtonDown="OnLengthSliderRightClick"/>
+
+                            <!-- Thickness Slider -->
+                            <Grid Margin="0,0,0,12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Thickness" Style="{StaticResource BodyText}"/>
+                                <TextBox x:Name="ThicknessTextBox" Grid.Column="1" Text="{Binding Thickness, StringFormat=F1, UpdateSourceTrigger=PropertyChanged}" Tag="{Binding ElementName=ThicknessSlider}" PreviewTextInput="OnDecimalPreviewTextInput" DataObject.Pasting="OnDecimalTextBoxPasting"/>
+                            </Grid>
+                            <Slider x:Name="ThicknessSlider" Minimum="0.1" Maximum="10"
+                                Value="{Binding Thickness, Mode=TwoWay}"
+                                TickFrequency="0.1"
+                                IsSnapToTickEnabled="True"
+                                SmallChange="0.1" LargeChange="0.1"
+                                Margin="0,0,0,16"
+                                MouseRightButtonDown="OnThicknessSliderRightClick"/>
+
+                            <!-- Checkboxes -->
+                            <CheckBox IsChecked="{Binding Outline, Mode=TwoWay}"
+                                      Content="Draw Outline" 
+                                      Margin="0,0,0,8"/>
+
+                            <!-- Outline Thickness (conditional) -->
+                            <StackPanel Margin="24,0,0,12">
+                                <StackPanel.Style>
+                                    <Style TargetType="StackPanel">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Outline}" Value="True">
+                                                <Setter Property="Visibility" Value="Visible"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </StackPanel.Style>
+
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="Outline Thickness" Style="{StaticResource BodyText}"/>
+                                    <TextBox x:Name="OutlineThicknessTextBox" Grid.Column="1" Text="{Binding OutlineThickness, StringFormat=F1, UpdateSourceTrigger=PropertyChanged}" Tag="{Binding ElementName=OutlineThicknessSlider}" PreviewTextInput="OnDecimalPreviewTextInput" DataObject.Pasting="OnDecimalTextBoxPasting"/>
+                                </Grid>
+                                <Slider x:Name="OutlineThicknessSlider" Minimum="0.1" Maximum="5" Value="{Binding OutlineThickness, Mode=TwoWay}"
+                                    TickFrequency="0.1"
+                                    IsSnapToTickEnabled="True"
+                                    SmallChange="0.1" LargeChange="0.1"
+                                    MouseRightButtonDown="OnOutlineThicknessSliderRightClick"/>
+                            </StackPanel>
+
+                            <CheckBox IsChecked="{Binding Dot, Mode=TwoWay}"
+                                      Content="Center Dot" 
+                                      Margin="0,0,0,8"/>
+
+                            <CheckBox IsChecked="{Binding TStyle, Mode=TwoWay}"
+                                      Content="T-Style"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Color Card -->
+                    <Border Style="{StaticResource Card}" 
+                            Background="{StaticResource SecondaryBrush}" 
+                            Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="Color" 
+                                       Style="{StaticResource SubheadingText}" 
+                                       FontSize="13"
+                                       Margin="0,0,0,16"/>
+
+                            <!-- Color Preview and Picker -->
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                                <Border Width="40" Height="40" 
+                                    CornerRadius="12" 
+                                    BorderBrush="{StaticResource BorderBrush}"
+                                    BorderThickness="1"
+                                    Background="Transparent"
+                                    Margin="0,0,12,0">
+
+                                    <Border.Clip>
+                                        <RectangleGeometry Rect="0,0,40,40" RadiusX="12" RadiusY="12"/>
+                                    </Border.Clip>
+
+                                    <colorpicker:PortableColorPicker 
+                                        x:Name="ColorPicker"
+                                        Style="{StaticResource DefaultColorPickerStyle}" SmallChange="5"
+                                        UseHintColor="True" HintColor="Lime"                                                                  
+                                        ShowFractionalPart="False"
+                                        ShowAlpha="True"
+                                        SelectedColor="{Binding Color, Mode=TwoWay}"
+                                        Cursor="Hand"/>
+                                </Border>
+                                <TextBlock Text="&lt;- Click here to pick a color!" VerticalAlignment="Center" Style="{StaticResource MutedText}"/>
+                            </StackPanel>
+
+                            <!-- R Slider -->
+                            <Grid Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Red" Style="{StaticResource BodyText}"/>
+                                <TextBox x:Name="ColorRTextBox" Grid.Column="1" Text="{Binding ColorR, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="OnRgbPreviewTextInput" PreviewKeyDown="OnRgbPreviewKeyDown"/>
+                            </Grid>
+                            <Slider Minimum="0" Maximum="255" Value="{Binding ColorR, Mode=TwoWay}" Margin="0,0,0,12"
+                                    TickFrequency="1"
+                                    IsSnapToTickEnabled="True"
+                                    SmallChange="1" LargeChange="1"
+                                    MouseRightButtonDown="OnColorRSliderRightClick"/>
+
+                            <!-- G Slider -->
+                            <Grid Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Green" Style="{StaticResource BodyText}"/>
+                                <TextBox x:Name="ColorGTextBox" Grid.Column="1" Text="{Binding ColorG, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="OnRgbPreviewTextInput" PreviewKeyDown="OnRgbPreviewKeyDown"/>
+                            </Grid>
+                            <Slider Minimum="0" Maximum="255" Value="{Binding ColorG, Mode=TwoWay}" Margin="0,0,0,12"
+                                TickFrequency="1"
+                                IsSnapToTickEnabled="True"
+                                SmallChange="1" LargeChange="1"
+                                MouseRightButtonDown="OnColorGSliderRightClick"/>
+
+                            <!-- B Slider -->
+                            <Grid Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Blue" Style="{StaticResource BodyText}"/>
+                                <TextBox x:Name="ColorBTextBox" Grid.Column="1" Text="{Binding ColorB, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="OnRgbPreviewTextInput" PreviewKeyDown="OnRgbPreviewKeyDown"/>
+                            </Grid>
+                            <Slider Minimum="0" Maximum="255" Value="{Binding ColorB, Mode=TwoWay}" Margin="0,0,0,12"
+                                TickFrequency="1"
+                                IsSnapToTickEnabled="True"
+                                SmallChange="1" LargeChange="1"
+                                MouseRightButtonDown="OnColorBSliderRightClick"/>
+
+                            <!-- A Slider -->
+                            <Grid Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Alpha" Style="{StaticResource BodyText}"/>
+                                <TextBox x:Name="ColorATextBox" Grid.Column="1" Text="{Binding Alpha, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="OnRgbPreviewTextInput" PreviewKeyDown="OnRgbPreviewKeyDown"/>
+                            </Grid>
+                            <Slider Minimum="0" Maximum="255" Value="{Binding Alpha, Mode=TwoWay}" Margin="0,0,0,12"
+                                TickFrequency="1"
+                                IsSnapToTickEnabled="True"
+                                SmallChange="1" LargeChange="1"
+                                MouseRightButtonDown="OnColorASliderRightClick"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Actions Card -->
+                    <Border Style="{StaticResource Card}" 
+                            Background="{StaticResource SecondaryBrush}">
+                        <StackPanel>
+                            <TextBlock Text="Actions" 
+                                       Style="{StaticResource SubheadingText}" 
+                                       FontSize="13"
+                                       Margin="0,0,0,16"/>
+
+                            <Button Content="Copy Crosshair Code" 
+                                    Style="{StaticResource SecondaryButton}" 
+                                    HorizontalAlignment="Stretch"
+                                    Margin="0,0,0,8" Click="OnCopyShareCodeButtonClicked"/>
+                            <Button Content="Import Crosshair Code" 
+                                    Style="{StaticResource SecondaryButton}" 
+                                    HorizontalAlignment="Stretch"
+                                    Margin="0,0,0,8" Click="OnImportShareCodeButtonClicked"/>
+                            <Button Content="Save Crosshair" 
+                                    Style="{StaticResource PrimaryButton}" 
+                                    HorizontalAlignment="Stretch"
+                                    Margin="0,0,0,8" Click="OnSaveCrosshairButtonClicked"/>
+                            <Button Content="Reset to Default"
+                                    Style="{StaticResource TextButton}"
+                                    Foreground="{StaticResource MutedForegroundBrush}"
+                                    BorderThickness="0"
+                                    HorizontalAlignment="Left"
+                                    Cursor="Hand" Click="OnResetCrosshairButtonClicked"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <!-- Preview Canvas -->
+        <Grid Grid.Column="1">
+            <Border Background="{StaticResource SecondaryBrush}" 
+                    CornerRadius="8" 
+                    Width="400" Height="400"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="1">
+                <Canvas x:Name="CrosshairCanvas"></Canvas>
+            </Border>
+        </Grid>
+    </Grid>
+</Page>

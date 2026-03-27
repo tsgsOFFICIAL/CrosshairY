@@ -1,0 +1,225 @@
+﻿<Page x:Class="CrosshairY.Pages.SettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:CrosshairY.Pages"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="Settings"
+      Background="{StaticResource BackgroundBrush}">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="24">
+        <StackPanel>
+            <!-- Header -->
+            <TextBlock Text="Settings" 
+                       Style="{StaticResource HeadingText}" 
+                       Margin="0,0,0,8"/>
+            <TextBlock Text="Manage application preferences and updates" 
+                       Style="{StaticResource MutedText}" 
+                       Margin="0,0,0,24"/>
+
+            <!-- Cards Grid -->
+            <Grid Margin="0,0,0,24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="24"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="24"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Application Card -->
+                <Border Grid.Column="0" Grid.Row="0" Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="Application" 
+                                   Style="{StaticResource SubheadingText}" 
+                                   Margin="0,0,0,4"/>
+                        <TextBlock Text="General application settings" 
+                                   Style="{StaticResource MutedText}" 
+                                   Margin="0,0,0,20"/>
+
+                        <!-- Start on startup -->
+                        <Grid Margin="0,0,0,16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Start on system startup" 
+                                           Style="{StaticResource BodyText}"/>
+                                <TextBlock Text="Launch CrosshairY when Windows starts" 
+                                           Style="{StaticResource MutedText}" 
+                                           FontSize="12"/>
+                            </StackPanel>
+                            <CheckBox Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding StartWithWindows, Mode=TwoWay}"/>
+                        </Grid>
+
+                        <!-- Start minimized on startup -->
+                        <Grid Margin="0,0,0,16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Minimize to system tray on startup" 
+                                           Style="{StaticResource BodyText}"/>
+                                <TextBlock Text="Launch CrosshairY to system tray when Windows starts" 
+                                           Style="{StaticResource MutedText}" 
+                                           FontSize="12"/>
+                            </StackPanel>
+                            <CheckBox Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding StartMinimized, Mode=TwoWay}" IsEnabled="{Binding StartWithWindows}"/>
+                        </Grid>
+
+                        <!-- Run in background -->
+                        <Grid Margin="0,0,0,16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Run in background" 
+                                           Style="{StaticResource BodyText}"/>
+                                <TextBlock Text="Keep running when window is closed" 
+                                           Style="{StaticResource MutedText}" 
+                                           FontSize="12"/>
+                            </StackPanel>
+                            <CheckBox Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding RunInBackground, Mode=TwoWay}"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Updates Card -->
+                <Border Grid.Column="2" Grid.Row="0" Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="Updates" 
+                                   Style="{StaticResource SubheadingText}" 
+                                   Margin="0,0,0,4"/>
+                        <TextBlock Text="Keep CrosshairY up to date" 
+                                   Style="{StaticResource MutedText}" 
+                                   Margin="0,0,0,20"/>
+
+                        <!-- Update Status -->
+                        <Border Background="{StaticResource SecondaryBrush}" 
+                                BorderBrush="{StaticResource BorderBrush}" 
+                                BorderThickness="1" 
+                                CornerRadius="6" 
+                                Padding="16" 
+                                Margin="0,0,0,16">
+                            <StackPanel Orientation="Horizontal">
+                                <Path Data="M22,12 A10,10 0 1,1 12,2 A10,10 0 0,1 22,12 M9,12 L11,14 L15,10" 
+                                      Stroke="{StaticResource PrimaryBrush}" 
+                                      StrokeThickness="2" 
+                                      Width="20" Height="20" 
+                                      Stretch="Uniform" 
+                                      Margin="0,0,12,0"/>
+                                <StackPanel>
+                                    <TextBlock Text="You are up to date" 
+                                               Style="{StaticResource BodyText}" 
+                                               FontWeight="Medium"/>
+                                    <TextBlock Text="{Binding AppVersion, StringFormat='Version {0}'}" 
+                                               Style="{StaticResource MutedText}" 
+                                               FontSize="12"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                            <Button Content="Check for updates" 
+                                    Style="{StaticResource SecondaryButton}" 
+                                    Margin="0,0,8,0" Click="OnCheckForUpdatesButtonClicked"/>
+                            <Button Content="Update now" 
+                                    Style="{StaticResource PrimaryButton}" 
+                                    IsEnabled="{Binding UpdateAvailable, UpdateSourceTrigger=PropertyChanged}" Click="OnUpdateButtonClicked"/>
+                        </StackPanel>
+
+                        <!-- Auto-update -->
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="Auto-update" 
+                                           Style="{StaticResource BodyText}"/>
+                                <TextBlock Text="Automatically download and install updates" 
+                                           Style="{StaticResource MutedText}" 
+                                           FontSize="12"/>
+                            </StackPanel>
+                            <CheckBox Grid.Column="1" VerticalAlignment="Center" IsChecked="{Binding AutoUpdate, Mode=TwoWay}"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- About Card -->
+                <Border Grid.Column="0" Grid.Row="2" Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="About" 
+                                   Style="{StaticResource SubheadingText}" 
+                                   Margin="0,0,0,4"/>
+                        <TextBlock Text="Application information" 
+                                   Style="{StaticResource MutedText}" 
+                                   Margin="0,0,0,20"/>
+
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Version" Style="{StaticResource MutedText}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding AppVersion}" 
+                                       Style="{StaticResource BodyText}" 
+                                       FontFamily="Consolas"/>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="Build" Style="{StaticResource MutedText}"/>
+                            <TextBlock Grid.Column="1" Text="2026.03.27" 
+                                       Style="{StaticResource BodyText}" 
+                                       FontFamily="Consolas"/>
+                        </Grid>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="License" Style="{StaticResource MutedText}"/>
+                            <TextBlock Grid.Column="1" Text="Free" 
+                                       Style="{StaticResource BodyText}"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Data Card -->
+                <Border Grid.Column="2" Grid.Row="2" Style="{StaticResource Card}">
+                    <StackPanel>
+                        <TextBlock Text="Data" 
+                                   Style="{StaticResource SubheadingText}" 
+                                   Margin="0,0,0,4"/>
+                        <TextBlock Text="Manage your crosshair data" 
+                                   Style="{StaticResource MutedText}" 
+                                   Margin="0,0,0,20"/>
+
+                        <Button Content="Export all crosshairs" 
+                                Style="{StaticResource SecondaryButton}" 
+                                HorizontalAlignment="Stretch"
+                                Margin="0,0,0,8" Click="OnExportButtonClicked"/>
+                        <Button Content="Import crosshairs" 
+                                Style="{StaticResource SecondaryButton}" 
+                                HorizontalAlignment="Stretch"
+                                Margin="0,0,0,8" Click="OnImportButtonClicked"/>
+                        <Button Content="Reset all settings" Style="{StaticResource DestructiveButton}" Click="OnResetButtonClicked"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

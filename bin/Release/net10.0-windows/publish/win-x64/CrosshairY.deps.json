@@ -1,0 +1,1973 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0/win-x64",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {},
+    ".NETCoreApp,Version=v10.0/win-x64": {
+      "CrosshairY/1.0.0": {
+        "dependencies": {
+          "GlobalHotKey": "1.1.0",
+          "Hardcodet.NotifyIcon.Wpf": "2.0.1",
+          "MahApps.Metro.IconPacks": "6.2.1",
+          "Microsoft.Toolkit.Uwp.Notifications": "7.1.3",
+          "PixiEditor.ColorPicker": "3.4.2.2",
+          "runtimepack.Microsoft.NETCore.App.Runtime.win-x64": "10.0.5",
+          "runtimepack.Microsoft.WindowsDesktop.App.Runtime.win-x64": "10.0.5",
+          "runtimepack.Microsoft.Windows.SDK.NET.Ref": "10.0.17763.57"
+        },
+        "runtime": {
+          "CrosshairY.dll": {}
+        }
+      },
+      "runtimepack.Microsoft.NETCore.App.Runtime.win-x64/10.0.5": {
+        "runtime": {
+          "Microsoft.CSharp.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "Microsoft.VisualBasic.Core.dll": {
+            "assemblyVersion": "15.0.0.0",
+            "fileVersion": "15.0.526.15411"
+          },
+          "Microsoft.Win32.Primitives.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "Microsoft.Win32.Registry.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.AppContext.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Buffers.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Collections.Concurrent.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Collections.Immutable.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Collections.NonGeneric.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Collections.Specialized.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Collections.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.ComponentModel.Annotations.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.ComponentModel.DataAnnotations.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.ComponentModel.EventBasedAsync.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.ComponentModel.Primitives.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.ComponentModel.TypeConverter.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.ComponentModel.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Configuration.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Console.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Core.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Data.Common.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Data.DataSetExtensions.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Data.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Diagnostics.Contracts.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Diagnostics.Debug.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Diagnostics.DiagnosticSource.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Diagnostics.FileVersionInfo.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Diagnostics.Process.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Diagnostics.StackTrace.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Diagnostics.TextWriterTraceListener.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Diagnostics.Tools.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Diagnostics.TraceSource.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Diagnostics.Tracing.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Drawing.Primitives.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Dynamic.Runtime.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Formats.Asn1.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Formats.Tar.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Globalization.Calendars.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Globalization.Extensions.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Globalization.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.IO.Compression.Brotli.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.IO.Compression.FileSystem.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.IO.Compression.ZipFile.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.IO.Compression.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.IO.FileSystem.AccessControl.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.IO.FileSystem.DriveInfo.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.IO.FileSystem.Primitives.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.IO.FileSystem.Watcher.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.IO.FileSystem.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.IO.IsolatedStorage.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.IO.MemoryMappedFiles.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.IO.Pipelines.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.IO.Pipes.AccessControl.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.IO.Pipes.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.IO.UnmanagedMemoryStream.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.IO.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Linq.AsyncEnumerable.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Linq.Expressions.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Linq.Parallel.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Linq.Queryable.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Linq.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Memory.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Net.Http.Json.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Net.Http.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Net.HttpListener.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Net.Mail.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Net.NameResolution.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Net.NetworkInformation.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Net.Ping.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Net.Primitives.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Net.Quic.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Net.Requests.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Net.Security.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Net.ServerSentEvents.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Net.ServicePoint.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Net.Sockets.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Net.WebClient.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Net.WebHeaderCollection.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Net.WebProxy.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Net.WebSockets.Client.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Net.WebSockets.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Net.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Numerics.Vectors.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Numerics.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.ObjectModel.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Private.CoreLib.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Private.DataContractSerialization.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Private.Uri.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Private.Xml.Linq.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Private.Xml.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Reflection.DispatchProxy.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Reflection.Emit.ILGeneration.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Reflection.Emit.Lightweight.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Reflection.Emit.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Reflection.Extensions.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Reflection.Metadata.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Reflection.Primitives.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Reflection.TypeExtensions.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Reflection.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Resources.Reader.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Resources.ResourceManager.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Resources.Writer.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Runtime.CompilerServices.Unsafe.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Runtime.CompilerServices.VisualC.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Runtime.Extensions.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Runtime.Handles.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Runtime.InteropServices.JavaScript.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Runtime.InteropServices.RuntimeInformation.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Runtime.InteropServices.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Runtime.Intrinsics.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Runtime.Loader.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Runtime.Numerics.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Runtime.Serialization.Formatters.dll": {
+            "assemblyVersion": "8.1.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Runtime.Serialization.Json.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Runtime.Serialization.Primitives.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Runtime.Serialization.Xml.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Runtime.Serialization.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Runtime.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Security.AccessControl.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Security.Claims.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Security.Cryptography.Algorithms.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Security.Cryptography.Cng.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Security.Cryptography.Csp.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Security.Cryptography.Encoding.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Security.Cryptography.OpenSsl.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Security.Cryptography.Primitives.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Security.Cryptography.X509Certificates.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Security.Cryptography.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Security.Principal.Windows.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Security.Principal.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Security.SecureString.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Security.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.ServiceModel.Web.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.ServiceProcess.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Text.Encoding.CodePages.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Text.Encoding.Extensions.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Text.Encoding.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Text.Encodings.Web.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Text.Json.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Text.RegularExpressions.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Threading.AccessControl.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Threading.Channels.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Threading.Overlapped.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Threading.Tasks.Dataflow.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Threading.Tasks.Extensions.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Threading.Tasks.Parallel.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Threading.Tasks.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Threading.Thread.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Threading.ThreadPool.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Threading.Timer.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Threading.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Transactions.Local.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Transactions.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.ValueTuple.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Web.HttpUtility.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Web.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Windows.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Xml.Linq.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Xml.ReaderWriter.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Xml.Serialization.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Xml.XDocument.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Xml.XPath.XDocument.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Xml.XPath.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Xml.XmlDocument.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Xml.XmlSerializer.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Xml.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "mscorlib.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "netstandard.dll": {
+            "assemblyVersion": "2.1.0.0",
+            "fileVersion": "10.0.526.15411"
+          }
+        },
+        "native": {
+          "Microsoft.DiaSymReader.Native.amd64.dll": {
+            "fileVersion": "14.40.33810.0"
+          },
+          "System.IO.Compression.Native.dll": {
+            "fileVersion": "10.0.526.15411"
+          },
+          "clretwrc.dll": {
+            "fileVersion": "10.0.526.15411"
+          },
+          "clrgc.dll": {
+            "fileVersion": "10.0.526.15411"
+          },
+          "clrgcexp.dll": {
+            "fileVersion": "10.0.526.15411"
+          },
+          "clrjit.dll": {
+            "fileVersion": "10.0.526.15411"
+          },
+          "coreclr.dll": {
+            "fileVersion": "10.0.526.15411"
+          },
+          "createdump.exe": {
+            "fileVersion": "10.0.526.15411"
+          },
+          "hostfxr.dll": {
+            "fileVersion": "10.0.526.15411"
+          },
+          "hostpolicy.dll": {
+            "fileVersion": "10.0.526.15411"
+          },
+          "mscordaccore.dll": {
+            "fileVersion": "10.0.526.15411"
+          },
+          "mscordaccore_amd64_amd64_10.0.526.15411.dll": {
+            "fileVersion": "10.0.526.15411"
+          },
+          "mscordbi.dll": {
+            "fileVersion": "10.0.526.15411"
+          },
+          "mscorrc.dll": {
+            "fileVersion": "10.0.526.15411"
+          },
+          "msquic.dll": {
+            "fileVersion": "2.4.16.0"
+          }
+        }
+      },
+      "runtimepack.Microsoft.WindowsDesktop.App.Runtime.win-x64/10.0.5": {
+        "runtime": {
+          "Accessibility.dll": {
+            "assemblyVersion": "4.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "DirectWriteForwarder.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "Microsoft.VisualBasic.Forms.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "Microsoft.VisualBasic.dll": {
+            "assemblyVersion": "10.1.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "Microsoft.Win32.Registry.AccessControl.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "Microsoft.Win32.SystemEvents.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "PresentationCore.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "PresentationFramework-SystemCore.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "PresentationFramework-SystemData.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "PresentationFramework-SystemDrawing.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "PresentationFramework-SystemXml.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "PresentationFramework-SystemXmlLinq.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "PresentationFramework.Aero.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "PresentationFramework.Aero2.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "PresentationFramework.AeroLite.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "PresentationFramework.Classic.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "PresentationFramework.Fluent.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "PresentationFramework.Luna.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "PresentationFramework.Royale.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "PresentationFramework.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "PresentationUI.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "ReachFramework.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.CodeDom.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Configuration.ConfigurationManager.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Design.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Diagnostics.EventLog.Messages.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "0.0.0.0"
+          },
+          "System.Diagnostics.EventLog.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Diagnostics.PerformanceCounter.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.DirectoryServices.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Drawing.Common.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Drawing.Design.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Drawing.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Formats.Nrbf.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.IO.Packaging.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Printing.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Private.Windows.Core.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Private.Windows.GdiPlus.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Resources.Extensions.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Security.Cryptography.Pkcs.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Security.Cryptography.ProtectedData.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Security.Cryptography.Xml.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Security.Permissions.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Windows.Controls.Ribbon.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Windows.Extensions.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Windows.Forms.Design.Editors.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Windows.Forms.Design.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Windows.Forms.Primitives.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Windows.Forms.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Windows.Input.Manipulations.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Windows.Presentation.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Windows.Primitives.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "System.Xaml.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "UIAutomationClient.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "UIAutomationClientSideProviders.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "UIAutomationProvider.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "UIAutomationTypes.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "WindowsBase.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          },
+          "WindowsFormsIntegration.dll": {
+            "assemblyVersion": "10.0.0.0",
+            "fileVersion": "10.0.526.15411"
+          }
+        },
+        "native": {
+          "D3DCompiler_47_cor3.dll": {
+            "fileVersion": "10.0.26100.6901"
+          },
+          "PenImc_cor3.dll": {
+            "fileVersion": "10.0.526.15411"
+          },
+          "PresentationNative_cor3.dll": {
+            "fileVersion": "10.0.426.10301"
+          },
+          "vcruntime140_cor3.dll": {
+            "fileVersion": "14.44.35211.0"
+          },
+          "wpfgfx_cor3.dll": {
+            "fileVersion": "10.0.526.15411"
+          }
+        }
+      },
+      "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.17763.57": {
+        "runtime": {
+          "Microsoft.Windows.SDK.NET.dll": {
+            "assemblyVersion": "10.0.17763.38",
+            "fileVersion": "10.0.17763.55"
+          },
+          "WinRT.Runtime.dll": {
+            "assemblyVersion": "2.2.0.0",
+            "fileVersion": "2.2.0.48161"
+          }
+        }
+      },
+      "GlobalHotKey/1.1.0": {
+        "runtime": {
+          "lib/GlobalHotKey.dll": {
+            "assemblyVersion": "1.1.0.0",
+            "fileVersion": "1.1.0.0"
+          }
+        }
+      },
+      "Hardcodet.NotifyIcon.Wpf/2.0.1": {
+        "runtime": {
+          "lib/net8.0-windows7.0/Hardcodet.NotifyIcon.Wpf.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.0.1.2717"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.BootstrapIcons": "6.2.1",
+          "MahApps.Metro.IconPacks.BoxIcons": "6.2.1",
+          "MahApps.Metro.IconPacks.BoxIcons2": "6.2.1",
+          "MahApps.Metro.IconPacks.CircumIcons": "6.2.1",
+          "MahApps.Metro.IconPacks.Codicons": "6.2.1",
+          "MahApps.Metro.IconPacks.Coolicons": "6.2.1",
+          "MahApps.Metro.IconPacks.Core": "6.2.1",
+          "MahApps.Metro.IconPacks.Entypo": "6.2.1",
+          "MahApps.Metro.IconPacks.EvaIcons": "6.2.1",
+          "MahApps.Metro.IconPacks.FeatherIcons": "6.2.1",
+          "MahApps.Metro.IconPacks.FileIcons": "6.2.1",
+          "MahApps.Metro.IconPacks.FontAwesome": "6.2.1",
+          "MahApps.Metro.IconPacks.FontAwesome5": "6.2.1",
+          "MahApps.Metro.IconPacks.FontAwesome6": "6.2.1",
+          "MahApps.Metro.IconPacks.Fontaudio": "6.2.1",
+          "MahApps.Metro.IconPacks.Fontisto": "6.2.1",
+          "MahApps.Metro.IconPacks.ForkAwesome": "6.2.1",
+          "MahApps.Metro.IconPacks.GameIcons": "6.2.1",
+          "MahApps.Metro.IconPacks.Ionicons": "6.2.1",
+          "MahApps.Metro.IconPacks.JamIcons": "6.2.1",
+          "MahApps.Metro.IconPacks.KeyruneIcons": "6.2.1",
+          "MahApps.Metro.IconPacks.Lucide": "6.2.1",
+          "MahApps.Metro.IconPacks.Material": "6.2.1",
+          "MahApps.Metro.IconPacks.MaterialDesign": "6.2.1",
+          "MahApps.Metro.IconPacks.MaterialLight": "6.2.1",
+          "MahApps.Metro.IconPacks.MemoryIcons": "6.2.1",
+          "MahApps.Metro.IconPacks.Microns": "6.2.1",
+          "MahApps.Metro.IconPacks.MingCuteIcons": "6.2.1",
+          "MahApps.Metro.IconPacks.Modern": "6.2.1",
+          "MahApps.Metro.IconPacks.MynaUIIcons": "6.2.1",
+          "MahApps.Metro.IconPacks.Octicons": "6.2.1",
+          "MahApps.Metro.IconPacks.PhosphorIcons": "6.2.1",
+          "MahApps.Metro.IconPacks.PicolIcons": "6.2.1",
+          "MahApps.Metro.IconPacks.PixelartIcons": "6.2.1",
+          "MahApps.Metro.IconPacks.RPGAwesome": "6.2.1",
+          "MahApps.Metro.IconPacks.RadixIcons": "6.2.1",
+          "MahApps.Metro.IconPacks.RemixIcon": "6.2.1",
+          "MahApps.Metro.IconPacks.SimpleIcons": "6.2.1",
+          "MahApps.Metro.IconPacks.Typicons": "6.2.1",
+          "MahApps.Metro.IconPacks.Unicons": "6.2.1",
+          "MahApps.Metro.IconPacks.VaadinIcons": "6.2.1",
+          "MahApps.Metro.IconPacks.WeatherIcons": "6.2.1",
+          "MahApps.Metro.IconPacks.Zondicons": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.BootstrapIcons/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.BootstrapIcons.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.BoxIcons/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.BoxIcons.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.BoxIcons2/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.BoxIcons2.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.CircumIcons/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.CircumIcons.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.Codicons/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.Codicons.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.Coolicons/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.Coolicons.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.Core/6.2.1": {
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.Core.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.Entypo/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.Entypo.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.EvaIcons/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.EvaIcons.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.FeatherIcons/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.FeatherIcons.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.FileIcons/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.FileIcons.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.Fontaudio/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.Fontaudio.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.FontAwesome/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.FontAwesome.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.FontAwesome5/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.FontAwesome5.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.FontAwesome6/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.FontAwesome6.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.Fontisto/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.Fontisto.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.ForkAwesome/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.ForkAwesome.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.GameIcons/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.GameIcons.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.Ionicons/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.Ionicons.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.JamIcons/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.JamIcons.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.KeyruneIcons/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.KeyruneIcons.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.Lucide/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.Lucide.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.Material/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.Material.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.MaterialDesign/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.MaterialDesign.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.MaterialLight/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.MaterialLight.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.MemoryIcons/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.MemoryIcons.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.Microns/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.Microns.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.MingCuteIcons/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.MingCuteIcons.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.Modern/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.Modern.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.MynaUIIcons/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.MynaUIIcons.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.Octicons/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.Octicons.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.PhosphorIcons/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.PhosphorIcons.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.PicolIcons/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.PicolIcons.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.PixelartIcons/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.PixelartIcons.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.RadixIcons/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.RadixIcons.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.RemixIcon/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.RemixIcon.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.RPGAwesome/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.RPGAwesome.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.SimpleIcons/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.SimpleIcons.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.Typicons/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.Typicons.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.Unicons/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.Unicons.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.VaadinIcons/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.VaadinIcons.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.WeatherIcons/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.WeatherIcons.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "MahApps.Metro.IconPacks.Zondicons/6.2.1": {
+        "dependencies": {
+          "MahApps.Metro.IconPacks.Core": "6.2.1"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/MahApps.Metro.IconPacks.Zondicons.dll": {
+            "assemblyVersion": "6.0.0.0",
+            "fileVersion": "6.2.1.0"
+          }
+        }
+      },
+      "Microsoft.Toolkit.Uwp.Notifications/7.1.3": {
+        "runtime": {
+          "lib/net5.0-windows10.0.17763/Microsoft.Toolkit.Uwp.Notifications.dll": {
+            "assemblyVersion": "7.1.0.0",
+            "fileVersion": "7.1.3.1"
+          }
+        }
+      },
+      "Microsoft.Xaml.Behaviors.Wpf/1.1.31": {
+        "runtime": {
+          "lib/net5.0-windows7.0/Microsoft.Xaml.Behaviors.dll": {
+            "assemblyVersion": "1.1.0.0",
+            "fileVersion": "1.1.31.10800"
+          }
+        }
+      },
+      "PixiEditor.ColorPicker/3.4.2.2": {
+        "dependencies": {
+          "Microsoft.Xaml.Behaviors.Wpf": "1.1.31",
+          "PixiEditor.ColorPicker.Models": "1.0.10"
+        },
+        "runtime": {
+          "lib/net8.0-windows7.0/ColorPicker.dll": {
+            "assemblyVersion": "3.4.2.2",
+            "fileVersion": "3.4.2.2"
+          }
+        }
+      },
+      "PixiEditor.ColorPicker.Models/1.0.10": {
+        "runtime": {
+          "lib/net8.0/ColorPicker.Models.dll": {
+            "assemblyVersion": "1.0.10.0",
+            "fileVersion": "1.0.10.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "CrosshairY/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "runtimepack.Microsoft.NETCore.App.Runtime.win-x64/10.0.5": {
+      "type": "runtimepack",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "runtimepack.Microsoft.WindowsDesktop.App.Runtime.win-x64/10.0.5": {
+      "type": "runtimepack",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.17763.57": {
+      "type": "runtimepack",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "GlobalHotKey/1.1.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-KkEHhyM+sSh27kF1d3YlfpXdYlkfu17XCiI3WfYy1cn65y3loR7f+GMkMwHTgf0xSyS3QdXTKCRfVLzb7jgJFQ==",
+      "path": "globalhotkey/1.1.0",
+      "hashPath": "globalhotkey.1.1.0.nupkg.sha512"
+    },
+    "Hardcodet.NotifyIcon.Wpf/2.0.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-dtxmeZXzV2GzSm91aZ3hqzgoeVoARSkDPVCYfhVUNyyKBWYxMgNC0EcLiSYxD4Uc4alq/2qb3SmV8DgAENLRLQ==",
+      "path": "hardcodet.notifyicon.wpf/2.0.1",
+      "hashPath": "hardcodet.notifyicon.wpf.2.0.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-D4iq02tGW42jn0go7M+mBI8uMkfAmUrPwQl9gaV3WqiIssjABwP9vAtU05NTWUx9lB0xl+YlfcnVfFoKki0Ylw==",
+      "path": "mahapps.metro.iconpacks/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.BootstrapIcons/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-dTd5CaF63Ke2mWKlpagKEoU7sQmAtpoTyIMrZulPtI8N6OEkA6my3ekTPEt0OHu68zjiiXzZA5HLH2dlHUX+9w==",
+      "path": "mahapps.metro.iconpacks.bootstrapicons/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.bootstrapicons.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.BoxIcons/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-fvxelxwj1Fr+osvmJnvlSthN34ZpwWMDacCWSGpylw8Pz+bFWcPIA3DxDMbxshvUhZ5dYzigCOxHZKG/BHPEdw==",
+      "path": "mahapps.metro.iconpacks.boxicons/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.boxicons.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.BoxIcons2/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-TkTvGg1L/w3kCGB7D7Hqd3EhYevijeknuh/VGVsaF47J4eOwf42Y2zXV7rpCXAY13zfrGWCq8RQQdacwFStQow==",
+      "path": "mahapps.metro.iconpacks.boxicons2/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.boxicons2.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.CircumIcons/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6L+lBg3Cj8Tq1TK0FHIBvS4t9iDa9V966dGZrzNAryZD/jQ2ncvz4rIDsZpSnsrLIhxMqChLvNogg3sDEuchtA==",
+      "path": "mahapps.metro.iconpacks.circumicons/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.circumicons.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.Codicons/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-+pQeVS29X7pG7qrJ4y0ZPSRUQVaWidwwM/tdoIABo40MQpC0Izg8t1BXnXprP0C10Od9Zzsi2Qt/GWgfEW/aSw==",
+      "path": "mahapps.metro.iconpacks.codicons/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.codicons.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.Coolicons/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-YdAqLEsLON2ripNNXkzrVX3iHQgEVXvfcvChx/2UsFyefV63RMVRu1rXCtLrOGRm/NAl7okTu2d6IeUVj+bCFQ==",
+      "path": "mahapps.metro.iconpacks.coolicons/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.coolicons.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.Core/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ySAyax37C045Ef1ufN33yQjn3qPM1MuQLgKdxZKYUAl2uZaIrn9wCeBNvfG46QPNRvBFLR6gVKTs6O3o81LNhQ==",
+      "path": "mahapps.metro.iconpacks.core/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.core.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.Entypo/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-H1xzNFcF1gPgkrMFT3RgVc+whTZ88+g1hFUzaRkZYjH7k4JGGxsb6dqVjHyMQCbSygCUiWNuzy0yzNrv1krQOg==",
+      "path": "mahapps.metro.iconpacks.entypo/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.entypo.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.EvaIcons/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-bUQfSeAb0uphQrhks3Mhj5kk+WsqL22dPF5b9DSVrRi7bHgWt2+ciMZZp85Q+zFKtHM3PkdGC2nUbl0bBu6AyQ==",
+      "path": "mahapps.metro.iconpacks.evaicons/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.evaicons.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.FeatherIcons/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-a5sxUHp39ejJu6p2wbbJT71tYY4zYuS+N4Vb9VxcnsQqaeMktuHtiy1ySR43h4dkdzhAohbyxvb9j80AkDXZLA==",
+      "path": "mahapps.metro.iconpacks.feathericons/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.feathericons.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.FileIcons/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Rir1rKL8LNhxhWNmVdWDbSRjoJg+y0t4kqDdD5zLH6T7uFm6yjPvIEK4pvA30NIFPgvl4bkN2TKQLv+7P4FNDw==",
+      "path": "mahapps.metro.iconpacks.fileicons/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.fileicons.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.Fontaudio/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-AsYb9vBKtkYBPV/3OEGTijH+wrlxxPcMFRXVbbRZLz1E9JIoGxkRcwnFryWs2bhDIMiLVzj2DgYClqvJSovmEw==",
+      "path": "mahapps.metro.iconpacks.fontaudio/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.fontaudio.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.FontAwesome/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Su6jzajwH8rP7H5OGhXvyC2SlsoyH0pNwNCkDFSP5zyVQlMtmUZGOY8X0Qcj1QFn+t4TmEnMjwGMB6RuzozgEg==",
+      "path": "mahapps.metro.iconpacks.fontawesome/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.fontawesome.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.FontAwesome5/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-PNTiFAT/+ro1SitUj8k+gGWDq7mC/eYD1cy8QfF84ZyCp+goLh5BApj0IGvv+eisLMw7hFIIzI8vIHQ1GbyExw==",
+      "path": "mahapps.metro.iconpacks.fontawesome5/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.fontawesome5.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.FontAwesome6/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-IB2AdqnGAdM2RK8Ekmf8U2VBw7cAnRQHQaVJ1Kv/0Ek+VavsmUqlyotmSg28iL4Sq9BBC2SQrRbvuIGfz9seWA==",
+      "path": "mahapps.metro.iconpacks.fontawesome6/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.fontawesome6.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.Fontisto/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-+JDR5+YpYq/iBdj7DZiT5XA4U5+I2kxqxGK6usqOi077iemIEXKWxhrEiWyruHfRQt4VrD/WGy27PrJzU/h6cA==",
+      "path": "mahapps.metro.iconpacks.fontisto/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.fontisto.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.ForkAwesome/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-luVbeZF3hH7DQl+QCT6NV9vGJ8a1CtOJd0W2AShOms8YuAU4RnsHMm9jrrONpCBeVqQI8mpFRTzd0bYit8gilg==",
+      "path": "mahapps.metro.iconpacks.forkawesome/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.forkawesome.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.GameIcons/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-oOVAHye1k+cjfXaGfBP6nu5AtZND65WhsolAqmS8wMtM5wPN5q0k8jUq3lxm5/MRMh+rCT99oAcZKmyDaRlcVA==",
+      "path": "mahapps.metro.iconpacks.gameicons/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.gameicons.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.Ionicons/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-WBHtfiUfEGUPiLaJkQ2ZXipo01eRbW6PM6qI7S4LLPGs5FM9YIy6PiaeahN8FcYS/HnYx8E2HSJ99R+U+M2nBA==",
+      "path": "mahapps.metro.iconpacks.ionicons/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.ionicons.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.JamIcons/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-9Jc2IzyBa0vASPCup7woKHTSwG31rtBvZsdpA+Jot++eWkZpvCpgWn8BKdcNcIh3Hjnve9qLzPWb11WobPO2CQ==",
+      "path": "mahapps.metro.iconpacks.jamicons/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.jamicons.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.KeyruneIcons/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-9Cs7gIl1WCTsZHPgX0Ri32r8vTPi32Zxf/z/3CxLpfksY7qsTodCWWWlIgjEqxriWE/AGoUzdh1o73j5qtQ/RQ==",
+      "path": "mahapps.metro.iconpacks.keyruneicons/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.keyruneicons.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.Lucide/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-xehG2J/Ljfa6NxlKCqvDxnxUMrApR0xSLGaoaFSVN531jF+WNZNAaUvE9qkxOHKZ+jpH4gUnb2sC3qNcpAGVkA==",
+      "path": "mahapps.metro.iconpacks.lucide/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.lucide.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.Material/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-DcNQIsJLAmuzlpXdD2hQtMV8IzLRHsxFBn9+nHDLAsYs8duTBTycpNpQitkzuNYH0o+sgIbefCSp3jDUu9hIiQ==",
+      "path": "mahapps.metro.iconpacks.material/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.material.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.MaterialDesign/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-qMQHCZzHoBZy3bcU9CBf9GusPMpbxy0DPxiJrfbhM7IHh/hK5xWREoP2TOevqAVTEOk3YszWbiJBkYo/oeEliw==",
+      "path": "mahapps.metro.iconpacks.materialdesign/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.materialdesign.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.MaterialLight/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-8ypOe4HwSGnoQl/JIpC5hb6VnK+xFtSbvhlTmw+cnJVNluiwWdpJv+m9jpU3/9+SRkJRHVgHvEMwEXQx/XmS4A==",
+      "path": "mahapps.metro.iconpacks.materiallight/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.materiallight.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.MemoryIcons/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-TIU3n0ZXhKgpSaSlqg3EEjPBp+E89UyV6nOhK4DCP9yUbnZ/CuLmkwrrd2rtt9au+VD+TB1lWbA6+3NjpH7G9Q==",
+      "path": "mahapps.metro.iconpacks.memoryicons/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.memoryicons.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.Microns/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-stnuTZXy+k7BmKGvI4oP0NlspElhernJ4yFXUlEkA3X/38qlqq+YltM5KPPKgQo1BLHj58lOOn+U03grfdPI5A==",
+      "path": "mahapps.metro.iconpacks.microns/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.microns.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.MingCuteIcons/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-AfMV+SbqWabsuQdS6wt7SpinS5cah+7Pkdj+bfhHBBizdMsL+nY8+tiwmKF1up+wfZm8lCvnrCQWTkJ2mMSjUA==",
+      "path": "mahapps.metro.iconpacks.mingcuteicons/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.mingcuteicons.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.Modern/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-xCDNREDX37HZE1YIAwQ9YOwwhQLHRby1ec1FwLKRU6MWX0OJuceqk3HY3532xG7KpGGaOIV/dpB5vFq3oo+wug==",
+      "path": "mahapps.metro.iconpacks.modern/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.modern.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.MynaUIIcons/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-StYsKBuK2kKfUdkKq6ZDa5xtlWk4gyI59ip9mS30niYxn4K0yAZIMEyx1EX4efpGanlLF4oPGZ/YUvWGfl98NA==",
+      "path": "mahapps.metro.iconpacks.mynauiicons/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.mynauiicons.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.Octicons/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-1WGEPYjdcOMgXNspZHhYXooNJbylZyqLAkzXiCvlu1pW6HinBzaJI+vSkPtoZaF9QaMkSxwT2ZxG4mMkbhUowA==",
+      "path": "mahapps.metro.iconpacks.octicons/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.octicons.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.PhosphorIcons/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-PTfhQXTe3INWoELJy0dCfm92/faS6hF3F/C4kZyTiVe9Pgf21cd5v7kIBeT2m/eNHyEBFZX2ifmk8Q3xK1dr7g==",
+      "path": "mahapps.metro.iconpacks.phosphoricons/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.phosphoricons.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.PicolIcons/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6lEuXdF77v9Ip4QoDEJm7+mrfVRz7EV3LJGxDzVfPsSPwA4VxIsqOU0xHKDQ/5Ekv+gPXW/PQtecfjlQ+UrWGw==",
+      "path": "mahapps.metro.iconpacks.picolicons/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.picolicons.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.PixelartIcons/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-KJwxtRvqpMHRkghru0H7AZcDgUDpgNq4bQTclivcQyUTChedfZh64REfJ1B5QCfKdCKmvVMR66JpJnGoM6ekdA==",
+      "path": "mahapps.metro.iconpacks.pixelarticons/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.pixelarticons.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.RadixIcons/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-1COtOqMAtgOydnx8cU/ukwNn4KRAzaFp5+SCucYgjyq0vdm1+1hi8inNDEZvIJqAhCSdCU13afFhsL/1KYLbBQ==",
+      "path": "mahapps.metro.iconpacks.radixicons/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.radixicons.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.RemixIcon/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ROcfFFN2S45IV7dqU6Alf8i5gMIG+4iArm8Mzb+KXjiyLOHpTZ/QHGIy9DtqIG4NuCO9pwf+fNTGCsDlXIG3TQ==",
+      "path": "mahapps.metro.iconpacks.remixicon/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.remixicon.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.RPGAwesome/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6zHlSIU5z5meUIjDpwX872Z9Zd1ZhBRuohWiy0a+AUevdOpPw9or7rGpiMAdAzEvmab4sy9Un787A4YC5LQr7w==",
+      "path": "mahapps.metro.iconpacks.rpgawesome/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.rpgawesome.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.SimpleIcons/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-EbK+/s00A72ATU+Qpk72ZxQsLvVGGRD8UA/jsGDqV0Hlym0I//dtQjYwWxzfwmTp2Ay3Sh6RmLu49qqv3Ey2/Q==",
+      "path": "mahapps.metro.iconpacks.simpleicons/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.simpleicons.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.Typicons/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-o6kNl3wKxsO1MkgRg8V/wY7un1ueNBbqy5Ut3Y46mC2vVzEwxcejss5+BtuO/oFud3GQtet2Ng53z+70dNjG4Q==",
+      "path": "mahapps.metro.iconpacks.typicons/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.typicons.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.Unicons/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-JdTZD7CtLjcf+Ne0jN6EsyvG/Dl+v4w08OQRSC9XTknuVW/zlJyHcxbJy+NvkBdcO+Jup/TwNslV5g9xVheavQ==",
+      "path": "mahapps.metro.iconpacks.unicons/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.unicons.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.VaadinIcons/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6GOuzyvLNojG+NLZDULsWSfQ+RAh2v8W6n2iPWc+c1pDcmgbuKCPiazQXb0YpPuldGEOpK1ur6WJOXXsrTRR6A==",
+      "path": "mahapps.metro.iconpacks.vaadinicons/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.vaadinicons.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.WeatherIcons/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-ChU6387+6rDPQZRS/L7wT4YFMmSvv0AdeCBAPVZTeW3SdeFt49tOWQvz2Xpb+N55Qn4tGjb+/lE2dg/NAYYU2w==",
+      "path": "mahapps.metro.iconpacks.weathericons/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.weathericons.6.2.1.nupkg.sha512"
+    },
+    "MahApps.Metro.IconPacks.Zondicons/6.2.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-6+IMX7VptiD05ctXsjhEcvBHx0Gbj4DH1j13Ko5gk9yO7m6cCYaWqsKlt/GMH5CJEfa7Obz9+1pRstOzxZ03+A==",
+      "path": "mahapps.metro.iconpacks.zondicons/6.2.1",
+      "hashPath": "mahapps.metro.iconpacks.zondicons.6.2.1.nupkg.sha512"
+    },
+    "Microsoft.Toolkit.Uwp.Notifications/7.1.3": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-A1dglAzb24gjehmb7DwGd07mfyZ1gacAK7ObE0KwDlRc3mayH2QW7cSOy3TkkyELjLg19OQBuhPOj4SpXET9lg==",
+      "path": "microsoft.toolkit.uwp.notifications/7.1.3",
+      "hashPath": "microsoft.toolkit.uwp.notifications.7.1.3.nupkg.sha512"
+    },
+    "Microsoft.Xaml.Behaviors.Wpf/1.1.31": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-LZpuf82ACZWldmfMuv3CTUMDh3o0xo0uHUaybR5HgqVLDBJJ9RZLykplQ/bTJd0/VDt3EhD4iDgUgbdIUAM+Kg==",
+      "path": "microsoft.xaml.behaviors.wpf/1.1.31",
+      "hashPath": "microsoft.xaml.behaviors.wpf.1.1.31.nupkg.sha512"
+    },
+    "PixiEditor.ColorPicker/3.4.2.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-YJssvrfsxkXmvZyQaNm48yW3EZxKDI6PS4k6N29M5uo6lY6Yz6OaXtP40CGIND7HJMOlI5ckzjuMJVhFE5QU5w==",
+      "path": "pixieditor.colorpicker/3.4.2.2",
+      "hashPath": "pixieditor.colorpicker.3.4.2.2.nupkg.sha512"
+    },
+    "PixiEditor.ColorPicker.Models/1.0.10": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-oxkV6Y9AoYO96UMPKHWW1URAL5VWcPXfXtDdsgj3eCeTwhwqT6iiODjRPuEGOAjGboB41mBcSMnjNGOcxITFtw==",
+      "path": "pixieditor.colorpicker.models/1.0.10",
+      "hashPath": "pixieditor.colorpicker.models.1.0.10.nupkg.sha512"
+    }
+  },
+  "runtimes": {
+    "win-x64": [
+      "win",
+      "any",
+      "base"
+    ]
+  }
+}
