@@ -81,11 +81,11 @@ namespace CrosshairY.Pages
             Settings.UpdateAvailable = App.Settings.App.UpdateAvailable; // Json ignore forces us to manually copy this over
 
             // Initialize backing fields from the cloned settings
-            StartWithWindows = Settings.StartWithWindows;
-            StartMinimized = Settings.StartMinimized;
-            RunInBackground = Settings.RunInBackground;
-            AutoUpdate = Settings.AutoUpdate;
-            UpdateAvailable = Settings.UpdateAvailable;
+            _startWithWindows = Settings.StartWithWindows;
+            _startMinimized = Settings.StartMinimized;
+            _runInBackground = Settings.RunInBackground;
+            _autoUpdate = Settings.AutoUpdate;
+            _updateAvailable = Settings.UpdateAvailable;
 
             DataContext = this;
 
