@@ -24,6 +24,7 @@ namespace CrosshairY.Managers
         private readonly string _shaCacheFile;
         private HashSet<string> _currentFiles;
         public event EventHandler<ProgressEventArgs>? ProgressUpdated;
+        public event EventHandler<EventArgs>? DownloadFinished;
 
         /// <summary>
         /// Initializes a new instance of the GitHubDirectoryDownloaderService class for downloading the contents of a specific
@@ -54,7 +55,7 @@ namespace CrosshairY.Managers
             _httpClient.DefaultRequestHeaders.Add("User-Agent", "GitHubDirectoryDownloaderService");
 
             // Replace with token, IF token exists locally (development purposes only)
-            string githubToken = Environment.GetEnvironmentVariable("GITHUB_TOKEN") ?? "N/A";
+            string githubToken = Environment.GetEnvironmentVariable("GITHUB_TOKEN") ?? "";
             if (!string.IsNullOrEmpty(githubToken))
                 _httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("token", githubToken);
             #endregion
@@ -119,6 +120,8 @@ namespace CrosshairY.Managers
                 await Task.WhenAll(_subfolderTasks);
 
                 SaveSHAHashes(_currentFiles);
+
+                DownloadFinished?.Invoke(this, EventArgs.Empty);
             }
             catch (Exception)
             {

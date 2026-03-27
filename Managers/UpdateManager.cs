@@ -15,7 +15,7 @@ namespace CrosshairY.Managers
 
         private readonly string _repositoryOwner = "tsgsOFFICIAL";
         private readonly string _repositoryName = "CrosshairY";
-        private readonly string _folderPath = "UI/bin/Release/net10.0-windows/publish/win-x64";
+        private readonly string _folderPath = "bin/Release/net10.0-windows/publish/win-x64";
 
         public event EventHandler<ProgressEventArgs>? DownloadProgress;
         public event EventHandler? UpdateAvailable;
@@ -42,7 +42,11 @@ namespace CrosshairY.Managers
                             if (isAvailable)
                             {
                                 if (App.Settings.App.AutoUpdate)
+                                {
+                                    App.Settings.App.UpdateAvailable = true;
+                                    UpdateAvailable?.Invoke(this, EventArgs.Empty);
                                     await DownloadUpdate();
+                                }
                                 else
                                 {
                                     App.Settings.App.UpdateAvailable = true;
@@ -121,18 +125,24 @@ namespace CrosshairY.Managers
 
             using GitHubDirectoryDownloaderService downloader = new GitHubDirectoryDownloaderService(_repositoryOwner, _repositoryName, _folderPath, basePath);
             downloader.ProgressUpdated += OnProgressChanged!;
+            downloader.DownloadFinished += OnDownloadFinished!;
 
             try
             {
                 await downloader.DownloadDirectoryAsync(updatePath);
-
-                Process.Start(Path.Combine(updatePath, "CrosshairY"), "--updating");
-                Environment.Exit(0);
             }
             catch (Exception ex)
             {
                 NotificationManager.ShowNotification("Update Error", $"An error occurred while updating the application.\n{ex.Message}\n\nTry again after this time", 300);
             }
+        }
+        private void OnDownloadFinished(object sender, EventArgs e)
+        {
+            string basePath = Path.Combine(Environment.ExpandEnvironmentVariables("%APPDATA%"), "CrosshairY");
+            string updatePath = Path.Combine(basePath, "Update");
+
+            Process.Start(Path.Combine(updatePath, "CrosshairY"), "--updating");
+            Environment.Exit(0);
         }
         /// <summary>
         /// Raises the event that reports progress updates during an operation.

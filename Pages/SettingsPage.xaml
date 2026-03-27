@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:CrosshairY.Pages"
+      xmlns:icon="http://metro.mahapps.com/winfx/xaml/iconpacks"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Settings"
@@ -104,25 +105,76 @@
 
                         <!-- Update Status -->
                         <Border Background="{StaticResource SecondaryBrush}" 
-                                BorderBrush="{StaticResource BorderBrush}" 
-                                BorderThickness="1" 
-                                CornerRadius="6" 
-                                Padding="16" 
-                                Margin="0,0,0,16">
+                            BorderBrush="{StaticResource BorderBrush}" 
+                            BorderThickness="1" 
+                            CornerRadius="6" 
+                            Padding="16" 
+                            Margin="0,0,0,16">
+
                             <StackPanel Orientation="Horizontal">
-                                <Path Data="M22,12 A10,10 0 1,1 12,2 A10,10 0 0,1 22,12 M9,12 L11,14 L15,10" 
-                                      Stroke="{StaticResource PrimaryBrush}" 
-                                      StrokeThickness="2" 
-                                      Width="20" Height="20" 
-                                      Stretch="Uniform" 
-                                      Margin="0,0,12,0"/>
+
+                                <!-- Icon -->
+                                <icon:PackIconGameIcons 
+                                    Width="20" Height="20" 
+                                    Margin="0,0,12,0"
+                                    VerticalAlignment="Center">
+
+                                    <icon:PackIconGameIcons.Style>
+                                        <Style TargetType="icon:PackIconGameIcons">
+                                            <!-- Default = up to date -->
+                                            <Setter Property="Kind" Value="CheckMark"/>
+                                            <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+
+                                            <Style.Triggers>
+                                                <!-- Update available -->
+                                                <DataTrigger Binding="{Binding UpdateAvailable}" Value="True">
+                                                    <Setter Property="Kind" Value="CloudDownload"/>
+                                                    <Setter Property="Foreground" Value="#FF6B6B"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </icon:PackIconGameIcons.Style>
+                                </icon:PackIconGameIcons>
+
                                 <StackPanel>
-                                    <TextBlock Text="You are up to date" 
-                                               Style="{StaticResource BodyText}" 
-                                               FontWeight="Medium"/>
-                                    <TextBlock Text="{Binding AppVersion, StringFormat='Version {0}'}" 
-                                               Style="{StaticResource MutedText}" 
-                                               FontSize="12"/>
+
+                                    <!-- Title -->
+                                    <TextBlock FontWeight="Medium">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock" BasedOn="{StaticResource BodyText}">
+
+                                                <!-- default -->
+                                                <Setter Property="Text" Value="You are up to date"/>
+
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding UpdateAvailable}" Value="True">
+                                                        <Setter Property="Text" Value="Update available!"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+
+                                    <!-- Subtitle -->
+                                    <TextBlock FontSize="12">
+                                        <TextBlock.Style>
+                                            <Style TargetType="TextBlock" BasedOn="{StaticResource MutedText}">
+
+                                                <!-- default -->
+                                                <Setter Property="Text" 
+                                                    Value="{Binding AppVersion, StringFormat='Version {0}'}"/>
+
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding UpdateAvailable}" Value="True">
+                                                        <Setter Property="Text" 
+                                                            Value="Download the latest version to stay updated."/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
                                 </StackPanel>
                             </StackPanel>
                         </Border>
