@@ -204,6 +204,7 @@ namespace CrosshairY.Pages
                 }
 
                 await SettingsService.SaveAsync(App.Settings);
+                App.Settings.Hotkey.ReloadLibraryHotkeys();
                 LoadCrosshairs();
             }
         }

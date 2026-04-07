@@ -293,7 +293,9 @@ namespace CrosshairY
         #region Event Handlers
         private void OnToggleCrosshairHotkeyPressed()
         {
-            App.Overlay.ToggleVisibility();
+            Dispatcher.Invoke(() => {
+                App.Overlay.ToggleVisibility();
+            });
         }
         private void WhenNavButtonIsChecked(object sender, RoutedEventArgs e)
         {

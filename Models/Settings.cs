@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using CrosshairY.Models.Dto;
 using System.Windows.Input;
-using GlobalHotKey;
+using CrosshairY.Managers;
 
 namespace CrosshairY.Models
 {
@@ -38,10 +38,11 @@ namespace CrosshairY.Models
 
     public class Hotkey
     {
-        private readonly HotKeyManager _hotKeyManager = new HotKeyManager();
+        private readonly HotkeyManager _hotkeyManager = new();
+        private HotkeyManager.Hotkey? _toggleRegisteredHotkey;
+        private readonly Dictionary<string, HotkeyManager.Hotkey> _libraryRegisteredHotkeys = new();
 
         private KeyGesture? _toggleCrosshair;
-        private HotKey? _registeredToggleCrosshair;
 
         public event Action? ToggleCrosshairHotkeyPressed;
         public event Action? ToggleCrosshairHotkeyChanged;
@@ -54,49 +55,83 @@ namespace CrosshairY.Models
                 if (_toggleCrosshair == value)
                     return;
 
-                Unregister();
+                UnregisterToggle();
 
                 _toggleCrosshair = value;
 
-                Register();
+                RegisterToggle();
 
                 ToggleCrosshairHotkeyChanged?.Invoke();
             }
         }
 
         public void Initialize()
-        {
-            _hotKeyManager.KeyPressed += OnHotKeyPressed;
+        {  
+            ReloadLibraryHotkeys();  
         }
 
-        private void Register()
+        private void RegisterToggle()
         {
             if (_toggleCrosshair == null)
                 return;
 
-            _registeredToggleCrosshair =
-                _hotKeyManager.Register(_toggleCrosshair.Key, _toggleCrosshair.Modifiers);
+            HotkeyManager.Hotkey hotkey = new HotkeyManager.Hotkey(_toggleCrosshair.Key, _toggleCrosshair.Modifiers)
+            {
+                Action = () => ToggleCrosshairHotkeyPressed?.Invoke()
+            };
+
+            _hotkeyManager.RegisterHotkey(hotkey);
+            _toggleRegisteredHotkey = hotkey;
         }
 
-        private void Unregister()
+        private void UnregisterToggle()
         {
-            if (_registeredToggleCrosshair == null)
-                return;
-
-            _hotKeyManager.Unregister(_registeredToggleCrosshair);
-            _registeredToggleCrosshair = null;
+            if (_toggleRegisteredHotkey != null)
+            {
+                _hotkeyManager.UnregisterHotkey(_toggleRegisteredHotkey);
+                _toggleRegisteredHotkey = null;
+            }
         }
 
-        private void OnHotKeyPressed(object? sender, KeyPressedEventArgs e)
+        public void ReloadLibraryHotkeys()
         {
-            if (e.HotKey.Key == _toggleCrosshair?.Key && e.HotKey.Modifiers == _toggleCrosshair?.Modifiers)
-                ToggleCrosshairHotkeyPressed?.Invoke();
+            // clear old library registrations
+            foreach (HotkeyManager.Hotkey hotkey in _libraryRegisteredHotkeys.Values)
+                _hotkeyManager.UnregisterHotkey(hotkey);
+            _libraryRegisteredHotkeys.Clear();
+
+            if (App.Settings?.LibraryHotkeys == null) return;
+
+            foreach (KeyValuePair<string, KeyGesture?> kvp in App.Settings.LibraryHotkeys)
+            {
+                KeyGesture? gesture = kvp.Value;
+                if (gesture == null) continue;
+
+                string shareCode = kvp.Key;
+
+                HotkeyManager.Hotkey hotkey = new HotkeyManager.Hotkey(gesture.Key, gesture.Modifiers)
+                {
+                    Action = async () =>
+                    {
+                        if (ShareCode.Decode(shareCode) is CrosshairSettings cs)
+                           await CrosshairManager.Instance.UpdateCrosshair(cs);
+                    }
+                };
+
+                _hotkeyManager.RegisterHotkey(hotkey);
+                _libraryRegisteredHotkeys[shareCode] = hotkey;
+            }
         }
 
         public void Shutdown()
         {
-            _hotKeyManager.KeyPressed -= OnHotKeyPressed;
-            _hotKeyManager.Dispose();
+            UnregisterToggle();
+
+            foreach (HotkeyManager.Hotkey hotkey in _libraryRegisteredHotkeys.Values)
+                _hotkeyManager.UnregisterHotkey(hotkey);
+            _libraryRegisteredHotkeys.Clear();
+
+            _hotkeyManager.Dispose();
         }
     }
 
