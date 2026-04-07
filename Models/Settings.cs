@@ -1,4 +1,5 @@
-﻿using CrosshairY.Models.Dto;
+﻿using System.Text.Json.Serialization;
+using CrosshairY.Models.Dto;
 using System.Windows.Input;
 using GlobalHotKey;
 
@@ -10,6 +11,8 @@ namespace CrosshairY.Models
         public Hotkey Hotkey { get; set; } = new Hotkey();
         public AppSettings App { get; set; } = new();
 
+        public Dictionary<string, KeyGesture?> LibraryHotkeys { get; set; } = new();
+
         public void Apply(SettingsDto dto)
         {
             Crosshair = dto.Crosshair;
@@ -17,6 +20,16 @@ namespace CrosshairY.Models
             if (dto.Hotkeys.TryGetValue("ToggleCrosshair", out HotkeyDto? hk))
             {
                 Hotkey.ToggleCrosshair = new KeyGesture((Key)hk.Key, (ModifierKeys)hk.Modifiers);
+            }
+
+            LibraryHotkeys.Clear();
+            foreach (KeyValuePair<string, HotkeyDto> kvp in dto.Hotkeys)
+            {
+                if (kvp.Key == "ToggleCrosshair")
+                    continue;
+
+                HotkeyDto h = kvp.Value;
+                LibraryHotkeys[kvp.Key] = new KeyGesture((Key)h.Key, (ModifierKeys)h.Modifiers);
             }
 
             App.Apply(dto.App!);
@@ -89,6 +102,25 @@ namespace CrosshairY.Models
 
     public class CrosshairSettings
     {
+        [JsonIgnore]
+        public string HotkeyDisplay
+        {
+            get
+            {
+                if (App.Settings?.LibraryHotkeys == null)
+                    return "Assign Hotkey";
+
+                string shareCode = ShareCode.Encode(this);
+
+                if (App.Settings.LibraryHotkeys.TryGetValue(shareCode, out KeyGesture? gesture) && gesture != null)
+                {
+                    return FormatHotkey(gesture);
+                }
+
+                return "Assign Hotkey";
+            }
+        }
+
         public string CrosshairName { get; set; } = "My Crosshair";
         public string Description { get; set; } = "A very cool crosshair";
 
@@ -103,5 +135,21 @@ namespace CrosshairY.Models
         public byte ColorG { get; set; } = 255;
         public byte ColorB { get; set; } = 255;
         public byte Alpha { get; set; } = 255;
+
+        private static string FormatHotkey(KeyGesture gesture)
+        {
+            if (gesture == null)
+                return "Assign Hotkey";
+
+            List<string> parts = new List<string>();
+            if (gesture.Modifiers.HasFlag(ModifierKeys.Control)) parts.Add("Ctrl");
+            if (gesture.Modifiers.HasFlag(ModifierKeys.Shift)) parts.Add("Shift");
+            if (gesture.Modifiers.HasFlag(ModifierKeys.Alt)) parts.Add("Alt");
+            if (gesture.Modifiers.HasFlag(ModifierKeys.Windows)) parts.Add("Win");
+
+            parts.Add(gesture.Key.ToString());
+
+            return string.Join(" + ", parts);
+        }
     }
 }
