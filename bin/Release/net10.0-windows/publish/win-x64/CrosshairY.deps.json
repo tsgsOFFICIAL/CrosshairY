@@ -9,11 +9,10 @@
     ".NETCoreApp,Version=v10.0/win-x64": {
       "CrosshairY/1.0.0": {
         "dependencies": {
-          "GlobalHotKey": "1.1.0",
           "Hardcodet.NotifyIcon.Wpf": "2.0.1",
           "MahApps.Metro.IconPacks": "6.2.1",
           "Microsoft.Toolkit.Uwp.Notifications": "7.1.3",
-          "PixiEditor.ColorPicker": "3.4.2.2",
+          "PixiEditor.ColorPicker": "3.4.2.3",
           "runtimepack.Microsoft.NETCore.App.Runtime.win-x64": "10.0.5",
           "runtimepack.Microsoft.WindowsDesktop.App.Runtime.win-x64": "10.0.5",
           "runtimepack.Microsoft.Windows.SDK.NET.Ref": "10.0.17763.57"
@@ -1014,14 +1013,6 @@
           }
         }
       },
-      "GlobalHotKey/1.1.0": {
-        "runtime": {
-          "lib/GlobalHotKey.dll": {
-            "assemblyVersion": "1.1.0.0",
-            "fileVersion": "1.1.0.0"
-          }
-        }
-      },
       "Hardcodet.NotifyIcon.Wpf/2.0.1": {
         "runtime": {
           "lib/net8.0-windows7.0/Hardcodet.NotifyIcon.Wpf.dll": {
@@ -1569,23 +1560,23 @@
           }
         }
       },
-      "PixiEditor.ColorPicker/3.4.2.2": {
+      "PixiEditor.ColorPicker/3.4.2.3": {
         "dependencies": {
           "Microsoft.Xaml.Behaviors.Wpf": "1.1.31",
-          "PixiEditor.ColorPicker.Models": "1.0.10"
+          "PixiEditor.ColorPicker.Models": "1.0.11"
         },
         "runtime": {
           "lib/net8.0-windows7.0/ColorPicker.dll": {
-            "assemblyVersion": "3.4.2.2",
-            "fileVersion": "3.4.2.2"
+            "assemblyVersion": "3.4.2.3",
+            "fileVersion": "3.4.2.3"
           }
         }
       },
-      "PixiEditor.ColorPicker.Models/1.0.10": {
+      "PixiEditor.ColorPicker.Models/1.0.11": {
         "runtime": {
           "lib/net8.0/ColorPicker.Models.dll": {
-            "assemblyVersion": "1.0.10.0",
-            "fileVersion": "1.0.10.0"
+            "assemblyVersion": "1.0.11.0",
+            "fileVersion": "1.0.11.0"
           }
         }
       }
@@ -1611,13 +1602,6 @@
       "type": "runtimepack",
       "serviceable": false,
       "sha512": ""
-    },
-    "GlobalHotKey/1.1.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-KkEHhyM+sSh27kF1d3YlfpXdYlkfu17XCiI3WfYy1cn65y3loR7f+GMkMwHTgf0xSyS3QdXTKCRfVLzb7jgJFQ==",
-      "path": "globalhotkey/1.1.0",
-      "hashPath": "globalhotkey.1.1.0.nupkg.sha512"
     },
     "Hardcodet.NotifyIcon.Wpf/2.0.1": {
       "type": "package",
@@ -1948,19 +1932,19 @@
       "path": "microsoft.xaml.behaviors.wpf/1.1.31",
       "hashPath": "microsoft.xaml.behaviors.wpf.1.1.31.nupkg.sha512"
     },
-    "PixiEditor.ColorPicker/3.4.2.2": {
+    "PixiEditor.ColorPicker/3.4.2.3": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-YJssvrfsxkXmvZyQaNm48yW3EZxKDI6PS4k6N29M5uo6lY6Yz6OaXtP40CGIND7HJMOlI5ckzjuMJVhFE5QU5w==",
-      "path": "pixieditor.colorpicker/3.4.2.2",
-      "hashPath": "pixieditor.colorpicker.3.4.2.2.nupkg.sha512"
+      "sha512": "sha512-DTP/0EGDSh53w7H5G0R7WZByxCfgtOndeCURyepsHWlEUcgew0c9OyJX6NcM61Dvd0nxtCSM7YP8wsDsiXiWGg==",
+      "path": "pixieditor.colorpicker/3.4.2.3",
+      "hashPath": "pixieditor.colorpicker.3.4.2.3.nupkg.sha512"
     },
-    "PixiEditor.ColorPicker.Models/1.0.10": {
+    "PixiEditor.ColorPicker.Models/1.0.11": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-oxkV6Y9AoYO96UMPKHWW1URAL5VWcPXfXtDdsgj3eCeTwhwqT6iiODjRPuEGOAjGboB41mBcSMnjNGOcxITFtw==",
-      "path": "pixieditor.colorpicker.models/1.0.10",
-      "hashPath": "pixieditor.colorpicker.models.1.0.10.nupkg.sha512"
+      "sha512": "sha512-Pedk5E5ChHH7hYNA0dqf51Izm329eQ1w1Sz4bU17Ls41CxwvH31Z/qGXcNRlaywX6w94sKtqlzSq+sj3gMkpow==",
+      "path": "pixieditor.colorpicker.models/1.0.11",
+      "hashPath": "pixieditor.colorpicker.models.1.0.11.nupkg.sha512"
     }
   },
   "runtimes": {
