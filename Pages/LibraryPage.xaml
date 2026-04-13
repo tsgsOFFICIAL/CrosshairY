@@ -151,7 +151,7 @@
                     <DataTemplate DataType="{x:Type settings:CrosshairSettings}">
 
                         <Border Style="{StaticResource Card}"
-                                Width="320"
+                                Width="380"
                                 Margin="0,0,16,16">                            
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -198,7 +198,7 @@
                                                 Tag="{Binding}"
                                                 Click="OnApplyButtonClicked"/>
 
-                                        <Button Content="Hotkey"
+                                        <Button Content="{Binding HotkeyDisplay}"
                                                 Style="{StaticResource SecondaryButton}"
                                                 Padding="12,6"
                                                 FontSize="12"

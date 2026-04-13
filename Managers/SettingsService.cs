@@ -38,20 +38,32 @@ namespace CrosshairY.Managers
 
         public static Task SaveAsync(Settings settings)
         {
+            Dictionary<string, HotkeyDto> Hotkeys = new Dictionary<string, HotkeyDto>
+            {
+                ["ToggleCrosshair"] = new HotkeyDto
+                {
+                    Key = (int)(settings.Hotkey.ToggleCrosshair?.Key ?? Key.None),
+                    Modifiers = (int)(settings.Hotkey.ToggleCrosshair?.Modifiers ?? ModifierKeys.None)
+                }
+            };
+
+            foreach (KeyValuePair<string, KeyGesture?> kv in settings.LibraryHotkeys)
+            {
+                if (kv.Value == null) continue;
+                Hotkeys[kv.Key] = new HotkeyDto
+                {
+                    Key = (int)kv.Value.Key,
+                    Modifiers = (int)kv.Value.Modifiers
+                };
+            }
+
             SettingsDto dto = new SettingsDto
             {
                 Version = SettingsDto.CurrentVersion, // Always latest
 
                 Crosshair = settings.Crosshair,
 
-                Hotkeys = new Dictionary<string, HotkeyDto>
-                {
-                    ["ToggleCrosshair"] = new HotkeyDto
-                    {
-                        Key = (int)(settings.Hotkey.ToggleCrosshair?.Key ?? Key.None),
-                        Modifiers = (int)(settings.Hotkey.ToggleCrosshair?.Modifiers ?? ModifierKeys.None)
-                    }
-                },
+                Hotkeys = Hotkeys,
 
                 App = new AppSettingsDto
                 {

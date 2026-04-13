@@ -1,5 +1,7 @@
 ﻿using System.Windows.Controls;
+using System.Windows.Input;
 using CrosshairY.Managers;
+using CrosshairY.Windows;
 using CrosshairY.Models;
 using System.Text.Json;
 using System.Windows;
@@ -112,6 +114,36 @@ namespace CrosshairY.Pages
             }
         }
 
+        private static string? FindConflictingHotkeyOwner(KeyGesture gesture, string? currentShareCode = null)
+        {
+            if (gesture == null)
+                return null;
+
+            KeyGesture? toggle = App.Settings.Hotkey.ToggleCrosshair;
+            if (toggle != null &&
+                toggle.Key == gesture.Key &&
+                toggle.Modifiers == gesture.Modifiers)
+            {
+                return "Toggle Crosshair";
+            }
+
+            foreach (KeyValuePair<string, KeyGesture?> kvp in App.Settings.LibraryHotkeys)
+            {
+                if (kvp.Key == currentShareCode)
+                    continue; // allow re-assigning the SAME crosshair
+
+                KeyGesture? existing = kvp.Value;
+                if (existing != null &&
+                    existing.Key == gesture.Key &&
+                    existing.Modifiers == gesture.Modifiers)
+                {
+                    return "another Library crosshair";
+                }
+            }
+
+            return null; // no conflict
+        }
+
         private void OnPreviewCanvasLoaded(object sender, RoutedEventArgs e)
         {
             if (sender is Canvas canvas && canvas.DataContext is CrosshairSettings settings)
@@ -144,11 +176,36 @@ namespace CrosshairY.Pages
             }
         }
 
-        private void OnHotkeyButtonClicked(object sender, RoutedEventArgs e)
+        private async void OnHotkeyButtonClicked(object sender, RoutedEventArgs e)
         {
             if (sender is System.Windows.Controls.Button btn && btn.Tag is CrosshairSettings crosshair)
             {
-                System.Windows.MessageBox.Show("Hotkey assignment is not implemented yet.", "CrosshairY", MessageBoxButton.OK, MessageBoxImage.Information);
+                string shareCode = ShareCode.Encode(crosshair); // this is the unique key
+
+                HotkeyDialog dialog = new HotkeyDialog();
+                if (dialog.ShowDialog() == true && dialog.SelectedHotkey != null)
+                {
+                    string? conflict = FindConflictingHotkeyOwner(dialog.SelectedHotkey, shareCode);
+                    if (conflict != null)
+                    {
+                        System.Windows.MessageBox.Show(
+                            $"This hotkey is already assigned to {conflict}.\n\nPlease choose a different combination.",
+                            "CrosshairY",
+                            MessageBoxButton.OK,
+                            MessageBoxImage.Warning);
+                        return; // ← do NOT save
+                    }
+
+                    App.Settings.LibraryHotkeys[shareCode] = dialog.SelectedHotkey;
+                }
+                else
+                {
+                    App.Settings.LibraryHotkeys.Remove(shareCode);
+                }
+
+                await SettingsService.SaveAsync(App.Settings);
+                App.Settings.Hotkey.ReloadLibraryHotkeys();
+                LoadCrosshairs();
             }
         }
 
@@ -169,7 +226,7 @@ namespace CrosshairY.Pages
                 {
                     _myCrosshairCodes.Remove(codeToRemove);
                     await SaveCrosshairsAsync();
-                    LoadCrosshairs();        // Refresh the list
+                    LoadCrosshairs();
                 }
             }
         }

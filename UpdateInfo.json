@@ -1,8 +1,13 @@
 {
-  "version": "2.0.3",
+  "version": "2.0.5",
   "type": "Alpha",
-  "changelog": "Implemented complete settings page, including automatic updates, start with windows, run in background when closed, etc.",
+  "changelog": "Fully re-worked keybind handling & added the final hotkey/keybinds to the Library page.",
   "historic_versions": [
+    {
+      "version": "2.0.3",
+      "type": "Alpha",
+      "changelog": "Implemented complete settings page, including automatic updates, start with windows, run in background when closed, etc."
+    },
     {
       "version": "2.0.2 - Beta",
       "type": "Beta",
