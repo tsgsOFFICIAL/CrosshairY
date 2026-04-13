@@ -1,8 +1,13 @@
 {
-  "version": "2.0.5",
-  "type": "Alpha",
-  "changelog": "Fully re-worked keybind handling & added the final hotkey/keybinds to the Library page.",
+  "version": "2.0.6",
+  "type": "Release",
+  "changelog": "HOTFIX - Crashing on initial load due to no settings being present.",
   "historic_versions": [
+    {
+      "version": "2.0.5",
+      "type": "Alpha",
+      "changelog": "Fully re-worked keybind handling & added the final hotkey/keybinds to the Library page."
+    },
     {
       "version": "2.0.3",
       "type": "Alpha",

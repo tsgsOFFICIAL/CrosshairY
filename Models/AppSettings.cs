@@ -16,6 +16,9 @@ namespace CrosshairY.Models
 
         public void Apply(AppSettingsDto dto)
         {
+            if (dto == null) 
+                return;
+
             StartWithWindows = dto.StartWithWindows;
             StartMinimized = dto.StartMinimized;
             RunInBackground = dto.RunInBackground;
