@@ -1,8 +1,13 @@
 {
-  "version": "2.0.6",
-  "type": "Release",
-  "changelog": "HOTFIX - Crashing on initial load due to no settings being present.",
+  "version": "2.0.7",
+  "type": "Patch",
+  "changelog": "Added community crosshairs to Github",
   "historic_versions": [
+    {
+      "version": "2.0.6",
+      "type": "Release",
+      "changelog": "HOTFIX - Crashing on initial load due to no settings being present."
+    },
     {
       "version": "2.0.5",
       "type": "Alpha",

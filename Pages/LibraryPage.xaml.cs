@@ -6,6 +6,7 @@ using CrosshairY.Models;
 using System.Text.Json;
 using System.Windows;
 using System.IO;
+using System.Net.Http;
 
 namespace CrosshairY.Pages
 {
@@ -37,13 +38,7 @@ namespace CrosshairY.Pages
         }
 
         private List<string> _myCrosshairCodes = [];
-        private List<string> _communityCrosshairCodes = [
-                "TSGS-QLNeZ-gFBjD-5uvqP-GnZvY-R5Dhi-TQkqO-dchd9-ZbJz8-AKZzk-Mbu6V-LjHTf-sXL3A-qncE2-2JgLs-2uzDu-ARhcy-9yDXH-JxqmO-LK",
-                "TSGS-FRpNW-iXbjq-QMchK-svKn8-jY94H-U4DzA-Xa",
-                "TSGS-CvZNa-mRmbN-rYYJH-BBE8s-qoiqQ-oaWVN-nkuzN-3aLKQ-YgZdQ-5MFvs-LpyL2-mDvXY-RoXRB-XmGoM-8MfsZ-f5rOK-9kecL-Bs",
-                "TSGS-GVAmh-KhzBp-PeRgD-XGf95-spPR7-9u6Mh-XW",
-                "TSGS-FRpMH-TZLPA-GJ6xA-jgPqD-CeMnB-B9qv3-bH"
-            ];
+        private List<string> _communityCrosshairCodes = [];
 
         public LibraryPage()
         {
@@ -55,10 +50,12 @@ namespace CrosshairY.Pages
             LoadCrosshairs();
         }
 
-        private void LoadCrosshairs()
+        private async void LoadCrosshairs()
         {
             if (SelectedTab == LibraryTab.MyCrosshairs)
                 LoadMyCrosshairsFromFile();
+            else
+               await LoadCommunityCrosshairs();
 
             List<CrosshairSettings> crosshairsToDisplay = new List<CrosshairSettings>();
 
@@ -98,6 +95,28 @@ namespace CrosshairY.Pages
             catch
             {
                 _myCrosshairCodes.Clear();   // Fallback on error
+            }
+        }
+
+        private async Task LoadCommunityCrosshairs()
+        {
+            try
+            {
+                using HttpClient client = new HttpClient();
+
+                client.DefaultRequestHeaders.CacheControl = new System.Net.Http.Headers.CacheControlHeaderValue
+                {
+                    NoCache = true
+                };
+
+                client.DefaultRequestHeaders.Add("Cache-Control", "no-cache");
+                string response = await client.GetStringAsync("https://raw.githubusercontent.com/tsgsOFFICIAL/CrosshairY/master/CommunityCrosshairs.json");
+
+                _communityCrosshairCodes = JsonSerializer.Deserialize<List<string>>(response) ?? [];
+            }
+            catch (Exception)
+            {
+                _communityCrosshairCodes.Clear();
             }
         }
 
