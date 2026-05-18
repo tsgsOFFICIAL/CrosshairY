@@ -48,6 +48,34 @@ namespace CrosshairY.Pages
             }
         }
 
+        private System.Windows.Media.Color _outlineColor;
+
+        public System.Windows.Media.Color OutlineColor
+        {
+            get => _outlineColor;
+            set
+            {
+                if (_outlineColor == value)
+                    return;
+
+                _outlineColor = value;
+
+                // Sync into settings
+                _crosshair.OutlineColorR = value.R;
+                _crosshair.OutlineColorG = value.G;
+                _crosshair.OutlineColorB = value.B;
+                _crosshair.OutlineAlpha = value.A;
+
+                // Notify / Update UI
+                Notify();
+                Notify(nameof(OutlineColorR));
+                Notify(nameof(OutlineColorG));
+                Notify(nameof(OutlineColorB));
+                Notify(nameof(OutlineAlpha));
+                CrosshairRenderer.Render(CrosshairCanvas, _crosshair);
+            }
+        }
+
         // ---- Metadata ----
         public string CrosshairName
         {
@@ -167,6 +195,19 @@ namespace CrosshairY.Pages
             }
         }
 
+        public bool SquareStyle
+        {
+            get => _crosshair.SquareStyle;
+            set
+            {
+                if (_crosshair.SquareStyle == value)
+                    return;
+
+                _crosshair.SquareStyle = value;
+                SetAndRender(nameof(SquareStyle));
+            }
+        }
+
         // ---- Color ----
         public byte ColorR
         {
@@ -220,6 +261,58 @@ namespace CrosshairY.Pages
             }
         }
 
+        public byte OutlineColorR
+        {
+            get => OutlineColor.R;
+            set
+            {
+                if (OutlineColor.R == value)
+                    return;
+
+                OutlineColor = System.Windows.Media.Color.FromArgb(OutlineColor.A, value, OutlineColor.G, OutlineColor.B);
+                SetAndRender(nameof(OutlineColorR));
+            }
+        }
+
+        public byte OutlineColorG
+        {
+            get => OutlineColor.G;
+            set
+            {
+                if (OutlineColor.G == value)
+                    return;
+
+                OutlineColor = System.Windows.Media.Color.FromArgb(OutlineColor.A, OutlineColor.R, value, OutlineColor.B);
+                SetAndRender(nameof(OutlineColorG));
+            }
+        }
+
+        public byte OutlineColorB
+        {
+            get => OutlineColor.B;
+            set
+            {
+                if (OutlineColor.B == value)
+                    return;
+
+                OutlineColor = System.Windows.Media.Color.FromArgb(OutlineColor.A, OutlineColor.R, OutlineColor.G, value);
+                SetAndRender(nameof(OutlineColorB));
+            }
+        }
+
+        public byte OutlineAlpha
+        {
+            get => OutlineColor.A;
+            set
+            {
+                if (OutlineColor.A == value)
+                    return;
+
+                OutlineColor = System.Windows.Media.Color.FromArgb(value, OutlineColor.R, OutlineColor.G, OutlineColor.B);
+                SetAndRender(nameof(OutlineAlpha));
+            }
+        }
+
         public DesignerPage()
         {
             InitializeComponent();
@@ -250,6 +343,7 @@ namespace CrosshairY.Pages
             CrosshairRenderer.Render(CrosshairCanvas, _crosshair);
 
             Color = System.Windows.Media.Color.FromArgb(_crosshair.Alpha, _crosshair.ColorR, _crosshair.ColorG, _crosshair.ColorB);
+            OutlineColor = System.Windows.Media.Color.FromArgb(_crosshair.OutlineAlpha, _crosshair.OutlineColorR, _crosshair.OutlineColorG, _crosshair.OutlineColorB);
 
             Notify(nameof(Gap));
             Notify(nameof(Length));
@@ -258,6 +352,7 @@ namespace CrosshairY.Pages
             Notify(nameof(Dot));
             Notify(nameof(TStyle));
             Notify(nameof(Outline));
+            Notify(nameof(SquareStyle));
             Notify(nameof(CrosshairName));
             Notify(nameof(Description));
         }
@@ -289,6 +384,7 @@ namespace CrosshairY.Pages
                     Notify(nameof(Dot));
                     Notify(nameof(TStyle));
                     Notify(nameof(Outline));
+                    Notify(nameof(SquareStyle));
                     Notify(nameof(CrosshairName));
                     Notify(nameof(Description));
                 }
@@ -311,6 +407,7 @@ namespace CrosshairY.Pages
                 CrosshairRenderer.Render(CrosshairCanvas, _crosshair);
 
                 Color = System.Windows.Media.Color.FromArgb(_crosshair.Alpha, _crosshair.ColorR, _crosshair.ColorG, _crosshair.ColorB);
+                OutlineColor = System.Windows.Media.Color.FromArgb(_crosshair.OutlineAlpha, _crosshair.OutlineColorR, _crosshair.OutlineColorG, _crosshair.OutlineColorB);
 
                 Notify(nameof(Gap));
                 Notify(nameof(Length));
@@ -319,6 +416,7 @@ namespace CrosshairY.Pages
                 Notify(nameof(Dot));
                 Notify(nameof(TStyle));
                 Notify(nameof(Outline));
+                Notify(nameof(SquareStyle));
                 Notify(nameof(CrosshairName));
                 Notify(nameof(Description));
             }
@@ -363,6 +461,26 @@ namespace CrosshairY.Pages
         {
             ColorATextBox.SelectAll();
             ColorATextBox.Focus();
+        }
+        private void OnOutlineColorRSliderRightClick(object sender, MouseButtonEventArgs e)
+        {
+            OutlineColorRTextBox.SelectAll();
+            OutlineColorRTextBox.Focus();
+        }
+        private void OnOutlineColorGSliderRightClick(object sender, MouseButtonEventArgs e)
+        {
+            OutlineColorGTextBox.SelectAll();
+            OutlineColorGTextBox.Focus();
+        }
+        private void OnOutlineColorBSliderRightClick(object sender, MouseButtonEventArgs e)
+        {
+            OutlineColorBTextBox.SelectAll();
+            OutlineColorBTextBox.Focus();
+        }
+        private void OnOutlineColorASliderRightClick(object sender, MouseButtonEventArgs e)
+        {
+            OutlineColorATextBox.SelectAll();
+            OutlineColorATextBox.Focus();
         }
 
         private void OnRgbPreviewTextInput(object sender, TextCompositionEventArgs e)

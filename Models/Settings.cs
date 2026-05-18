@@ -166,10 +166,15 @@ namespace CrosshairY.Models
         public bool Dot { get; set; }
         public bool TStyle { get; set; }
         public bool Outline { get; set; } = true;
+        public bool SquareStyle { get; set; }
         public byte ColorR { get; set; } = 255;
         public byte ColorG { get; set; } = 255;
         public byte ColorB { get; set; } = 255;
         public byte Alpha { get; set; } = 255;
+        public byte OutlineColorR { get; set; } = 0;
+        public byte OutlineColorG { get; set; } = 0;
+        public byte OutlineColorB { get; set; } = 0;
+        public byte OutlineAlpha { get; set; } = 255;
 
         private static string FormatHotkey(KeyGesture gesture)
         {

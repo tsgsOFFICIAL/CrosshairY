@@ -9,7 +9,7 @@
 		<UseWindowsForms>true</UseWindowsForms>
 		<ApplicationIcon>assets\logo.ico</ApplicationIcon>
 		<SupportedOSPlatformVersion>10.0.17763.0</SupportedOSPlatformVersion>
-		<FileVersion>2.0.7</FileVersion>
+		<FileVersion>2.0.8</FileVersion>
 	</PropertyGroup>
 
 	<ItemGroup>

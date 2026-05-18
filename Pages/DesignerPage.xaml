@@ -156,6 +156,10 @@
                                     MouseRightButtonDown="OnOutlineThicknessSliderRightClick"/>
                             </StackPanel>
 
+                            <CheckBox IsChecked="{Binding SquareStyle, Mode=TwoWay}"
+                                      Content="Square Style" 
+                                      Margin="0,0,0,8"/>
+
                             <CheckBox IsChecked="{Binding Dot, Mode=TwoWay}"
                                       Content="Center Dot" 
                                       Margin="0,0,0,8"/>
@@ -170,7 +174,7 @@
                             Background="{StaticResource SecondaryBrush}" 
                             Margin="0,0,0,16">
                         <StackPanel>
-                            <TextBlock Text="Color" 
+                            <TextBlock Text="Crosshair Color" 
                                        Style="{StaticResource SubheadingText}" 
                                        FontSize="13"
                                        Margin="0,0,0,16"/>
@@ -259,6 +263,103 @@
                                 IsSnapToTickEnabled="True"
                                 SmallChange="1" LargeChange="1"
                                 MouseRightButtonDown="OnColorASliderRightClick"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Outline Color Card -->
+                    <Border Style="{StaticResource Card}" 
+                        Background="{StaticResource SecondaryBrush}" 
+                        Margin="0,0,0,16">
+                        <StackPanel>
+                            <TextBlock Text="Outline Color" 
+                               Style="{StaticResource SubheadingText}" 
+                               FontSize="13"
+                               Margin="0,0,0,16"/>
+
+                            <!-- Color Preview and Picker -->
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,16">
+                                <Border Width="40" Height="40" 
+                                    CornerRadius="12" 
+                                    BorderBrush="{StaticResource BorderBrush}"
+                                    BorderThickness="1"
+                                    Background="Transparent"
+                                    Margin="0,0,12,0">
+
+                                    <Border.Clip>
+                                        <RectangleGeometry Rect="0,0,40,40" RadiusX="12" RadiusY="12"/>
+                                    </Border.Clip>
+
+                                    <colorpicker:PortableColorPicker 
+                                        x:Name="OutlineColorPicker"
+                                        Style="{StaticResource DefaultColorPickerStyle}" SmallChange="5"
+                                        UseHintColor="True" HintColor="#000"                                                                  
+                                        ShowFractionalPart="False"
+                                        ShowAlpha="True"
+                                        SelectedColor="{Binding OutlineColor, Mode=TwoWay}"
+                                        Cursor="Hand"/>
+                                </Border>
+                                <TextBlock Text="&lt;- Click here to pick a color!" VerticalAlignment="Center" Style="{StaticResource MutedText}"/>
+                            </StackPanel>
+
+                            <!-- R Slider -->
+                            <Grid Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Red" Style="{StaticResource BodyText}"/>
+                                <TextBox x:Name="OutlineColorRTextBox" Grid.Column="1" Text="{Binding OutlineColorR, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="OnRgbPreviewTextInput" PreviewKeyDown="OnRgbPreviewKeyDown"/>
+                            </Grid>
+                            <Slider Minimum="0" Maximum="255" Value="{Binding OutlineColorR, Mode=TwoWay}" Margin="0,0,0,12"
+                                TickFrequency="1"
+                                IsSnapToTickEnabled="True"
+                                SmallChange="1" LargeChange="1"
+                                MouseRightButtonDown="OnOutlineColorRSliderRightClick"/>
+
+                            <!-- G Slider -->
+                            <Grid Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Green" Style="{StaticResource BodyText}"/>
+                                <TextBox x:Name="OutlineColorGTextBox" Grid.Column="1" Text="{Binding OutlineColorG, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="OnRgbPreviewTextInput" PreviewKeyDown="OnRgbPreviewKeyDown"/>
+                            </Grid>
+                            <Slider Minimum="0" Maximum="255" Value="{Binding OutlineColorG, Mode=TwoWay}" Margin="0,0,0,12"
+                                TickFrequency="1"
+                                IsSnapToTickEnabled="True"
+                                SmallChange="1" LargeChange="1"
+                                MouseRightButtonDown="OnOutlineColorGSliderRightClick"/>
+
+                            <!-- B Slider -->
+                            <Grid Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Blue" Style="{StaticResource BodyText}"/>
+                                <TextBox x:Name="OutlineColorBTextBox" Grid.Column="1" Text="{Binding OutlineColorB, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="OnRgbPreviewTextInput" PreviewKeyDown="OnRgbPreviewKeyDown"/>
+                            </Grid>
+                            <Slider Minimum="0" Maximum="255" Value="{Binding OutlineColorB, Mode=TwoWay}" Margin="0,0,0,12"
+                                TickFrequency="1"
+                                IsSnapToTickEnabled="True"
+                                SmallChange="1" LargeChange="1"
+                                MouseRightButtonDown="OnOutlineColorBSliderRightClick"/>
+
+                            <!-- A Slider -->
+                            <Grid Margin="0,0,0,8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Alpha" Style="{StaticResource BodyText}"/>
+                                <TextBox x:Name="OutlineColorATextBox" Grid.Column="1" Text="{Binding OutlineAlpha, UpdateSourceTrigger=PropertyChanged}" PreviewTextInput="OnRgbPreviewTextInput" PreviewKeyDown="OnRgbPreviewKeyDown"/>
+                            </Grid>
+                            <Slider Minimum="0" Maximum="255" Value="{Binding OutlineAlpha, Mode=TwoWay}" Margin="0,0,0,12"
+                                TickFrequency="1"
+                                IsSnapToTickEnabled="True"
+                                SmallChange="1" LargeChange="1"
+                                MouseRightButtonDown="OnOutlineColorASliderRightClick"/>
                         </StackPanel>
                     </Border>
 

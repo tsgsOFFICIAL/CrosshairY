@@ -6,7 +6,7 @@ namespace CrosshairY.Models
     public static class ShareCode
     {
         private const string Prefix = "TSGS-";
-        private const byte Version = 2;
+        private const byte Version = 4;
 
         private const string Alphabet = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789"; // Custom Base57
         private static readonly int BaseN = Alphabet.Length;
@@ -26,11 +26,17 @@ namespace CrosshairY.Models
             bw.Write(crosshair.Dot);
             bw.Write(crosshair.TStyle);
             bw.Write(crosshair.Outline);
+            bw.Write(crosshair.SquareStyle);
 
             bw.Write(crosshair.ColorR);
             bw.Write(crosshair.ColorG);
             bw.Write(crosshair.ColorB);
             bw.Write(crosshair.Alpha);
+
+            bw.Write(crosshair.OutlineColorR);
+            bw.Write(crosshair.OutlineColorG);
+            bw.Write(crosshair.OutlineColorB);
+            bw.Write(crosshair.OutlineAlpha);
 
             WriteString(bw, crosshair.CrosshairName ?? "");
             WriteString(bw, crosshair.Description ?? "");
@@ -69,6 +75,8 @@ namespace CrosshairY.Models
                 {
                     1 => DecodeV1(br),
                     2 => DecodeV2(br),
+                    3 => DecodeV3(br),
+                    4 => DecodeV4(br),
                     _ => null,
                 };
             }
@@ -118,6 +126,63 @@ namespace CrosshairY.Models
                 ColorB = br.ReadByte(),
                 Alpha = br.ReadByte(),
                 
+                CrosshairName = ReadString(br),
+                Description = ReadString(br)
+            };
+
+            return c;
+        }
+
+        private static CrosshairSettings DecodeV3(BinaryReader br)
+        {
+            CrosshairSettings c = new CrosshairSettings
+            {
+                Gap = br.ReadSingle(),
+                Length = br.ReadSingle(),
+                Thickness = br.ReadSingle(),
+                OutlineThickness = br.ReadSingle(),
+
+                Dot = br.ReadBoolean(),
+                TStyle = br.ReadBoolean(),
+                Outline = br.ReadBoolean(),
+                SquareStyle = br.ReadBoolean(),
+
+                ColorR = br.ReadByte(),
+                ColorG = br.ReadByte(),
+                ColorB = br.ReadByte(),
+                Alpha = br.ReadByte(),
+
+                CrosshairName = ReadString(br),
+                Description = ReadString(br)
+            };
+
+            return c;
+        }
+
+        private static CrosshairSettings DecodeV4(BinaryReader br)
+        {
+            CrosshairSettings c = new CrosshairSettings
+            {
+                Gap = br.ReadSingle(),
+                Length = br.ReadSingle(),
+                Thickness = br.ReadSingle(),
+                OutlineThickness = br.ReadSingle(),
+
+                Dot = br.ReadBoolean(),
+                TStyle = br.ReadBoolean(),
+                Outline = br.ReadBoolean(),
+                SquareStyle = br.ReadBoolean(),
+
+                ColorR = br.ReadByte(),
+                ColorG = br.ReadByte(),
+                ColorB = br.ReadByte(),
+                Alpha = br.ReadByte(),
+
+                OutlineColorR = br.ReadByte(),
+                OutlineColorG = br.ReadByte(),
+                OutlineColorB = br.ReadByte(),
+                OutlineAlpha = br.ReadByte(),
+
                 CrosshairName = ReadString(br),
                 Description = ReadString(br)
             };

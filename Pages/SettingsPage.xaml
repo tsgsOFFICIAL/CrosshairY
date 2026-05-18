@@ -233,7 +233,7 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <TextBlock Text="Build" Style="{StaticResource MutedText}"/>
-                            <TextBlock Grid.Column="1" Text="2026.04.14" 
+                            <TextBlock Grid.Column="1" Text="2026.05.18" 
                                        Style="{StaticResource BodyText}" 
                                        FontFamily="Consolas"/>
                         </Grid>
