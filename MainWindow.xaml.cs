@@ -293,7 +293,8 @@ namespace CrosshairY
         #region Event Handlers
         private void OnToggleCrosshairHotkeyPressed()
         {
-            Dispatcher.Invoke(() => {
+            Dispatcher.Invoke(() =>
+            {
                 App.Overlay.ToggleVisibility();
             });
         }
@@ -367,6 +368,11 @@ namespace CrosshairY
                             string relativePath = Path.GetRelativePath(updatePath, file);
                             string destinationPath = Path.Combine(basePath, relativePath);
                             string destinationDir = Path.GetDirectoryName(destinationPath)!;
+
+                            if (Array.Exists(filesToKeep, f => f.Equals(relativePath, StringComparison.OrdinalIgnoreCase)))
+                            {
+                                continue;
+                            }
 
                             if (!Directory.Exists(destinationDir))
                                 Directory.CreateDirectory(destinationDir);
