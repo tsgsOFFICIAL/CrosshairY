@@ -45,12 +45,11 @@ Open a [GitHub Issue](https://github.com/tsgsOFFICIAL/CrosshairY/issues) or cont
 ---
 
 ## Installation
-1. **Download** the latest release [here](https://github.com/tsgsOFFICIAL/CrosshairY/releases/latest) (*preferred*) or via [direct link](https://download-directory.github.io/?url=https%3A%2F%2Fgithub.com%2FtsgsOFFICIAL%2FCrosshairY%2Ftree%2Fmaster%2Fbin%2FRelease%2Fnet10.0-windows%2Fpublish%2Fwin-x64).
-2. **Extract** the ZIP to `%appdata%\CrosshairY`:
-   - Press `Win + R`, type `%appdata%`, then press Enter.
-   - Create a folder named `CrosshairY` and extract the files here.
-3. **Create a shortcut**:
+1. **Download** the latest release from [Releases](https://github.com/tsgsOFFICIAL/CrosshairY/releases/latest) (*preferred*). Run `Setup.exe` for a guided install, or extract one of the zips instead if you prefer a portable copy.
+2. If you extracted a portable zip, **create a shortcut**:
    - Right-click `CrosshairY.exe` > `Send to` > `Desktop (create shortcut)`.
+
+> **Nightly Builds:** Want the latest code before it gets a tagged release? Every push to `master` automatically rebuilds and republishes the [nightly release](https://github.com/tsgsOFFICIAL/CrosshairY/releases/tag/nightly), both self-contained and framework-dependent, plus the installer. The version number includes the short commit hash it was built from, so you always know exactly what you're running. It's untested beyond CI passing, so expect the occasional rough edge, grab a regular [Release](https://github.com/tsgsOFFICIAL/CrosshairY/releases/latest) instead if you want something stable.
 
 ---
 

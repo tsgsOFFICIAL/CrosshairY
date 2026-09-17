@@ -1,0 +1,74 @@
+name: Release Build
+
+on:
+    push:
+        tags: ["v*"]
+
+jobs:
+    build:
+        runs-on: windows-latest
+        permissions:
+            contents: write
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Setup .NET
+              uses: actions/setup-dotnet@v4
+              with:
+                  dotnet-version: "10.0.x"
+
+            - name: Publish (Self-Contained)
+              run: |
+                  Remove-Item -Recurse -Force publish/self-contained/ -ErrorAction SilentlyContinue
+                  dotnet publish CrosshairY.csproj -c Release -r win-x64 -p:SelfContained=true -o publish/self-contained/
+
+            - name: Publish (Framework-Dependent)
+              run: |
+                  Remove-Item -Recurse -Force publish/framework-dependent/ -ErrorAction SilentlyContinue
+                  dotnet publish CrosshairY.csproj -c Release -r win-x64 -p:SelfContained=false -o publish/framework-dependent/
+
+            - name: Zip (Self-Contained)
+              run: Compress-Archive -Path publish/self-contained/* -DestinationPath CrosshairY-${{ github.ref_name }}-self-contained.zip
+
+            - name: Zip (Framework-Dependent)
+              run: Compress-Archive -Path publish/framework-dependent/* -DestinationPath CrosshairY-${{ github.ref_name }}-framework-dependent.zip
+
+            - name: Install Inno Setup
+              run: choco install innosetup -y --no-progress
+
+            - name: Build installer
+              run: '& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\CrosshairY.iss'
+
+            - name: Get previous tag
+              id: prev_tag
+              shell: pwsh
+              run: |
+                  $prev = git tag --sort=-creatordate | Where-Object { $_ -ne "${{ github.ref_name }}" -and $_ -ne "nightly" } | Select-Object -First 1
+                  echo "tag=$prev" >> $env:GITHUB_OUTPUT
+
+            - name: Create release
+              shell: pwsh
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              run: |
+                  $notes = @"
+                  Grab `Setup.exe` below for a guided install, or extract one of the zips instead if you prefer a portable copy.
+
+                  [Installation guide](https://github.com/tsgsOFFICIAL/CrosshairY?tab=readme-ov-file#installation)
+
+                  Drop your comments on my [Discord](https://discord.gg/Cddu5aJ), or create an issue on GitHub.
+
+                  **Full Changelog**: https://github.com/tsgsOFFICIAL/CrosshairY/compare/${{ steps.prev_tag.outputs.tag }}...${{ github.ref_name }}
+                  "@
+                  $installer = Get-ChildItem "publish/installer/*.exe" | Select-Object -First 1 -ExpandProperty FullName
+                  gh release create "${{ github.ref_name }}" `
+                    "CrosshairY-${{ github.ref_name }}-self-contained.zip" `
+                    "CrosshairY-${{ github.ref_name }}-framework-dependent.zip" `
+                    "$installer" `
+                    --title "CrosshairY ${{ github.ref_name }}" `
+                    --verify-tag `
+                    --notes $notes
