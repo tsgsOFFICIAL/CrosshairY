@@ -78,6 +78,15 @@ namespace CrosshairY.Utility
             }
         }
 
+        /// <summary>
+        /// Gets the user-facing application version, including nightly suffixes when present.
+        /// </summary>
+        public static string GetDisplayVersion()
+        {
+            FileVersionInfo versionInfo = FileVersionInfo.GetVersionInfo(GetExePath());
+            return versionInfo.ProductVersion ?? versionInfo.FileVersion ?? "N/A";
+        }
+
         public static string GetExePath()
         {
             string? exeLocation = Process.GetCurrentProcess().MainModule?.FileName;

@@ -312,6 +312,7 @@ namespace CrosshairY
         private void OnMainWindowLoaded(object sender, RoutedEventArgs e)
         {
             StartActivationServer();
+            UpdateManager.SyncRegisteredVersion();
 
             FileVersionInfo localVersionInfo = FileVersionInfo.GetVersionInfo(Helper.GetExePath());
             VersionString = localVersionInfo.FileVersion ?? "N/A";
@@ -325,65 +326,6 @@ namespace CrosshairY
             {
                 switch (arg)
                 {
-                    case "--updating":
-                        Thread.Sleep(3000); // Allow other instance(s) to close before finalizing the update
-
-                        // Delete all files and folders from the base path (%appdata% + \\CrosshairY)
-                        // except update/runtime state and user data.
-                        string[] foldersToKeep =
-                        [
-                            "Update"
-                        ];
-
-                        string[] filesToKeep =
-                        [
-                            "Settings.json",
-                            "update_cache.tsgs",
-                            "RecentCrosshairs.json",
-                            "MyCrosshairs.json"
-                        ];
-
-                        // Delete all files, except for the ones in filesToKeep
-                        foreach (string file in Directory.GetFiles(basePath))
-                        {
-                            string fileName = Path.GetFileName(file);
-                            if (Array.Exists(filesToKeep, f => f.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
-                                continue;
-
-                            File.Delete(file);
-                        }
-
-                        foreach (string directory in Directory.GetDirectories(basePath))
-                        {
-                            string dirName = Path.GetFileName(directory);
-                            if (Array.Exists(foldersToKeep, f => f.Equals(dirName, StringComparison.OrdinalIgnoreCase)))
-                                continue;
-
-                            Directory.Delete(directory, true);
-                        }
-
-                        // Move update files to base path
-                        foreach (string file in Directory.GetFiles(updatePath, "*", SearchOption.AllDirectories))
-                        {
-                            string relativePath = Path.GetRelativePath(updatePath, file);
-                            string destinationPath = Path.Combine(basePath, relativePath);
-                            string destinationDir = Path.GetDirectoryName(destinationPath)!;
-
-                            if (Array.Exists(filesToKeep, f => f.Equals(relativePath, StringComparison.OrdinalIgnoreCase)))
-                            {
-                                continue;
-                            }
-
-                            if (!Directory.Exists(destinationDir))
-                                Directory.CreateDirectory(destinationDir);
-
-                            File.Copy(file, destinationPath, true);
-                        }
-
-                        // Start the real, updated app
-                        Process.Start(Path.Combine(basePath, "CrosshairY"), "--updated");
-                        Environment.Exit(0);
-                        break;
                     case "--updated":
                         // Start normally, but delete the Update folder after a delay
                         Task.Run(() =>
