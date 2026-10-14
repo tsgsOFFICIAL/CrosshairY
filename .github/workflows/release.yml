@@ -21,15 +21,34 @@ jobs:
               with:
                   dotnet-version: "10.0.x"
 
+            - name: Set release version
+              id: vars
+              shell: pwsh
+              run: |
+                  $version = "${{ github.ref_name }}".TrimStart('v')
+                  echo "version=$version" >> $env:GITHUB_OUTPUT
+
             - name: Publish (Self-Contained)
               run: |
                   Remove-Item -Recurse -Force publish/self-contained/ -ErrorAction SilentlyContinue
-                  dotnet publish CrosshairY.csproj -c Release -r win-x64 -p:SelfContained=true -o publish/self-contained/
+                  dotnet publish CrosshairY.csproj -c Release -r win-x64 `
+                    -p:SelfContained=true `
+                    -p:Version=${{ steps.vars.outputs.version }} `
+                    -p:FileVersion=${{ steps.vars.outputs.version }} `
+                    -p:InformationalVersion=${{ steps.vars.outputs.version }} `
+                    -p:IncludeSourceRevisionInInformationalVersion=false `
+                    -o publish/self-contained/
 
             - name: Publish (Framework-Dependent)
               run: |
                   Remove-Item -Recurse -Force publish/framework-dependent/ -ErrorAction SilentlyContinue
-                  dotnet publish CrosshairY.csproj -c Release -r win-x64 -p:SelfContained=false -o publish/framework-dependent/
+                  dotnet publish CrosshairY.csproj -c Release -r win-x64 `
+                    -p:SelfContained=false `
+                    -p:Version=${{ steps.vars.outputs.version }} `
+                    -p:FileVersion=${{ steps.vars.outputs.version }} `
+                    -p:InformationalVersion=${{ steps.vars.outputs.version }} `
+                    -p:IncludeSourceRevisionInInformationalVersion=false `
+                    -o publish/framework-dependent/
 
             - name: Zip (Self-Contained)
               run: Compress-Archive -Path publish/self-contained/* -DestinationPath CrosshairY-${{ github.ref_name }}-self-contained.zip
