@@ -1,8 +1,18 @@
 {
-  "version": "2.0.8",
-  "type": "Feature",
-  "changelog": "Enhance crosshair customization with square style option and outline color settings",
+  "version": "2.0.10",
+  "type": "Patch",
+  "changelog": "Fixed the crosshair occasionally disappearing behind other windows by re-asserting the overlay's always-on-top state.\nRevamped the README with new badges, and added a license.\nAdded last-build badge generation to the nightly and release workflows.",
   "historic_versions": [
+    {
+      "version": "2.0.9",
+      "type": "Patch",
+      "changelog": "Added nightly and release build workflows, and updated the installer."
+    },
+    {
+      "version": "2.0.8",
+      "type": "Feature",
+      "changelog": "Enhance crosshair customization with square style option and outline color settings"
+    },
     {
       "version": "2.0.7",
       "type": "Patch",

@@ -3,6 +3,7 @@ using System.Windows.Interop;
 using System.Diagnostics;
 using CrosshairY.Models;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace CrosshairY.Windows
 {
@@ -25,10 +26,27 @@ namespace CrosshairY.Windows
 
         private static readonly IntPtr HWND_TOPMOST = new IntPtr(-1); // Handle for topmost z-order
 
+        // Other topmost windows (e.g. borderless games) can push the overlay behind them, so re-assert periodically
+        private readonly DispatcherTimer _topmostTimer = new() { Interval = TimeSpan.FromSeconds(1) };
+
         public OverlayWindow()
         {
             InitializeComponent();
             Loaded += (_, _) => MakeClickThrough();
+
+            _topmostTimer.Tick += (_, _) => AssertTopmost();
+            IsVisibleChanged += (_, e) =>
+            {
+                if ((bool)e.NewValue)
+                {
+                    AssertTopmost();
+                    _topmostTimer.Start();
+                }
+                else
+                {
+                    _topmostTimer.Stop();
+                }
+            };
         }
 
         public void UpdateCrosshair(CrosshairSettings crosshair)
@@ -57,6 +75,15 @@ namespace CrosshairY.Windows
 
         public void ToggleVisibility() => Visibility = Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
 
+        private void AssertTopmost()
+        {
+            IntPtr hwnd = new WindowInteropHelper(this).Handle;
+            if (hwnd == IntPtr.Zero)
+                return;
+
+            SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+        }
+
         private void MakeClickThrough()
         {
             try
@@ -79,7 +106,7 @@ namespace CrosshairY.Windows
                 int currentStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
 
                 // Set the window to always be on top without activating or resizing it
-                bool posResult = SetWindowPos(hwnd, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE);
+                AssertTopmost();
             }
             catch (Exception ex)
             {
