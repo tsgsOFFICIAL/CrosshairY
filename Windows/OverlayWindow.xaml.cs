@@ -3,6 +3,7 @@ using System.Windows.Interop;
 using System.Diagnostics;
 using CrosshairY.Models;
 using System.Windows;
+using System.Windows.Media;
 using System.Windows.Threading;
 
 namespace CrosshairY.Windows
@@ -34,7 +35,11 @@ namespace CrosshairY.Windows
             InitializeComponent();
             Loaded += (_, _) => MakeClickThrough();
 
-            _topmostTimer.Tick += (_, _) => AssertTopmost();
+            _topmostTimer.Tick += (_, _) =>
+            {
+                AssertTopmost();
+                CenterOnPrimaryScreen();
+            };
             IsVisibleChanged += (_, e) =>
             {
                 if ((bool)e.NewValue)
@@ -69,8 +74,25 @@ namespace CrosshairY.Windows
 
             CrosshairRenderer.Render(OverlayCanvas, crosshair);
 
-            Left = (SystemParameters.PrimaryScreenWidth - Width) / 2;
-            Top = (SystemParameters.PrimaryScreenHeight - Height) / 2;
+            CenterOnPrimaryScreen();
+        }
+
+        // Read the live screen size (SystemParameters can be stale after a game changes the display mode)
+        private void CenterOnPrimaryScreen()
+        {
+            var screen = System.Windows.Forms.Screen.PrimaryScreen;
+            if (screen == null)
+                return;
+
+            DpiScale dpi = VisualTreeHelper.GetDpi(this);
+            var bounds = screen.Bounds;
+            double left = bounds.X / dpi.DpiScaleX + (bounds.Width / dpi.DpiScaleX - Width) / 2;
+            double top = bounds.Y / dpi.DpiScaleY + (bounds.Height / dpi.DpiScaleY - Height) / 2;
+
+            if (Math.Abs(Left - left) > 0.5)
+                Left = left;
+            if (Math.Abs(Top - top) > 0.5)
+                Top = top;
         }
 
         public void ToggleVisibility() => Visibility = Visibility == Visibility.Visible ? Visibility.Hidden : Visibility.Visible;
